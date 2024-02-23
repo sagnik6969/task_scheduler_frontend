@@ -1,3 +1,9 @@
 <template>
-  <div class="text-red-600 font-bold">Task</div>
+  <div>
+    <Sidebar />
+    <router-view />
+  </div>
 </template>
+<script setup>
+import Sidebar from './components/Sidebar/Sidebar.vue'
+</script>
