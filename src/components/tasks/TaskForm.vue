@@ -5,8 +5,9 @@
         class="py-3 px-5 flex flex-col max-w-2xl w-10/12 shadow-2xl rounded-lg bg-white relative"
       >
         <button
+          type="button"
           @click="$emit('close')"
-          class="absolute top-2 right-2 p-1 rounded-full text-slate-600 hover:bg-slate-100 duration-300"
+          class="absolute top-2 right-2 p-1 rounded-full text-slate-600 hover:bg-slate-300 duration-300"
         >
           <v-icon icon="mdi-close"></v-icon>
         </button>
@@ -43,7 +44,7 @@
             </icon-select>
           </div>
           <div class="flex space-x-2">
-            <icon-button class="bg-slate-600 text-slate-100 hover:bg-slate-700"
+            <icon-button class="bg-slate-900 text-slate-100 hover:bg-slate-950"
               >Add Task</icon-button
             >
           </div>
@@ -58,7 +59,7 @@ import IconButton from '@/components/ui/IconButton.vue'
 import IconSelect from '@/components/ui/IconSelect.vue'
 import VueDatePicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
-import { onMounted, ref, watch } from 'vue'
+import { ref, watch } from 'vue'
 import axios from 'axios'
 
 const emit = defineEmits(['close'])
@@ -80,7 +81,7 @@ const handleSubmit = () => {
       deadline: date.value,
       priority: priority.value
     })
-    .then((res) => {
+    .then(() => {
       emit('close')
       // console.log(res.data)
     })
