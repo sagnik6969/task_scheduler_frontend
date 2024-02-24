@@ -1,16 +1,34 @@
 <template>
-  <div class="px-10 py-6 flex xl:flex-row flex-col">
-    <div class="left flex-1">
+  <div class="px-10 py-6 flex xl:flex-row flex-col h-full">
+    <div class="left flex-1 h-full overflow-y-scroll [&::-webkit-scrollbar]:hidden px-4">
+      <!-- [&::-webkit-scrollbar]:hidden => to hide the scroll bar -->
       <greeting-vue></greeting-vue>
-      <task-list class="mt-8"></task-list>
+      <task-list :tasks="tasks" class="mt-8"></task-list>
     </div>
 
     <div class="right flex-1"></div>
   </div>
 </template>
 <script setup>
+import axios from 'axios'
+import { onMounted, ref } from 'vue'
 import GreetingVue from './Greeting.vue'
 import TaskList from './TaskList/TaskList.vue'
+
+const tasks = ref([])
+
+onMounted(async () => {
+  // await axios.get('/sanctum/csrf-cookie')
+  // await axios.post('api/login', {
+  //   email: 'madelynn80@example.net',
+  //   password: 'password'
+  // })
+
+  axios.get('/api/user/tasks').then((res) => {
+    // console.log(res.data)
+    tasks.value = res.data.data
+  })
+})
 </script>
 <style scoped>
 .left {

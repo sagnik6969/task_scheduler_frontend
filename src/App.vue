@@ -1,5 +1,5 @@
 <template>
-  <div class="flex">
+  <div class="flex h-screen">
     <Sidebar></Sidebar>
     <dash-board class="flex-grow"></dash-board>
     <!-- <task-form></task-form> -->

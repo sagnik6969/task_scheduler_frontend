@@ -4,7 +4,12 @@
     <search-box class="mt-2"></search-box>
     <task-list-nav class="mt-4" :nav-links="navLinks"></task-list-nav>
     <div class="mt-4">
-      <single-task-card v-for="i in 10" :key="i" class="mt-3"></single-task-card>
+      <single-task-card
+        v-for="task in tasks"
+        :key="task.data.task_id"
+        :task="task"
+        class="mt-3"
+      ></single-task-card>
     </div>
   </div>
 </template>
@@ -12,6 +17,7 @@
 import SearchBox from '@/components/ui/SearchBox.vue'
 import SingleTaskCard from './SingleTaskCard.vue'
 import TaskListNav from './TaskListNav.vue'
+defineProps(['tasks'])
 
 const navLinks = [
   { name: 'All Tasks', active: true },
