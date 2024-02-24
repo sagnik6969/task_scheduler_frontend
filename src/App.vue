@@ -1,5 +1,7 @@
 <template>
+  <router-view></router-view>
   <LoginForm />
+  <!-- <Login /> -->
   <RegisterForm />
   <!-- <TaskForm /> -->
 </template>
@@ -12,7 +14,7 @@ import RegisterForm from './components/auth/RegisterForm.vue'
 export default {
   components: {
     LoginForm,
-    RegisterForm,
+    RegisterForm
     // TaskForm,
   }
 }
