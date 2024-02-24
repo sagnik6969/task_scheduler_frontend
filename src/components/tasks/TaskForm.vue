@@ -58,7 +58,7 @@ import IconButton from '@/components/ui/IconButton.vue'
 import IconSelect from '@/components/ui/IconSelect.vue'
 import VueDatePicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
-import { onMounted, ref, watch } from 'vue'
+import { ref, watch } from 'vue'
 import axios from 'axios'
 
 const emit = defineEmits(['close'])
@@ -80,7 +80,7 @@ const handleSubmit = () => {
       deadline: date.value,
       priority: priority.value
     })
-    .then((res) => {
+    .then(() => {
       emit('close')
       // console.log(res.data)
     })
