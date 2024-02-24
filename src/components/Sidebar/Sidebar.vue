@@ -1,7 +1,7 @@
 <template>
   <div
-    :class="open ? 'w-64' : 'w-16'"
-    class="bg-black w-64 text-black h-screen overflow-hidden transition-all duration-300"
+    :class="{ 'w-64': open, 'w-16': !open }"
+    class="bg-black text-black h-screen overflow-hidden transition-all duration-300"
   >
     <div class="py-4 flex items-center justify-center">
       <img
