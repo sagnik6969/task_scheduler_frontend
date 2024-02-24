@@ -4,7 +4,7 @@
   >
     <div class="flex-1">
       <h1 class="font-bold text-lg">{{ title }}</h1>
-      <p class="text-slate-700 font-medium">{{ description }}</p>
+      <p class="text-slate-700 font-medium">{{ task.data.attributes.priority }}</p>
     </div>
     <div class="flex-1 space-x-1 font-medium">
       <v-icon icon="mdi-clock-time-four"></v-icon>
@@ -17,7 +17,7 @@
 <script setup>
 import ProgressBar from '@/components/ui/ProgressBar.vue'
 import IconButton from '@/components/ui/IconButton.vue'
-import { computed, onMounted } from 'vue'
+import { computed } from 'vue'
 const { task } = defineProps(['task'])
 
 const title = computed(() => {
@@ -26,18 +26,14 @@ const title = computed(() => {
   return fullTitle.substring(0, 12) + '...'
 })
 
-const description = computed(() => {
-  const fullDescription = task.data.attributes.description
-  if (fullDescription.length <= 20) return fullDescription
-  return fullDescription.substring(0, 18) + '....'
-})
-
 const remainingTime = computed(() => {
   const mySQLDate = task.data.attributes.deadline
   const deadline = new Date(Date.parse(mySQLDate.replace(/-/g, '/')))
   const today = new Date()
 
   const differenceInMinutes = (deadline.getTime() - today.getTime()) / (1000 * 60)
+
+  if (differenceInMinutes < 0) return '0min'
 
   if (differenceInMinutes < 60) return Math.round(differenceInMinutes) + 'min'
 
@@ -59,9 +55,5 @@ const remainingTime = computed(() => {
     Math.floor(differenceInHours - Math.floor(differenceInDays) * 24) +
     'h'
   )
-})
-
-onMounted(() => {
-  console.log(task.data.attributes.title)
 })
 </script>
