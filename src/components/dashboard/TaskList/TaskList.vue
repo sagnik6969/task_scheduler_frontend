@@ -17,7 +17,8 @@
 import SearchBox from '@/components/ui/SearchBox.vue'
 import SingleTaskCard from './SingleTaskCard.vue'
 import TaskListNav from './TaskListNav.vue'
-import { computed, ref } from 'vue'
+// import { computed, ref } from 'vue'
+import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 defineProps(['tasks'])
 

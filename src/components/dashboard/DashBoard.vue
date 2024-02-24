@@ -16,19 +16,19 @@
 import axios from 'axios'
 import { onMounted, ref } from 'vue'
 import GreetingVue from './Greeting.vue'
-import TaskList from './TaskList/TaskList.vue'
+// import TaskList from './TaskList/TaskList.vue'
 
 const tasks = ref([])
 
 onMounted(async () => {
-  // await axios.get('/sanctum/csrf-cookie')
-  // await axios.post('api/login', {
-  //   email: 'madelynn80@example.net',
-  //   password: 'password'
-  // })
+  await axios.get('/sanctum/csrf-cookie')
+  await axios.post('api/login', {
+    email: 'amangangwani1101@gmail.com',
+    password: '12345678'
+  })
 
   axios.get('/api/user/tasks').then((res) => {
-    // console.log(res.data)
+    console.log(res.data)
     tasks.value = res.data.data
   })
 })
