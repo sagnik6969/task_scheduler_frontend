@@ -1,18 +1,33 @@
 import { createRouter, createWebHistory } from 'vue-router'
-const router = createRouter({
+import DashBoard from '@/components/dashboard/DashBoard.vue'
+import TaskList from '@/components/dashboard/TaskList/TaskList.vue'
+export default createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: '/',
-      name: 'Home'
+      name: 'DashBoard',
+      component: DashBoard,
+      children: [
+        {
+          path: '',
+          name: 'TaskList',
+          component: TaskList
+        }
+      ]
     },
+    // {
+    //   path: '/login',
+    //   name: 'Login'
+    // },
     {
-      path: '/login',
-      name: 'Login'
-    },
-    {
-      path: 'logout',
+      path: '/logout',
       name: 'Logout'
-    }
+    },
+    {
+      path: '/settings',
+      name: 'Settings'
+    },
+    { path: '/manage-tasks', name: 'ManageTasks' }
   ]
 })
