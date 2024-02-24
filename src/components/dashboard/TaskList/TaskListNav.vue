@@ -1,13 +1,21 @@
 <template>
   <div class="flex space-x-10 font-bold text-slate-500">
-    <a
+    <router-link
       v-for="link in navLinks"
       :key="link.name"
-      :class="{ 'text-slate-900': link.active }"
       class="cursor-pointer hover:text-slate-900 duration-300"
+      :class="{
+        'text-slate-800': link.active
+      }"
+      :to="{
+        name: 'TaskList',
+        query: link.filter && {
+          filter: link.filter
+        }
+      }"
     >
       {{ link.name }}
-    </a>
+    </router-link>
   </div>
 </template>
 

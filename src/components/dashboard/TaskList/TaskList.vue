@@ -17,12 +17,24 @@
 import SearchBox from '@/components/ui/SearchBox.vue'
 import SingleTaskCard from './SingleTaskCard.vue'
 import TaskListNav from './TaskListNav.vue'
+import { computed, ref } from 'vue'
+import { useRoute } from 'vue-router'
 defineProps(['tasks'])
 
-const navLinks = [
-  { name: 'All Tasks', active: true },
-  { name: 'Recently Added' },
-  { name: 'Most Important' },
-  { name: 'Near Deadline' }
-]
+const route = useRoute()
+
+const navLinks = computed(() => [
+  { name: 'All Tasks', filter: '', active: route.query.filter == null },
+  {
+    name: 'Recently Added',
+    filter: 'recently_added',
+    active: route.query.filter == 'recently_added'
+  },
+  {
+    name: 'Most Important',
+    filter: 'most_important',
+    active: route.query.filter == 'most_important'
+  },
+  { name: 'Near Deadline', filter: 'near_deadline', active: route.query.filter == 'near_deadline' }
+])
 </script>

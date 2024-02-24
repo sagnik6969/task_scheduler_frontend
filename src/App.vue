@@ -1,8 +1,9 @@
 <template>
   <div class="flex h-screen">
     <Sidebar></Sidebar>
-    <dash-board class="flex-grow"></dash-board>
+    <!-- <dash-board class="flex-grow"></dash-board> -->
     <!-- <task-form></task-form> -->
+    <router-view class="flex-grow h-full"></router-view>
   </div>
 </template>
 <script setup>
