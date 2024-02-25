@@ -4,5 +4,8 @@ export default {
   theme: {
     extend: {}
   },
+  screens: {
+    small: { min: '540px', max: '767px' }
+  },
   plugins: [require('@tailwindcss/forms')]
 }

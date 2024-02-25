@@ -60,6 +60,7 @@ const store = createStore({
           password: password,
           password_confirmation: password
         })
+
         context.commit('setUser', res.data.user)
         return 'Registered Successfully'
       } catch (err) {
