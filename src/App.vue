@@ -1,21 +1,14 @@
 <template>
-  <router-view></router-view>
-  <LoginForm />
-  <!-- <Login /> -->
-  <RegisterForm />
-  <!-- <TaskForm /> -->
+
+  <div class="flex h-screen">
+    <Sidebar></Sidebar>
+    <!-- <dash-board class="flex-grow"></dash-board> -->
+    <router-view class="flex-grow h-full"></router-view>
+    <!-- <task-form></task-form> -->
+  </div>
 </template>
-
-<script>
-import LoginForm from './components/auth/LoginForm.vue'
-import RegisterForm from './components/auth/RegisterForm.vue'
-// import TaskForm from './components/tasks/TaskForm.vue';
-
-export default {
-  components: {
-    LoginForm,
-    RegisterForm
-    // TaskForm,
-  }
-}
+<script setup>
+import Sidebar from './components/Sidebar/Sidebar.vue'
+// import DashBoard from './components/dashboard/DashBoard.vue'
+// import TaskForm from './components/tasks/TaskForm.vue'
 </script>

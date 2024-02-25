@@ -1,29 +1,38 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
-import Login from '../components/auth/LoginForm.vue'
-import Register from '../components/auth/RegisterForm.vue'
-import store from '../store/index'
-
-const routes = [
-  {
-    path: '/',
-    redirect: '/home'
-  },
-  {
-    path: '/login',
-    component: Login,
-    meta: { public: true }
-  },
-  {
-    path: '/register',
-    component: Register,
-    meta: { public: true }
-  }
-]
-
-const router = createRouter({
+import DashBoard from '@/components/dashboard/DashBoard.vue'
+import TaskList from '@/components/dashboard/TaskList/TaskList.vue'
+import AdminDashboard from '../components/Admin/AdminDashboard.vue'
+export default createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
-  routes
+  routes: [
+    {
+      path: '/',
+      name: 'DashBoard',
+      component: DashBoard,
+      children: [
+        {
+          path: '',
+          name: 'TaskList',
+          component: TaskList
+        }
+      ]
+    },
+    {
+      path: '/admin',
+      name: 'Admin',
+      component: AdminDashboard
+    },
+    {
+      path: '/logout',
+      name: 'Logout'
+    },
+    {
+      path: '/settings',
+      name: 'Settings'
+    },
+    { path: '/manage-tasks', name: 'ManageTasks' }
+  ]
 })
 
 router.beforeEach((to) => {
