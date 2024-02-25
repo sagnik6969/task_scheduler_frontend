@@ -34,10 +34,3 @@ export default createRouter({
     { path: '/manage-tasks', name: 'ManageTasks' }
   ]
 })
-
-router.beforeEach((to) => {
-  if (to.meta.requireLogin) {
-    if (!store.getters.isLoggedIn) return `/login?redirect=${to.fullPath}`
-  }
-})
-export default router
