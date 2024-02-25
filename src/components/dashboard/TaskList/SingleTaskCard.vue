@@ -43,7 +43,7 @@ const remainingTime = computed(() => {
     return (
       Math.floor(differenceInHours) +
       'h ' +
-      (differenceInMinutes - Math.floor(differenceInHours) * 60) +
+      Math.round(differenceInMinutes - Math.floor(differenceInHours) * 60) +
       'min'
     )
 

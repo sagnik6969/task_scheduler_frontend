@@ -14,18 +14,14 @@ export default createRouter({
           path: '',
           name: 'TaskList',
           component: TaskList
-        },
-        {
-          path: 'admin',
-          name: 'Admin',
-          component: AdminDashboard
         }
       ]
     },
-    // {
-    //   path: '/login',
-    //   name: 'Login'
-    // },
+    {
+      path: '/admin',
+      name: 'Admin',
+      component: AdminDashboard
+    },
     {
       path: '/logout',
       name: 'Logout'
