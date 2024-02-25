@@ -17,12 +17,12 @@
 import SearchBox from '@/components/ui/SearchBox.vue'
 import SingleTaskCard from './SingleTaskCard.vue'
 import TaskListNav from './TaskListNav.vue'
+
 import { computed, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import sortByDeadLine from './filter_functions/sortByDeadline.js'
 import sortByPriority from './filter_functions/sortByPriority.js'
 import sortByProgress from './filter_functions/sortByProgress.js'
-
 const props = defineProps(['tasks'])
 
 const route = useRoute()

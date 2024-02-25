@@ -25,7 +25,7 @@
         open ? 'justify-start ' : 'justify-center items-start  text-white text-sm space-y-2 px-2'
       "
     >
-      <router-link to="/" class="button flex items-center">
+      <router-link to="/api/admin" class="button flex items-center">
         <span class="material-symbols-outlined text-white mr-4"> dashboard </span>
         <span class="text-sm text-white">dashboard</span>
       </router-link>

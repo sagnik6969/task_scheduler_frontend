@@ -83,7 +83,6 @@ const handleSubmit = () => {
     })
     .then(() => {
       emit('close')
-      // console.log(res.data)
     })
     .catch((err) => {
       console.log(err)

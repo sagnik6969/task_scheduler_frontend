@@ -27,11 +27,12 @@ const tasks = ref([])
 const tasksLoading = ref(true)
 
 onMounted(async () => {
-  // await axios.get('/sanctum/csrf-cookie')
-  // await axios.post('api/login', {
-  //   email: 'madelynn80@example.net',
-  //   password: 'password'
-  // })
+ // await axios.get('/sanctum/csrf-cookie')
+ // await axios.post('api/login', {
+ //   email: 'amangangwani1101@gmail.com',
+ //   password: '12345678'
+ //})
+
 
   axios
     .get('/api/user/tasks')
@@ -42,5 +43,6 @@ onMounted(async () => {
     .finally(() => {
       tasksLoading.value = false
     })
+
 })
 </script>
