@@ -8,8 +8,8 @@
         'text-slate-800': link.active
       }"
       :to="{
-        name: 'TaskList',
-        query: link.filter && {
+        query: {
+          ...$route.query,
           filter: link.filter
         }
       }"
