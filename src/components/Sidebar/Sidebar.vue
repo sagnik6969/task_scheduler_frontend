@@ -40,14 +40,16 @@
         </router-link>
       </div>
     </div>
-    <div v-else class="bg-black">
+    <div v-else class="absolute bg-black">
       <div class="flex justify-center items-center p-4">
-        <button clss="focus:outline-none" @click="toggle" v-tooltip="'Menu'">
-          <span class="material-icons text-white">menu</span>
+        <button class="focus:outline-none" @click="toggle">
+          <span :class="{ 'rotate-90': open }" class="material-icons text-white">{{
+            open ? 'close' : 'menu'
+          }}</span>
         </button>
       </div>
 
-      <div class="flex flex-col p-4 gap-10 items-center justify-center" v-if="open">
+      <div class="flex flex-col h-screen sticky p-4 gap-10 justify-start" v-if="open">
         <router-link to="/profile" class="button flex items-center">
           <img
             src="https://avatars.githubusercontent.com/u/47273253?v=4"
@@ -58,12 +60,13 @@
         <router-link
           v-for="link in links"
           :to="link.path"
-          class="button flex items-center justify-center"
+          class="button flex justify-start"
           :key="link.path"
         >
           <span v-if="link.icon" class="text-white" :class="link.iconClass">{{
             link.iconname
           }}</span>
+          <span class="text-sm text-white">{{ link.label }}</span>
         </router-link>
       </div>
     </div>
@@ -147,5 +150,8 @@ onUnmounted(() => {
 .menu .button:hover {
   cursor: pointer;
   background-color: rgb(233, 45, 59);
+}
+.rotate-90 {
+  transform: rotate(90deg);
 }
 </style>

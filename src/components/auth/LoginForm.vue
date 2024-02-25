@@ -1,36 +1,44 @@
 <template>
   <div class="w-full h-screen flex items-center justify-center">
-    <div class="w-full max-w-xs">
-      <form @submit.prevent="handleSubmit" class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+    <div class="w-full max-w-xs bg-gray-200 shadow-lg rounded px-8 pt-6 pb-8 mb-4">
+      <form @submit.prevent="handleSubmit" class="">
         <div class="mb-4">
-          <label class="block text-gray-700 text-sm font-bold mb-2" for="username"> Email </label>
+          <label class="block text-black text-sm font-bold mb-2" for="username"> Email </label>
           <input
-            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            class="shadow appearance-none border rounded w-full py-2 px-3 text-black leading-tight focus:outline-none focus:shadow-outline"
             v-model="email"
             type="text"
             placeholder="Email"
           />
         </div>
         <div class="mb-6">
-          <label class="block text-gray-700 text-sm font-bold mb-2" for="password">
-            Password
-          </label>
+          <label class="block text-black text-sm font-bold mb-2" for="password"> Password </label>
           <input
-            class="shadow appearance-none border w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+            class="shadow appearance-none border w-full py-2 px-3 text-black mb-3 leading-tight focus:outline-none focus:shadow-outline"
             v-model="password"
             type="password"
             placeholder="*******"
           />
         </div>
-        <div class="flex items-center justify-center">
+        <a class="text-blue underline" href="#!">Forgot password?</a>
+        <div class="flex items-center mt-2 justify-center">
           <button
-            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            class="bg-black w-full hover:bg-white text-white hover:text-black font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             type="submit"
           >
             Sign In
           </button>
         </div>
       </form>
+      <div class="mt-10 flex text-black">
+        <span class="w-1/2"> Don't have an account? </span>
+        <router-link
+          class="text-center rounded-md border-2 border-red-600 p-3 text-red-700"
+          to="/register"
+        >
+          Register Now
+        </router-link>
+      </div>
     </div>
   </div>
 </template>
@@ -60,18 +68,14 @@ const password = ref('')
 
 const redirectUrl = route.query.redirect || '/'
 
-const handleSubmit = () => {
-  // console.log(email.value)
-  // console.log(password.value)
-
-  store
-    .dispatch('login', {
+const handleSubmit = async () => {
+  try {
+    await store.dispatch('login', {
       email: email.value,
       password: password.value
     })
-    .then(() => {
-      router.replace(redirectUrl)
-    })
+    router.replace(redirectUrl)
+  } catch {}
 }
 
 onMounted(async () => {
