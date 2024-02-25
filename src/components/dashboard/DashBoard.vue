@@ -5,6 +5,7 @@
     >
       <!-- [&::-webkit-scrollbar]:hidden => to hide the scroll bar -->
       <greeting-vue></greeting-vue>
+      <action-bar class="mt-8"></action-bar>
       <div v-if="tasksLoading" class="text-center mt-20 text-slate-900">
         <v-progress-circular
           :size="50"
@@ -13,7 +14,7 @@
           indeterminate
         ></v-progress-circular>
       </div>
-      <router-view v-else :tasks="tasks" class="mt-8"></router-view>
+      <router-view v-else :tasks="tasks" class="mt-5"></router-view>
     </div>
 
     <div class="right flex-initial xl:flex-[0.4_0.4_0%]"></div>
@@ -23,6 +24,7 @@
 import axios from 'axios'
 import { onMounted, ref } from 'vue'
 import GreetingVue from './Greeting.vue'
+import ActionBar from './ActionBar.vue'
 const tasks = ref([])
 const tasksLoading = ref(true)
 
