@@ -13,6 +13,20 @@
           :class="open ? 'w-20 h-20' : 'w-12 h-12'"
         />
       </div>
+  <div>
+    <div
+      v-if="!ismobile"
+      :class="{ 'w-64': open, 'w-16': !open }"
+      class="bg-black text-black h-screen overflow-hidden transition-all duration-300"
+    >
+      <div class="py-4 flex items-center justify-center">
+        <img
+          src="https://avatars.githubusercontent.com/u/47273253?v=4"
+          alt="profile pic"
+          class="rounded-full object-cover border-2 border-white"
+          :class="open ? 'w-20 h-20' : 'w-12 h-12'"
+        />
+      </div>
 
       <div class="flex justify-end mb-4">
         <button class="focus:outline-none" @click="toggle">
