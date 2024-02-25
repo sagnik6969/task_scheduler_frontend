@@ -3,7 +3,6 @@
     <div
       class="left flex-initial xl:h-full xl:overflow-y-scroll [&::-webkit-scrollbar]:hidden px-4 xl:flex-[0.6_0.6_0%]"
     >
-      <!-- [&::-webkit-scrollbar]:hidden => to hide the scroll bar -->
       <greeting-vue></greeting-vue>
       <action-bar class="mt-8"></action-bar>
       <div v-if="tasksLoading" class="text-center my-20 text-slate-900">
@@ -19,6 +18,7 @@
 
     <div class="right flex-initial xl:flex-[0.4_0.4_0%] px-4 py-4 xl:py-0">
       <task-counter></task-counter>
+      <statistics class="mt-5"></statistics>
     </div>
   </div>
 </template>
@@ -27,7 +27,8 @@ import axios from 'axios'
 import { onMounted, ref } from 'vue'
 import GreetingVue from './Greeting.vue'
 import ActionBar from './ActionBar.vue'
-import TaskCounter from './TaskCounter.vue'
+import TaskCounter from './right_column/TaskCounter.vue'
+import Statistics from './right_column/statistics/Statistics.vue'
 const tasks = ref([])
 const tasksLoading = ref(true)
 
