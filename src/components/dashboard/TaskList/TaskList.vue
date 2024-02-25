@@ -1,7 +1,11 @@
 <template>
   <div>
     <h1 class="text-3xl font-bold text-slate-900">Tasks</h1>
-    <search-box v-model="searchText" class="mt-2"></search-box>
+    <search-box
+      placeholder="Search tasks...."
+      v-model="searchText"
+      class="mt-2 font-medium"
+    ></search-box>
     <task-list-nav class="mt-4" :nav-links="navLinks"></task-list-nav>
     <div class="mt-4">
       <single-task-card
@@ -39,7 +43,7 @@ watch(searchText, (newVal) => {
 })
 
 const navLinks = computed(() => [
-  { name: 'All Tasks', filter: '', active: route.query.filter == null },
+  { name: 'All Tasks', filter: '', active: route.query.filter == '' || route.query.filter == null },
   // {
   //   name: 'Recently Added',
   //   filter: 'recently_added',
