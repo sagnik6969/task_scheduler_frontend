@@ -58,11 +58,11 @@ const route = useRoute()
 const email = ref('')
 const password = ref('')
 
-const redirectUrl = route.query.redirect || '/home'
+const redirectUrl = route.query.redirect || '/'
 
 const handleSubmit = () => {
-  console.log(email.value)
-  console.log(password.value)
+  // console.log(email.value)
+  // console.log(password.value)
 
   store
     .dispatch('login', {

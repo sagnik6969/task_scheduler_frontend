@@ -21,17 +21,15 @@ const store = createStore({
 
   actions: {
     tryLogIn(context) {
-      return new Promise((resolve) => {
+      return new Promise((resolve, reject) => {
         axios
           .get('/api/user')
           .then((res) => {
             context.commit('setUser', res.data)
-          })
-          .catch((err) => {
-            console.log(err)
-          })
-          .finally(() => {
             resolve()
+          })
+          .catch(() => {
+            reject()
           })
       })
     },
@@ -70,7 +68,8 @@ const store = createStore({
           .post('/api/register', {
             name: name,
             email: email,
-            password: password
+            password: password,
+            password_confirmation: password
           })
           .then(() => {
             resolve('Registered Successfully')
