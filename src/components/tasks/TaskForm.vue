@@ -26,8 +26,10 @@
           placeholder="Add description..."
           v-model="description"
         ></textarea>
-        <div class="mb-2 text-slate-600 flex items-center justify-between">
-          <div class="flex space-x-2">
+        <div
+          class="mb-2 text-slate-600 flex sm:items-center justify-between flex-col sm:flex-row space-y-3 sm:space-y-0 items-start"
+        >
+          <div class="flex flex-col sm:flex-row sm:space-x-2 space-y-3 sm:space-y-0">
             <VueDatePicker
               model-type="yyyy-MM-dd hh:mm:ss"
               placeholder="Set Due Date"
