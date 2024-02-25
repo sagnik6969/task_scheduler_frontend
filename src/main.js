@@ -6,4 +6,7 @@ import router from './router/index.js'
 
 import { createApp } from 'vue'
 import App from './App.vue'
-createApp(App).use(vutify).use(router).mount('#app')
+import store from './store/index'
+
+
+createApp(App).use(store).use(vutify).use(router).mount('#app');

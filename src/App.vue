@@ -1,4 +1,5 @@
 <template>
+
   <div class="flex h-screen">
     <Sidebar></Sidebar>
     <!-- <dash-board class="flex-grow"></dash-board> -->

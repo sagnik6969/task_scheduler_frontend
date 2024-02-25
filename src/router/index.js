@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+
 import DashBoard from '@/components/dashboard/DashBoard.vue'
 import TaskList from '@/components/dashboard/TaskList/TaskList.vue'
 import AdminDashboard from '../components/Admin/AdminDashboard.vue'
