@@ -38,20 +38,12 @@ const tasksLoading = ref(true)
 
 const store = useStore()
 onMounted(async () => {
-  // await axios.get('/sanctum/csrf-cookie')
-  // await axios.post('api/login', {
-  //   email: 'madelynn80@example.net',
-  //   password: 'password'
-  // })
-
-  axios
-    .get('/api/user/tasks')
-    .then((res) => {
-      tasks.value = res.data.data
-    })
-    .finally(() => {
-      tasksLoading.value = false
-    })
+  try {
+    const res = await axios.get('/api/user/tasks')
+    tasks.value = res.data.data
+  } finally {
+    tasksLoading.value = false
+  }
 })
 
 // watch(tasksLoading, (newValue) => {

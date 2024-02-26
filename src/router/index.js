@@ -6,6 +6,8 @@ import AdminDashboard from '../components/Admin/AdminDashboard.vue'
 import LoginForm from '@/components/auth/LoginForm.vue'
 import RegisterForm from '@/components/auth/RegisterForm.vue'
 import Logout from '@/components/auth/Logout.vue'
+import ManageTasks from '@/components/Manangednd/ManageTasks.vue'
+import UserProfile from '@/components/Profile/UserProfile.vue'
 import Home from '../Home.vue'
 export default createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -34,9 +36,10 @@ export default createRouter({
         },
         {
           path: '/settings',
-          name: 'Settings'
+          name: 'Settings',
+          component: UserProfile
         },
-        { path: '/manage-tasks', name: 'ManageTasks' }
+        { path: '/manage-tasks', name: 'ManageTasks', component: ManageTasks }
       ]
     },
     {

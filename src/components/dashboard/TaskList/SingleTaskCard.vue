@@ -1,6 +1,9 @@
 <template>
   <div
     class="rounded-lg bg-sky-200 text-slate-900 px-6 py-4 flex justify-between items-center flex-col lg:flex-row text-center lg:text-left space-y-3 lg:space-y-0 space-x-2"
+    draggable="true"
+    @dragstart="onDragStart($event, task)"
+    @dragend="onDragEnd($event)"
   >
     <div class="flex-1">
       <h1 class="font-bold text-lg">{{ title }}</h1>
@@ -21,6 +24,7 @@
     </teleport>
   </div>
 </template>
+
 <script setup>
 import ProgressBar from '@/components/ui/ProgressBar.vue'
 import IconButton from '@/components/ui/IconButton.vue'
