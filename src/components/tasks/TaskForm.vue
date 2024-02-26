@@ -65,30 +65,32 @@ import VueDatePicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
 import { ref, watch } from 'vue'
 import axios from 'axios'
+import { useToast } from 'vue-toast-notification'
 
 const emit = defineEmits(['close'])
+const toast = useToast()
 
 const date = ref(null)
 const title = ref('')
 const description = ref('')
 const priority = ref('')
 
-watch(priority, (newVal) => {
-  console.log(newVal)
-})
-
-const handleSubmit = async () => {
-  try {
-    const res = await axios.post('api/user/tasks', {
+const handleSubmit = () => {
+  axios
+    .post('api/user/tasks', {
       title: title.value,
       description: description.value,
       deadline: date.value,
       priority: priority.value
     })
-    emit('close')
-  } catch {
-    console.log(err)
-  }
+    .then(() => {
+      toast.success('Task added successfully')
+      emit('close')
+    })
+    .catch((err) => {
+      toast.error('Something went wrong')
+      // console.log(err)
+    })
 }
 // onMounted(async () => {
 //   await axios.get('/sanctum/csrf-cookie')
