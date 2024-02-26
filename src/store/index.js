@@ -18,6 +18,9 @@ const store = createStore({
     },
     userName(state) {
       return state.user.name
+    },
+    User(state) {
+      return state.user
     }
   },
   mutations: {

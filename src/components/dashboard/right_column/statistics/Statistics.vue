@@ -3,7 +3,7 @@
     <h1 class="text-2xl font-semibold text-slate-900">Your Statistics</h1>
     <div class="mt-3 space-x-3">
       <select
-        class="border-none focus:[box-shadow:none] bg-slate-200 rounded-md shadow font-medium text-slate-900"
+        class="border-none focus:[box-shadow:none] bg-black rounded-md shadow font-medium text-white"
         v-model="statistics"
       >
         <option value="completed_vs_pending_tasks" selected>Completed vs Pending Tasks</option>
@@ -12,7 +12,7 @@
         <!-- <option value="">Task Distribution by Deadline</option> -->
       </select>
       <select
-        class="border-none focus:[box-shadow:none] bg-slate-200 rounded-md shadow font-medium text-slate-900"
+        class="border-none focus:[box-shadow:none] bg-black rounded-md shadow font-medium text-white"
         v-model="timeFilter"
       >
         <option value="last_hour">Last Hour</option>
@@ -29,7 +29,7 @@
     </div>
     <apexchart
       v-else
-      class="-z-10 relative mt-5"
+      class="-z-10 relative mt-5 shadow-md rounded-xl border-black border-2 bg-yellow-300"
       width="500"
       type="donut"
       :options="options"
@@ -56,22 +56,22 @@ const labels = ref([])
 const timeFilter = ref('all')
 const statistics = ref('completed_vs_pending_tasks')
 
-watchEffect(() => {
-  statLoading.value = true
-  axios
-    .get(`/api/user/analysis`, {
+watchEffect(async () => {
+  try {
+    statLoading.value = true
+    const res = await axios.get(`/api/user/analysis`, {
       params: {
         time_range: timeFilter.value,
         statistics: statistics.value
       }
     })
-    .then((res) => {
-      console.log(res.data)
-      series.value = res.data.series
-      labels.value = res.data.labels
-    })
-    .finally(() => {
-      statLoading.value = false
-    })
+    series.value = res.data.series
+    labels.value = res.data.labels
+    statLoading.value = false
+  } catch {
+    statLoading.value = false
+  } finally {
+    statLoading.value = false
+  }
 })
 </script>
