@@ -29,7 +29,7 @@
     </div>
     <apexchart
       v-else
-      class="-z-10 relative mt-5 shadow-md rounded-xl border-black border-2 bg-yellow-300"
+      class="-z-10 relative mt-5 shadow-md rounded-xl border-black border-2 bg-white"
       width="500"
       type="donut"
       :options="options"

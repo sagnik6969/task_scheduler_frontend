@@ -1,6 +1,6 @@
 <template>
   <button
-    class="py-2 px-3 space-x-2 flex items-center font-medium bg-slate-100 hover:bg-slate-200 rounded-md duration-300"
+    class="py-2 px-6 space-x-2 flex border-2 border-black items-center font-medium bg-black text-white hover:bg-green-200 hover:text-black rounded-md duration-300"
   >
     <v-icon v-if="icon" :icon="icon"></v-icon>
     <span>

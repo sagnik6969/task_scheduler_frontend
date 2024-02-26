@@ -9,7 +9,7 @@
       <v-icon icon="mdi-arrow-right-thin"></v-icon>
     </button>
     <button
-      class="m-3 rounded-2xl px-6 py-2 border-2 border-slate-900 font-medium bg-slate-900 text-slate-100 flex-1 hover:opacity-90 duration-300 flex items-center justify-center space-x-1"
+      class="m-3 rounded-full px-6 py-2 border-2 border-slate-900 font-medium bg-black text-slate-100 flex-1 hover:bg-green-300 hover:text-black duration-300 flex items-center justify-center space-x-1"
       @click="isTaskFormVisible = true"
     >
       Add Task
