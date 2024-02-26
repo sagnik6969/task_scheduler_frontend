@@ -18,6 +18,7 @@
     </div>
 
     <div class="right flex-initial xl:flex-[0.4_0.4_0%] px-4 py-4 xl:py-0">
+      <user-notification-bar></user-notification-bar>
       <task-counter></task-counter>
       <statistics class="mt-5"></statistics>
     </div>
@@ -29,6 +30,7 @@ import axios from 'axios'
 import { onMounted, ref, computed } from 'vue'
 import GreetingVue from './Greeting.vue'
 import ActionBar from './ActionBar.vue'
+import UserNotificationBar from './right_column/notifications/UserNotificationBar.vue'
 
 import TaskCounter from './right_column/TaskCounter.vue'
 import Statistics from './right_column/statistics/Statistics.vue'
