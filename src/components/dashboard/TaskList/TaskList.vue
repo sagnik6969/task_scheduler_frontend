@@ -1,7 +1,11 @@
 <template>
   <div>
     <h1 class="text-3xl font-bold text-slate-900">Tasks</h1>
-    <search-box v-model="searchText" class="mt-2"></search-box>
+    <search-box
+      v-model="searchText"
+      placeholder="Search tasks....."
+      class="mt-2 font-medium"
+    ></search-box>
     <task-list-nav class="mt-4" :nav-links="navLinks"></task-list-nav>
     <div class="mt-4">
       <single-task-card
