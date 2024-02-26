@@ -3,7 +3,7 @@
     <button
       class="m-3 font-medium border-2 border-slate-900 rounded-2xl px-6 py-2 flex-1 hover:bg-slate-900 hover:text-slate-100 duration-300 flex items-center justify-center space-x-1"
       @click="$router.push('/admin')"
-      v-if="$store.state.user.is_admin"
+      v-if="$store?.state?.user?.is_admin"
     >
       <span> Admin Dashboard </span>
       <v-icon icon="mdi-arrow-right-thin"></v-icon>

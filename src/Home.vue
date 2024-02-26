@@ -19,14 +19,12 @@ const router = useRouter()
 
 const isLoading = ref(true)
 
-onMounted(() => {
-  store
-    .dispatch('tryLogIn')
-    .then(() => {
-      isLoading.value = false
-    })
-    .catch(() => {
-      router.push('/login')
-    })
+onMounted(async () => {
+  try {
+    await store.dispatch('tryLogIn')
+    isLoading.value = false
+  } catch {
+    router.push('/login')
+  }
 })
 </script>

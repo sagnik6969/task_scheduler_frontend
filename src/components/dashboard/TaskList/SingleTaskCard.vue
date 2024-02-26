@@ -1,6 +1,9 @@
 <template>
   <div
     class="rounded-lg bg-sky-200 text-slate-900 px-6 py-4 flex justify-between items-center flex-col lg:flex-row text-center lg:text-left space-y-3 lg:space-y-0 space-x-2"
+    draggable="true"
+    @dragstart="onDragStart($event, task)"
+    @dragend="onDragEnd($event)"
   >
     <div class="flex-1">
       <h1 class="font-bold text-lg">{{ title }}</h1>
@@ -14,10 +17,12 @@
     <icon-button class="bg-slate-900 text-slate-100 hover:bg-slate-950">View</icon-button>
   </div>
 </template>
+
 <script setup>
 import ProgressBar from '@/components/ui/ProgressBar.vue'
 import IconButton from '@/components/ui/IconButton.vue'
 import { computed } from 'vue'
+
 const { task } = defineProps(['task'])
 
 const title = computed(() => {
@@ -56,4 +61,15 @@ const remainingTime = computed(() => {
     'h'
   )
 })
+
+const onDragStart = (event, draggedTask) => {
+  event.dataTransfer.setData(
+    'application/json',
+    JSON.stringify({ taskId: draggedTask.data.task_id, taskData: draggedTask.data })
+  )
+}
+
+const onDragEnd = (event) => {
+  event.dataTransfer.clearData()
+}
 </script>

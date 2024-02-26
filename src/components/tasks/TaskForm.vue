@@ -77,20 +77,18 @@ watch(priority, (newVal) => {
   console.log(newVal)
 })
 
-const handleSubmit = () => {
-  axios
-    .post('api/user/tasks', {
+const handleSubmit = async () => {
+  try {
+    const res = await axios.post('api/user/tasks', {
       title: title.value,
       description: description.value,
       deadline: date.value,
       priority: priority.value
     })
-    .then(() => {
-      emit('close')
-    })
-    .catch((err) => {
-      console.log(err)
-    })
+    emit('close')
+  } catch {
+    console.log(err)
+  }
 }
 // onMounted(async () => {
 //   await axios.get('/sanctum/csrf-cookie')
