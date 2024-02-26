@@ -9,10 +9,15 @@
           <label class="block text-black text-sm font-bold mb-2" for="username"> Email </label>
           <input
             class="shadow appearance-none border-2 border-black rounded w-full py-2 px-3 text-black leading-tight focus:outline-none focus:shadow-outline"
-            v-model="email"
+            v-model.trim="email"
             type="text"
             placeholder="Email"
+            required
+            @blur="validateEmail"
           />
+          <p v-if="emailValidity === 'invalid'" class="text-red-500 text-xs">
+            {{ emailValidityMessage }}
+          </p>
         </div>
         <div class="mb-4">
           <label class="block text-black text-sm font-bold mb-2" for="password"> Password </label>
@@ -20,6 +25,7 @@
             class="shadow appearance-none border-2 border-black rounded w-full py-2 px-3 text-black mb-3 leading-tight focus:outline-none focus:shadow-outline"
             v-model="password"
             type="password"
+            required
             placeholder="*******"
           />
         </div>
@@ -69,6 +75,9 @@ const router = useRouter()
 const route = useRoute()
 
 const email = ref('')
+const emailValidity = ref('')
+const emailValidityMessage = ref('')
+
 const password = ref('')
 const errorMessages = ref([])
 const redirectUrl = route.query.redirect || '/'
@@ -83,7 +92,22 @@ const handleSubmit = async () => {
         password: password.value
       })
       router.replace(redirectUrl)
-    } catch {}
+    } catch {
+      console.log('Login Failed')
+    }
+  }
+}
+
+const validateEmail = () => {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+  if (!email.value) {
+    emailValidity.value = 'invalid'
+    emailValidityMessage.value = 'Email cannot be empty'
+  } else if (!emailRegex.test(email.value)) {
+    emailValidity.value = 'invalid'
+    emailValidityMessage.value = 'Please enter a valid email'
+  } else {
+    emailValidity.value = 'valid'
   }
 }
 
