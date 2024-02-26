@@ -1,7 +1,7 @@
 <template>
   <div class="sm:flex w-full p-5 md:p-20 gap-5 h-full">
     <div
-      class="w-full sm:w-1/2 md:w-1/2 lg:w-1/2 xl:w-1/3 shadow-md border-2 border-black bg-orange-300 rounded-lg"
+      class="w-full sm:w-1/2 md:w-1/2 lg:w-1/2 xl:w-1/3 shadow-md border-2 border-black bg-green-200 rounded-lg"
     >
       <div class="flex justify-center items-center mt-5">
         <img
@@ -15,7 +15,7 @@
       </div>
       <div class="p-5 md:p-14 flex flex-col justify-start">
         <div
-          class="flex border-white border-2 bg-black text-white p-2 rounded-sm items-center w-full justify-between mb-2"
+          class="flex p-2 border-2 border-black rounded-sm items-center w-full justify-between mb-2"
         >
           <h1 class="text-lg sm:text-2xl font-semibold">My profile</h1>
           <p class="text-sm sm:text-md">
@@ -23,13 +23,15 @@
             <span class="text-xs sm:text-sm block">{{ formatDate(date) }}</span>
           </p>
         </div>
-        <div class="flex w-full text-black bg-white p-2 justify-between mb-2">
+        <div class="flex w-full border-2 border-black items-center p-2 justify-between mb-2">
           <h1 class="text-lg sm:text-2xl font-semibold">Email:</h1>
           <p class="text-sm sm:text-md">{{ Email }}</p>
         </div>
-        <div class="flex border-white border-2 w-full text-white bg-black p-2 justify-between">
+        <div class="flex items-center border-2 border-black w-full p-2 justify-between">
           <h1 class="text-lg sm:text-2xl font-semibold">Email Verified:</h1>
-          <p class="text-sm sm:text-md">{{ isverified ? 'Yes' : 'No' }}</p>
+          <p class="text-sm sm:text-md justify-center text-center">
+            {{ isverified ? 'Yes' : 'No' }}
+          </p>
         </div>
       </div>
     </div>
