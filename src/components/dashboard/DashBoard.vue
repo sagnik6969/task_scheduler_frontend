@@ -4,8 +4,8 @@
       class="left flex-initial xl:h-full xl:overflow-y-scroll [&::-webkit-scrollbar]:hidden px-4 xl:flex-[0.6_0.6_0%]"
     >
       <!-- [&::-webkit-scrollbar]:hidden => to hide the scroll bar -->
-      <greeting-vue></greeting-vue>
-      <action-bar class="mt-8"></action-bar>
+      <GreetingVue></GreetingVue>
+      <ActionBar class="mt-8" :isAdmin="isAdmin"></ActionBar>
       <div v-if="tasksLoading" class="text-center my-20 text-slate-900">
         <v-progress-circular
           :size="50"
@@ -22,7 +22,7 @@
         <div
           class="flex-1 bg-slate-200 rounded-lg py-6 px-6 flex justify-center items-center space-x-3"
         >
-          <h1 class="text-6xl font-extrabold text-slate-900">11</h1>
+          <h1 class="text-6xl font-extrabold text-slate-900">{{ completedTasks }}</h1>
           <div class="font-semibold text-slate-700">
             <p>Tasks</p>
             <p>completed</p>
@@ -32,7 +32,7 @@
         <div
           class="flex-1 bg-slate-200 rounded-lg py-6 px-6 flex justify-center items-center space-x-3"
         >
-          <h1 class="text-6xl font-extrabold text-slate-900">4</h1>
+          <h1 class="text-6xl font-extrabold text-slate-900">{{ inProgressTasks }}</h1>
           <div class="font-semibold text-slate-700">
             <p>Tasks</p>
             <p>in Progress</p>
@@ -42,16 +42,22 @@
     </div>
   </div>
 </template>
+
 <script setup>
 import axios from 'axios'
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, computed } from 'vue'
 import GreetingVue from './Greeting.vue'
 import ActionBar from './ActionBar.vue'
+import { useStore } from 'vuex'
+
 const tasks = ref([])
 const tasksLoading = ref(true)
 
+const store = useStore()
+const completedTasks = ref(0)
+const inProgressTasks = ref(0)
 onMounted(async () => {
-  // await axios.get('/sanctum/csrf-cookie')
+  await axios.get('/sanctum/csrf-cookie')
   // await axios.post('api/login', {
   //   email: 'madelynn80@example.net',
   //   password: 'password'
@@ -60,11 +66,21 @@ onMounted(async () => {
   axios
     .get('/api/user/tasks')
     .then((res) => {
-      // console.log(res.data)
       tasks.value = res.data.data
     })
     .finally(() => {
       tasksLoading.value = false
     })
+})
+
+// watch(tasksLoading, (newValue) => {
+//   if (!newValue) {
+//     completedTasks.value = tasks.value.filter((task) => task.attributes.is_completed).length
+//     inProgressTasks.value = tasks.value.filter((task) => !task.attributes.is_completed).length
+//   }
+// })
+
+const isAdmin = computed(() => {
+  return store.getters.isAdmin
 })
 </script>

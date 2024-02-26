@@ -3,6 +3,7 @@
     <button
       class="font-medium border-2 border-slate-900 rounded-2xl px-6 py-2 flex-1 hover:bg-slate-900 hover:text-slate-100 duration-300 flex items-center justify-center space-x-1"
       @click="$router.push('/admin')"
+      v-if="isAdmin"
     >
       <span> Admin Dashboard </span>
       <v-icon icon="mdi-arrow-right-thin"></v-icon>
@@ -23,4 +24,8 @@
 import TaskForm from '@/components/tasks/TaskForm.vue'
 import { ref } from 'vue'
 const isTaskFormVisible = ref(false)
+
+defineProps({
+  isAdmin: Boolean
+})
 </script>
