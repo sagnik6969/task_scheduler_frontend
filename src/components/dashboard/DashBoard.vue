@@ -3,8 +3,10 @@
     <div
       class="left flex-initial xl:h-full xl:overflow-y-scroll [&::-webkit-scrollbar]:hidden px-4 xl:flex-[0.6_0.6_0%]"
     >
+
       <greeting-vue></greeting-vue>
       <action-bar class="mt-8"></action-bar>
+
       <div v-if="tasksLoading" class="text-center my-20 text-slate-900">
         <v-progress-circular
           :size="50"
@@ -22,18 +24,23 @@
     </div>
   </div>
 </template>
+
 <script setup>
 import axios from 'axios'
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, computed } from 'vue'
 import GreetingVue from './Greeting.vue'
 import ActionBar from './ActionBar.vue'
+
 import TaskCounter from './right_column/TaskCounter.vue'
 import Statistics from './right_column/statistics/Statistics.vue'
 const tasks = ref([])
 const tasksLoading = ref(true)
 
+const store = useStore()
+const completedTasks = ref(0)
+const inProgressTasks = ref(0)
 onMounted(async () => {
-  // await axios.get('/sanctum/csrf-cookie')
+  await axios.get('/sanctum/csrf-cookie')
   // await axios.post('api/login', {
   //   email: 'madelynn80@example.net',
   //   password: 'password'
@@ -42,11 +49,21 @@ onMounted(async () => {
   axios
     .get('/api/user/tasks')
     .then((res) => {
-      // console.log(res.data)
       tasks.value = res.data.data
     })
     .finally(() => {
       tasksLoading.value = false
     })
+})
+
+// watch(tasksLoading, (newValue) => {
+//   if (!newValue) {
+//     completedTasks.value = tasks.value.filter((task) => task.attributes.is_completed).length
+//     inProgressTasks.value = tasks.value.filter((task) => !task.attributes.is_completed).length
+//   }
+// })
+
+const isAdmin = computed(() => {
+  return store.getters.isAdmin
 })
 </script>

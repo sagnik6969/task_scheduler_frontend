@@ -4,18 +4,28 @@ import axios from 'axios'
 const store = createStore({
   state() {
     return {
-      user: null
+      user: null,
+      admin: null
     }
   },
 
   getters: {
     isLoggedIn(state) {
       return state.user !== null
+    },
+    isAdmin(state) {
+      return state.admin
+    },
+    userName(state) {
+      return state.user.name
     }
   },
   mutations: {
     setUser(state, user) {
       state.user = user
+    },
+    adminStatus(state, res) {
+      state.admin = res
     }
   },
 
@@ -24,6 +34,7 @@ const store = createStore({
       try {
         const res = await axios.get('/api/user')
         context.commit('setUser', res.data)
+        context.commit('adminStatus', res.data.is_admin)
       } catch (err) {
         console.log(err)
       }

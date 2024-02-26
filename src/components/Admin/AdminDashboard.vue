@@ -19,6 +19,8 @@ import axios from 'axios'
 import AdminSectionSelector from './AdminSectionSelector.vue'
 import AdminContent from './AdminContent.vue'
 import GreetingVue from '../dashboard/Greeting.vue'
+// import { useStore } from 'vuex'
+// const store = useStore()
 export default {
   data() {
     return {
@@ -27,8 +29,13 @@ export default {
       users: []
     }
   },
+  // computed:{
+  //   userName(){
+  //     return store.getters.userName
+  //   }
+  // },
   created() {
-    this.currentUser = JSON.parse(localStorage.getItem('currentUser'))
+    // this.currentUser = store.getters.userName
     this.fetchData()
   },
   methods: {
