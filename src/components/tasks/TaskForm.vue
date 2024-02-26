@@ -65,17 +65,15 @@ import VueDatePicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
 import { ref, watch } from 'vue'
 import axios from 'axios'
+import { useToast } from 'vue-toast-notification'
 
 const emit = defineEmits(['close'])
+const toast = useToast()
 
 const date = ref(null)
 const title = ref('')
 const description = ref('')
 const priority = ref('')
-
-watch(priority, (newVal) => {
-  console.log(newVal)
-})
 
 const handleSubmit = () => {
   axios
@@ -86,10 +84,12 @@ const handleSubmit = () => {
       priority: priority.value
     })
     .then(() => {
+      toast.success('Task added successfully')
       emit('close')
     })
     .catch((err) => {
-      console.log(err)
+      toast.error('Something went wrong')
+      // console.log(err)
     })
 }
 // onMounted(async () => {

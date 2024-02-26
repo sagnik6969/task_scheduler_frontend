@@ -11,23 +11,33 @@
       <span class="font-medium text-slate-600">{{ remainingTime }}</span>
     </div>
     <progress-bar class="flex-1" :percentage="task.data.attributes.progress"></progress-bar>
-    <icon-button class="bg-slate-900 text-slate-100 hover:bg-slate-950">View</icon-button>
+    <icon-button
+      class="bg-slate-900 text-slate-100 hover:bg-slate-950"
+      @click="taskDetailsIsVisible = true"
+      >View</icon-button
+    >
+    <teleport to="body" v-if="taskDetailsIsVisible">
+      <display-task :task="task" @close="taskDetailsIsVisible = false"></display-task>
+    </teleport>
   </div>
 </template>
 <script setup>
 import ProgressBar from '@/components/ui/ProgressBar.vue'
 import IconButton from '@/components/ui/IconButton.vue'
-import { computed } from 'vue'
-const { task } = defineProps(['task'])
+import DisplayTask from '@/components/tasks/DisplayTask.vue'
+import { computed, ref } from 'vue'
+const props = defineProps(['task'])
+
+const task = computed(() => props.task)
 
 const title = computed(() => {
-  const fullTitle = task.data.attributes.title
+  const fullTitle = task.value.data.attributes.title
   if (fullTitle.length <= 14) return fullTitle
   return fullTitle.substring(0, 12) + '...'
 })
 
 const remainingTime = computed(() => {
-  const mySQLDate = task.data.attributes.deadline
+  const mySQLDate = task.value.data.attributes.deadline
   const deadline = new Date(Date.parse(mySQLDate.replace(/-/g, '/')))
   const today = new Date()
 
@@ -56,4 +66,6 @@ const remainingTime = computed(() => {
     'h'
   )
 })
+
+const taskDetailsIsVisible = ref(false)
 </script>

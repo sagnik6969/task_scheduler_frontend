@@ -4,9 +4,11 @@ import '@mdi/font/css/materialdesignicons.css'
 import vutify from './vutify.js'
 import router from './router/index.js'
 import VueApexCharts from 'vue3-apexcharts'
+import ToastPlugin from 'vue-toast-notification'
+import 'vue-toast-notification/dist/theme-sugar.css'
 
 import { createApp } from 'vue'
 import App from './App.vue'
 import store from './store/index'
 
-createApp(App).use(store).use(vutify).use(router).use(VueApexCharts).mount('#app')
+createApp(App).use(store).use(vutify).use(router).use(VueApexCharts).use(ToastPlugin).mount('#app')
