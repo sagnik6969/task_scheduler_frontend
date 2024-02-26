@@ -30,14 +30,18 @@ const store = createStore({
   },
 
   actions: {
-    async tryLogIn(context) {
-      try {
-        const res = await axios.get('/api/user')
-        context.commit('setUser', res.data)
-        context.commit('adminStatus', res.data.is_admin)
-      } catch (err) {
-        console.log(err)
-      }
+    tryLogIn(context) {
+      return new Promise((resolve, reject) => {
+        axios
+          .get('/api/user')
+          .then((res) => {
+            context.commit('setUser', res.data)
+            resolve()
+          })
+          .catch(() => {
+            reject()
+          })
+      })
     },
     async login(context, payload) {
       const email = payload.email
