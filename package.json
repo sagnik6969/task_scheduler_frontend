@@ -20,6 +20,7 @@
     "vue": "^3.4.15",
     "vue-chartjs": "^5.3.0",
     "vue-router": "^4.3.0",
+    "vue3-apexcharts": "^1.5.2",
     "vuetify": "^3.5.6",
     "vuex": "^4.1.0"
   },

@@ -40,7 +40,7 @@
         </router-link>
       </div>
     </div>
-    <div v-else class="absolute bg-black">
+    <div v-else class="absolute bg-black max-h-screen overflow-hidden">
       <div class="flex justify-center items-center p-4">
         <button class="focus:outline-none" @click="toggle">
           <span :class="{ 'rotate-90': open }" class="material-icons text-white">{{

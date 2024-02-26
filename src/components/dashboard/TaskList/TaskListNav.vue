@@ -1,5 +1,5 @@
 <template>
-  <div class="flex space-x-10 font-bold text-slate-500">
+  <div class="sm:flex space-x-10 font-bold text-slate-500 hidden">
     <router-link
       v-for="link in navLinks"
       :key="link.name"
