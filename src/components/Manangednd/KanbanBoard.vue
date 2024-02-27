@@ -1,5 +1,5 @@
 <template>
-  <div class="grid grid-cols-3 gap-2">
+  <div class="grid grid-row h-[650px] w-2/5 my-10 fixed gap-2">
     <div
       class="flex flex-col items-center border-dashed border-black border-2 bg-green-200"
       @drop="onDrop('completedTasks')"
