@@ -100,7 +100,7 @@ watch(date, (newVal) => {
 const priorityOptions = computed(() => ({
   normal: taskCopy.data.attributes.priority == 'normal' ? 'Modify Priority' : 'normal',
   important: taskCopy.data.attributes.priority == 'important' ? 'Modify Priority' : 'important',
-  very_important:
+  'very important':
     taskCopy.data.attributes.priority == 'very_important' ? 'Modify Priority' : 'very_important'
 }))
 

@@ -95,12 +95,11 @@ const sortFn = computed(() => {
 })
 
 const filteredTasks = computed(() => {
+  const searchQuery = searchText.value.toLowerCase()
   return props.tasks.toSorted(sortFn.value).filter((task) => {
-    return (
-      searchText.value == '' ||
-      task.data.attributes.title.includes(searchText.value) ||
-      task.data.attributes.description.includes(searchText.value)
-    )
+    const title = task.data.attributes.title.toLowerCase()
+    const description = task.data.attributes.description.toLowerCase()
+    return searchQuery === '' || title.includes(searchQuery) || description.includes(searchQuery)
   })
 })
 

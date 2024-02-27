@@ -1,8 +1,6 @@
 <template>
   <div class="sm:flex w-full p-5 md:p-20 gap-5 h-full">
-    <div
-      class="w-full sm:w-1/2 md:w-1/2 lg:w-1/2 xl:w-1/3 shadow-md border-2 border-black bg-green-200 rounded-lg"
-    >
+    <div class="shadow-md border-2 border-black bg-green-200 rounded-lg">
       <div class="flex justify-center items-center mt-5">
         <img
           class="object-cover rounded-full h-48 w-48 min-h-12 min-w-12"
@@ -27,17 +25,14 @@
           <h1 class="text-lg sm:text-2xl font-semibold">Email:</h1>
           <p class="text-sm sm:text-md">{{ Email }}</p>
         </div>
-        <div class="flex items-center border-2 border-black w-full p-2 justify-between">
-          <h1 class="text-lg sm:text-2xl font-semibold">Email Verified:</h1>
-          <p class="text-sm sm:text-md justify-center text-center">
-            {{ isverified ? 'Yes' : 'No' }}
-          </p>
-        </div>
       </div>
     </div>
-    <div class="flex flex-col w-full sm:w-1/2 md:w-1/2 lg:w-1/2 xl:w-2/3">
+    <div class="flex flex-col w-full sm:w-1/2 md:w-1/2 lg:w-1/3 xl:w-2/3">
       <TaskCounter />
-      <Statistics />
+      <div class="flex">
+        <Statistics class="xl:w-[500px]" />
+        <Efficiency />
+      </div>
     </div>
   </div>
 </template>
@@ -45,6 +40,7 @@
 <script setup>
 import TaskCounter from '@/components/dashboard/right_column/TaskCounter.vue'
 import Statistics from '@/components/dashboard/right_column/statistics/Statistics.vue'
+import Efficiency from '@/components/dashboard/right_column/Efficiency.vue'
 import { useStore } from 'vuex'
 const store = useStore()
 const name = store.getters.userName
@@ -52,14 +48,29 @@ const date = store.getters.User.created_at
 const Email = store.getters.User.email
 const isverified = store.getters.User.email_verified_at
 const formatDate = (dateString) => {
-  const options = {
-    year: 'numeric',
-    month: 'short',
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit'
+  const currentDate = new Date()
+  const date = new Date(dateString)
+  const timeDifference = currentDate.getTime() - date.getTime()
+
+  const seconds = Math.floor(timeDifference / 1000)
+  const minutes = Math.floor(seconds / 60)
+  const hours = Math.floor(minutes / 60)
+  const days = Math.floor(hours / 24)
+  const months = Math.floor(days / 30)
+  const years = Math.floor(days / 365)
+
+  if (years > 0) {
+    return `${years} year${years > 1 ? 's' : ''} ago`
+  } else if (months > 0) {
+    return `${months} month${months > 1 ? 's' : ''} ago`
+  } else if (days > 0) {
+    return `${days} day${days > 1 ? 's' : ''} ago`
+  } else if (hours > 0) {
+    return `${hours} hour${hours > 1 ? 's' : ''} ago`
+  } else if (minutes > 0) {
+    return `${minutes} minute${minutes > 1 ? 's' : ''} ago`
+  } else {
+    return `${seconds} second${seconds > 1 ? 's' : ''} ago`
   }
-  const formattedDate = new Date(dateString).toLocaleString('en-US', options)
-  return formattedDate
 }
 </script>
