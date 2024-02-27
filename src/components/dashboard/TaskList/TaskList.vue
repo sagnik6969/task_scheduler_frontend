@@ -23,7 +23,17 @@
         </select>
       </div>
     </div>
-    <div class="mt-4">
+
+    <div
+      v-if="
+        $store.getters.userTasksLoadingStatus == 'loading' ||
+        $store.getters.userTasksLoadingStatus == null
+      "
+      class="text-center my-20 text-slate-900"
+    >
+      <v-progress-circular :size="50" :width="5" color="purple" indeterminate></v-progress-circular>
+    </div>
+    <div v-else class="mt-4">
       <single-task-card
         v-for="task in filteredTasks"
         :key="task.data.task_id"
@@ -39,18 +49,25 @@ import SearchBox from '@/components/ui/SearchBox.vue'
 import SingleTaskCard from './SingleTaskCard.vue'
 import TaskListNav from './TaskListNav.vue'
 
-import { computed, ref, watch } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import sortByDeadLine from './filter_functions/sortByDeadline.js'
 import sortByPriority from './filter_functions/sortByPriority.js'
 import sortByProgress from './filter_functions/sortByProgress.js'
+import { useStore } from 'vuex'
 
-const props = defineProps(['tasks'])
+// const props = defineProps(['tasks'])
 
 const route = useRoute()
 const router = useRouter()
+const store = useStore()
 const searchText = ref(route.query.search || '')
 const showFilter = ref(route.query.filter || 'latest_tasks')
+
+onMounted(() => {
+  const taskLoadingStatus = store.getters.userTasksLoadingStatus
+  if (taskLoadingStatus == null) store.dispatch('fetchUserTasks')
+})
 
 watch(searchText, (newVal) => {
   router.push({
@@ -96,12 +113,16 @@ const sortFn = computed(() => {
 
 const filteredTasks = computed(() => {
   const searchQuery = searchText.value.toLowerCase()
-  return props.tasks.toSorted(sortFn.value).filter((task) => {
+  return store.getters.userTasks.toSorted(sortFn.value).filter((task) => {
     const title = task.data.attributes.title.toLowerCase()
-    const description = task.data.attributes.description.toLowerCase()
+    const description = task.data.attributes.description?.toLowerCase() || ''
     return searchQuery === '' || title.includes(searchQuery) || description.includes(searchQuery)
   })
 })
+
+// watch(filteredTasks, () => {
+//   console.log(filteredTasks)
+// })
 
 const sortByLatestTasks = (taskA, taskB) => {
   return new Date(taskB.data.attributes.created_at) - new Date(taskA.data.attributes.created_at)
