@@ -42,9 +42,9 @@
             </VueDatePicker>
             <icon-select v-model="priority" icon="mdi-priority-high" :required="true">
               <option hidden selected value="">Select Task Priority</option>
-              <option value="normal">Normal</option>
-              <option value="important">Important</option>
-              <option value="very_important">Very Important</option>
+              <option value="Normal">Normal</option>
+              <option value="Important">Important</option>
+              <option value="Very Important">Very Important</option>
             </icon-select>
           </div>
           <div class="flex space-x-2">

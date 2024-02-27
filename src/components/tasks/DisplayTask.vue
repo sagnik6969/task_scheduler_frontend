@@ -26,21 +26,14 @@
           v-model="taskCopy.data.attributes.progress"
           id="task_progress"
         />
-        <!-- <button
-          @click="updateProgress"
-          class="bg-blue-700 text-slate-100 px-4 py-0.5 rounded-3xl disabled:bg-slate-400 disabled:cursor-not-allowed duration-300"
-          :disabled="taskCopy.data.attributes.progress == taskProgress"
-        >
-          Set
-        </button> -->
       </div>
       <div class="mt-5 flex justify-between space-x-2">
         <div class="flex items-center space-x-2 font-medium text-slate-900">
           <input
+            v-model="taskCopy.data.attributes.is_completed"
             type="checkbox"
-            :checked="taskCopy.data.attributes.is_completed"
+            name=""
             id="mark-as-complete"
-            @change="taskCopy.data.attributes.is_completed = !taskCopy.data.attributes.is_completed"
           />
           <label for="mark-as-complete">Mark as complete</label>
         </div>
@@ -89,7 +82,7 @@ import { useToast } from 'vue-toast-notification'
 
 const props = defineProps(['task'])
 const taskCopy = reactive(props.task)
-
+console.log(taskCopy.data.attributes.is_completed)
 const toast = useToast()
 const date = ref(null)
 
@@ -98,16 +91,18 @@ watch(date, (newVal) => {
 })
 
 const priorityOptions = computed(() => ({
-  normal: taskCopy.data.attributes.priority == 'normal' ? 'Modify Priority' : 'normal',
-  important: taskCopy.data.attributes.priority == 'important' ? 'Modify Priority' : 'important',
-  very_important:
-    taskCopy.data.attributes.priority == 'very_important' ? 'Modify Priority' : 'very_important'
+  Normal: taskCopy.data.attributes.priority == 'Normal' ? 'Modify Priority' : 'Normal',
+  Important: taskCopy.data.attributes.priority == 'Important' ? 'Modify Priority' : 'Important',
+  'Very Important':
+    taskCopy.data.attributes.priority == 'Very Important' ? 'Modify Priority' : 'Very Important'
 }))
 
-watch(taskCopy, async () => {
+watch(taskCopy, () => {
+  console.log(priorityOptions)
+  //   console.log(taskCopy)
   if (props.task == taskCopy.value) return
-  try {
-    await axios.put(`/api/user/tasks/${taskCopy.data.task_id}`, {
+  axios
+    .put(`/api/user/tasks/${taskCopy.data.task_id}`, {
       //   id: taskCopy.value.data.attributes.user_id,
       title: taskCopy.data.attributes.title,
       description: taskCopy.data.attributes.description,
@@ -116,11 +111,15 @@ watch(taskCopy, async () => {
       progress: taskCopy.data.attributes.progress,
       priority: taskCopy.data.attributes.priority
     })
-    toast.success('Task updated successfully')
-  } catch {
-    toast.error('something went wrong')
-  }
+    .then(() => {
+      toast.success('task updated successfully')
+    })
+    .catch(() => {
+      toast.error('Something went wrong please try again')
+    })
 })
+
+// console.log(taskCopy.value)
 </script>
 
 <style>
