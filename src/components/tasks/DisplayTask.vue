@@ -98,16 +98,16 @@ watch(date, (newVal) => {
 })
 
 const priorityOptions = computed(() => ({
-  Normal: taskCopy.data.attributes.priority == 'Normal' ? 'Modify Priority' : 'Normal',
-  Important: taskCopy.data.attributes.priority == 'Important' ? 'Modify Priority' : 'Important',
-  'Very Important':
-    taskCopy.data.attributes.priority == 'Very Important' ? 'Modify Priority' : 'Very Important'
+  normal: taskCopy.data.attributes.priority == 'normal' ? 'Modify Priority' : 'normal',
+  important: taskCopy.data.attributes.priority == 'important' ? 'Modify Priority' : 'important',
+  very_important:
+    taskCopy.data.attributes.priority == 'very_important' ? 'Modify Priority' : 'very_important'
 }))
 
-watch(taskCopy, () => {
+watch(taskCopy, async () => {
   if (props.task == taskCopy.value) return
-  axios
-    .put(`/api/user/tasks/${taskCopy.data.task_id}`, {
+  try {
+    await axios.put(`/api/user/tasks/${taskCopy.data.task_id}`, {
       //   id: taskCopy.value.data.attributes.user_id,
       title: taskCopy.data.attributes.title,
       description: taskCopy.data.attributes.description,
@@ -116,12 +116,10 @@ watch(taskCopy, () => {
       progress: taskCopy.data.attributes.progress,
       priority: taskCopy.data.attributes.priority
     })
-    .then(() => {
-      toast.success('task updated successfully')
-    })
-    .catch(() => {
-      toast.error('Something went wrong please try again')
-    })
+    toast.success('Task updated successfully')
+  } catch {
+    toast.error('something went wrong')
+  }
 })
 </script>
 
