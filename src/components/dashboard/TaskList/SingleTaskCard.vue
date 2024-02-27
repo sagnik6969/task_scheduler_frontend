@@ -68,6 +68,5 @@ const remainingTime = computed(() => {
     'h'
   )
 })
-
 const taskDetailsIsVisible = ref(false)
 </script>

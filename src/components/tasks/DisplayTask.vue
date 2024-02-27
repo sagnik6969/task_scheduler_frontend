@@ -37,10 +37,10 @@
       <div class="mt-5 flex justify-between space-x-2">
         <div class="flex items-center space-x-2 font-medium text-slate-900">
           <input
-            v-model="taskCopy.data.attributes.is_completed"
             type="checkbox"
-            name=""
+            :checked="taskCopy.data.attributes.is_completed"
             id="mark-as-complete"
+            @change="taskCopy.data.attributes.is_completed = !taskCopy.data.attributes.is_completed"
           />
           <label for="mark-as-complete">Mark as complete</label>
         </div>
@@ -89,6 +89,7 @@ import { useToast } from 'vue-toast-notification'
 
 const props = defineProps(['task'])
 const taskCopy = reactive(props.task)
+
 const toast = useToast()
 const date = ref(null)
 
@@ -104,8 +105,6 @@ const priorityOptions = computed(() => ({
 }))
 
 watch(taskCopy, () => {
-  console.log(priorityOptions)
-  //   console.log(taskCopy)
   if (props.task == taskCopy.value) return
   axios
     .put(`/api/user/tasks/${taskCopy.data.task_id}`, {
@@ -124,8 +123,6 @@ watch(taskCopy, () => {
       toast.error('Something went wrong please try again')
     })
 })
-
-// console.log(taskCopy.value)
 </script>
 
 <style>
