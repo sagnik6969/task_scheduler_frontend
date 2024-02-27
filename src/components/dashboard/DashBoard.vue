@@ -1,5 +1,5 @@
 <template>
-  <div class="px-10 pt-6 flex xl:flex-row flex-col h-full overflow-scroll">
+  <div class="px-10 pt-6 flex xl:flex-row xl:mt-0 flex-col h-full md:ml-10 mt-12">
     <div
       class="left flex-initial xl:h-full xl:overflow-y-scroll [&::-webkit-scrollbar]:hidden px-4 xl:flex-[0.6_0.6_0%]"
     >
@@ -18,7 +18,9 @@
     </div>
 
     <div class="right flex-initial xl:flex-[0.4_0.4_0%] px-4 py-4 xl:py-0">
-      <user-notification-bar></user-notification-bar>
+      <user-notification-bar
+        class="fixed top-0 right-0 left-0 z-0 py-3 pr-14 w-full bg-white xl:static xl:mr-0 xl:mt-0 xl:pr-0"
+      ></user-notification-bar>
       <task-counter></task-counter>
       <statistics class="mt-5"></statistics>
     </div>
