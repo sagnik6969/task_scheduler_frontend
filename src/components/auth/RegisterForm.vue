@@ -91,6 +91,7 @@ import axios from 'axios'
 import { onMounted } from 'vue'
 import { ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { useToast } from 'vue-toast-notification'
 import { useStore } from 'vuex'
 
 const store = useStore()
@@ -114,7 +115,8 @@ const confirmPasswordValidity = ref(null)
 const confirmPasswordValidityMessage = ref(null)
 
 const errorMessages = ref([])
-const redirectUrl = route.query.redirect || '/login'
+// const redirectUrl = route.query.redirect || '/login'
+const toast = useToast()
 
 const handleSubmit = async () => {
   if (
@@ -131,7 +133,9 @@ const handleSubmit = async () => {
         email: email.value,
         password: password.value
       })
-      router.replace(redirectUrl)
+
+      toast.success('Verification email sent. Check your mailbox for more details')
+      // router.replace(redirectUrl)
     } catch {
       console.log('error')
     }
