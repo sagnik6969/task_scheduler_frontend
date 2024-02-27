@@ -26,13 +26,6 @@
           v-model="taskCopy.data.attributes.progress"
           id="task_progress"
         />
-        <!-- <button
-          @click="updateProgress"
-          class="bg-blue-700 text-slate-100 px-4 py-0.5 rounded-3xl disabled:bg-slate-400 disabled:cursor-not-allowed duration-300"
-          :disabled="taskCopy.data.attributes.progress == taskProgress"
-        >
-          Set
-        </button> -->
       </div>
       <div class="mt-5 flex justify-between space-x-2">
         <div class="flex items-center space-x-2 font-medium text-slate-900">
@@ -89,6 +82,7 @@ import { useToast } from 'vue-toast-notification'
 
 const props = defineProps(['task'])
 const taskCopy = reactive(props.task)
+console.log(taskCopy.data.attributes.is_completed)
 const toast = useToast()
 const date = ref(null)
 

@@ -42,9 +42,9 @@
             </VueDatePicker>
             <icon-select v-model="priority" icon="mdi-priority-high" :required="true">
               <option hidden selected value="">Select Task Priority</option>
-              <option value="normal">Normal</option>
-              <option value="important">Important</option>
-              <option value="very_important">Very Important</option>
+              <option value="Normal">Normal</option>
+              <option value="Important">Important</option>
+              <option value="Very Important">Very Important</option>
             </icon-select>
           </div>
           <div class="flex space-x-2">
@@ -75,30 +75,20 @@ const title = ref('')
 const description = ref('')
 const priority = ref('')
 
-const handleSubmit = () => {
-  axios
-    .post('api/user/tasks', {
+const handleSubmit = async () => {
+  try {
+    await axios.post('api/user/tasks', {
       title: title.value,
       description: description.value,
       deadline: date.value,
       priority: priority.value
     })
-    .then(() => {
-      toast.success('Task added successfully')
-      emit('close')
-    })
-    .catch((err) => {
-      toast.error('Something went wrong')
-      // console.log(err)
-    })
+    toast.success('Task added successfully')
+    emit('close')
+  } catch {
+    toast.error('something went wrong')
+  }
 }
-// onMounted(async () => {
-//   await axios.get('/sanctum/csrf-cookie')
-//   await axios.post('api/login', {
-//     email: 'madelynn80@example.net',
-//     password: 'password'
-//   })
-// })
 </script>
 
 <style>

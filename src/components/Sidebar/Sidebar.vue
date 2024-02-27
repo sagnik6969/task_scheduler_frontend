@@ -3,7 +3,7 @@
     <div
       v-if="!ismobile"
       :class="{ 'w-64': open, 'w-16': !open }"
-      class="bg-black text-black h-screen overflow-auto transition-all duration-300"
+      class="bg-black text-black h-screen overflow-hidden transition-all duration-300 fixed z-10 shadow-md"
     >
       <!-- fixed top-0 start-0 z-50 -->
       <div class="py-4 flex items-center justify-center">
@@ -41,7 +41,7 @@
         </router-link>
       </div>
     </div>
-    <div v-else class="absolute bg-black max-h-screen overflow-hidden">
+    <div v-else class="fixed bg-black max-h-screen overflow-hidden z-10">
       <div class="flex justify-center items-center p-4">
         <button class="focus:outline-none" @click="toggle">
           <span :class="{ 'rotate-90': open }" class="material-icons text-white">{{
@@ -115,11 +115,11 @@ const links = [
 ]
 
 onMounted(() => {
-  if (window.innerWidth < 680) {
+  if (window.innerWidth < 768) {
     ismobile.value = true
   }
   window.addEventListener('resize', () => {
-    if (window.innerWidth < 680) {
+    if (window.innerWidth < 768) {
       ismobile.value = true
     } else {
       ismobile.value = false
