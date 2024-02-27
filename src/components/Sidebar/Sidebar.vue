@@ -75,21 +75,17 @@
 </template>
 
 <script setup>
-import { onMounted, onUnmounted, ref } from 'vue'
-
+import { onMounted, onUnmounted, ref, computed } from 'vue'
+import { useStore } from 'vuex'
+const store = useStore()
 const open = ref(false)
 const ismobile = ref(false)
 const toggle = () => {
   open.value = !open.value
 }
+const isAdmin = computed(async () => await store?.getters?.isAdmin)
+
 const links = [
-  {
-    path: '/admin',
-    label: 'Admin dashboard',
-    icon: true,
-    iconClass: 'material-symbols-outlined ',
-    iconname: 'dashboard'
-  },
   {
     path: '/',
     label: 'Tasks',
@@ -125,6 +121,16 @@ onMounted(() => {
       ismobile.value = false
     }
   })
+  console.log(isAdmin.data.value)
+  if (isAdmin.value) {
+    links.unshift({
+      path: '/admin',
+      label: 'Admin dashboard',
+      icon: true,
+      iconClass: 'material-symbols-outlined',
+      iconname: 'dashboard'
+    })
+  }
 })
 onUnmounted(() => {
   window.removeEventListener('resize', () => {
