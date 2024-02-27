@@ -9,13 +9,21 @@
       <h1 class="font-bold text-lg">{{ title }}</h1>
       <p class="text-slate-700 font-medium">{{ task.data.attributes.priority }}</p>
     </div>
-    <div class="flex-1 space-x-1 font-medium">
-      <div class="bg-green-200 w-fit py-2 px-4 space-x-2 rounded-full">
-        <v-icon icon="mdi-clock-time-four"></v-icon>
-        <span class="font-medium text-slate-600">{{ remainingTime }}</span>
-      </div>
+
+    <div class="flex-1 font-medium">
+      <Tooltip text="Time left until the deadline">
+        <div class="bg-green-200 w-fit py-2 px-4 space-x-2 rounded-full">
+          <v-icon icon="mdi-clock-time-four"></v-icon>
+          <span class="font-medium text-slate-600">{{ remainingTime }}</span>
+        </div>
+      </Tooltip>
     </div>
-    <progress-bar class="flex-1" :percentage="task.data.attributes.progress"></progress-bar>
+
+    <div class="flex-1">
+      <tooltip text="Task Progress">
+        <progress-bar class="flex-1" :percentage="task.data.attributes.progress"></progress-bar>
+      </tooltip>
+    </div>
     <icon-button class="" @click="taskDetailsIsVisible = true">View</icon-button>
     <teleport to="body" v-if="taskDetailsIsVisible">
       <display-task :task="task" @close="taskDetailsIsVisible = false"></display-task>
@@ -24,6 +32,8 @@
 </template>
 
 <script setup>
+import Tooltip from '@/components/ui/Tooltip.vue'
+
 import ProgressBar from '@/components/ui/ProgressBar.vue'
 import IconButton from '@/components/ui/IconButton.vue'
 import DisplayTask from '@/components/tasks/DisplayTask.vue'

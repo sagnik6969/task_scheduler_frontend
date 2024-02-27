@@ -11,7 +11,7 @@ const router = useRouter()
 onMounted(async () => {
   await router.isReady()
   const message = route.query.message
-  console.log(message)
-  toast.info(message)
+  // console.log(message)
+  if (message) toast.info(message)
 })
 </script>
