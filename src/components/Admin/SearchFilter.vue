@@ -6,20 +6,16 @@
         type="text"
         v-model="searchQuery"
         @input="searchUsers"
-        class="border rounded-md py-2 pl-4 pr-10 w-full md:w-96 focus:outline-none focus:border-blue-500"
+        class="border rounded-md py-2 pl-4 pr-10 w-full md:w-96 focus:outline-none focus:border-blue-500 transition duration-300 ease-in-out hover:border-blue-400"
         placeholder="Search users..."
+        @mouseover="showHelpText = true"
+        @mouseleave="showHelpText = false"
       />
-      <svg
+      <img
+        src="../../assets/images/search.png"
+        alt="search_icon"
         class="absolute right-3 top-3 h-6 w-6 text-gray-400"
-        fill="none"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        stroke-width="2"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-      >
-        <path d="M15 15l5-5-5-5M10 4a6 6 0 100 12 6 6 0 000-12z" />
-      </svg>
+      />
     </div>
 
     <!-- Filter Dropdown -->
@@ -55,6 +51,7 @@ export default {
     return {
       open: false,
       searchQuery: '',
+      showHelpText: false,
       filterOptions: ['Sort by Name', 'Sort by Date Created']
     }
   },
@@ -83,4 +80,31 @@ export default {
 
 <style scoped>
 /* Add your custom CSS styles here */
+/* Style for filter dropdown */
+.absolute.right-0::before {
+  content: '';
+  position: absolute;
+  top: -10px;
+  right: 12px;
+  border-style: solid;
+  border-width: 0 8px 8px 8px;
+  border-color: transparent transparent white transparent;
+}
+
+/* Style for filter dropdown button */
+.relative button::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  border: solid black;
+  border-width: 0 1px 1px 0;
+  padding: 3px;
+  transition: transform 0.3s ease;
+}
+
+.relative button.open::after {
+  transform: translateY(-50%) rotate(-135deg);
+}
 </style>

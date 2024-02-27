@@ -25,32 +25,77 @@
       <!-- User Information -->
       <div class="flex justify-between mb-6">
         <div>
-          <h2 class="text-2xl font-bold">{{ userDetails.name }}</h2>
-          <p class="text-gray-600">Created at: {{ formatDate(userDetails.created_at) }}</p>
-          <p class="text-gray-600">Updated at: {{ formatDate(userDetails.updated_at) }}</p>
+          <h2 class="text-3xl font-bold">{{ userDetails.name }}</h2>
+          <p class="text-gray-800 text-lg font-bold">
+            Created at: {{ formatDate(userDetails.created_at) }}
+          </p>
+          <p class="text-gray-800 text-lg font-bold">
+            Updated at: {{ formatDate(userDetails.updated_at) }}
+          </p>
         </div>
-        <div>
-          <div class="pie-chart w-24 h-24 relative">
+        <div class="flex items-center">
+          <div class="pie-chart w-24 h-24 relative" v-if="userDetails.tasks.length > 0">
             <div
               class="absolute inset-0 bg-brown-300 rounded-full transform rotate-180"
-              :style="{ width: 80 + '%' }"
+              :style="{ width: incompletePercentage + '%' }"
             ></div>
             <div
               class="absolute inset-0 bg-green-300 rounded-full transform rotate-180"
-              :style="{ width: 20 + '%' }"
+              :style="{ width: completePercentage + '%' }"
             ></div>
           </div>
-          <div class="text-center mt-2">
-            <p class="text-brown-600 text-sm font-bold">Incomplete Tasks</p>
-            <p class="text-green-600 text-sm font-bold">Complete Tasks</p>
-            <p :class="[efficiencyClass]">{{ efficiency }}</p>
+          <div class="text-center ml-4" v-if="userDetails.tasks.length > 0">
+            <div class="text-gray-800 text-lg font-bold mb-1">Task Status:</div>
+            <div class="flex items-center">
+              <div class="bg-red-500 w-4 h-4 mr-1"></div>
+              <p class="text-red-600 font-bold mr-4">{{ crossedDeadlineCount }}</p>
+              <div class="bg-green-500 w-4 h-4 mr-1"></div>
+              <p class="text-green-600 font-bold">{{ completeTaskCount }}</p>
+            </div>
           </div>
         </div>
       </div>
 
+      <!-- Stars Rating -->
+      <div class="flex items-center mb-6" v-if="userDetails.tasks.length > 0">
+        <div class="text-gray-800 text-lg font-bold mr-4">Rating:</div>
+        <div class="flex items-center">
+          <template v-for="star in 5" :key="star">
+            <svg
+              v-if="star <= stars"
+              class="h-6 w-6 fill-current text-yellow-500 mr-1 cursor-pointer"
+              @click="stars = star"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M12 2c-.2 0-.4.08-.55.24L8.22 7.29 2 8.25l4.66 4.26L5.6 19.2l6.6-3.9v8.34l3.8-2.26 3.8 2.26V15.06l6.6 3.9-1.06-6.66 4.66-4.26-6.23-.96L12 2z"
+              />
+            </svg>
+            <svg
+              v-else
+              class="h-6 w-6 fill-current text-gray-400 mr-1 cursor-pointer"
+              @click="stars = star"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M12 2c-.2 0-.4.08-.55.24L8.22 7.29 2 8.25l4.66 4.26L5.6 19.2l6.6-3.9v8.34l3.8-2.26 3.8 2.26V15.06l6.6 3.9-1.06-6.66 4.66-4.26-6.23-.96L12 2z"
+              />
+            </svg>
+          </template>
+        </div>
+      </div>
+
+      <div class="text-center" v-if="userDetails.tasks.length == 0">
+        <p class="text-gray-800 text-lg font-bold mb-10">No tasks added</p>
+      </div>
       <!-- Options -->
       <div class="flex justify-between">
-        <button @click="makeAdmin" class="flex items-center text-blue-500">
+        <button
+          @click="makeAdmin"
+          class="flex items-center text-blue-500 bg-blue-100 px-4 py-2 rounded-md"
+        >
           <svg
             class="h-6 w-6 mr-1"
             fill="none"
@@ -63,11 +108,14 @@
               stroke-linejoin="round"
               stroke-width="2"
               d="M5 13l4 4L19 7"
-            />
+            ></path>
           </svg>
           Make Admin
         </button>
-        <button @click="deleteUser" class="flex items-center text-red-500">
+        <button
+          @click="deleteUser"
+          class="flex items-center text-red-500 bg-red-100 px-4 py-2 rounded-md"
+        >
           <svg
             class="h-6 w-6 mr-1"
             fill="none"
@@ -80,7 +128,7 @@
               stroke-linejoin="round"
               stroke-width="2"
               d="M6 18L18 6M6 6l12 12"
-            />
+            ></path>
           </svg>
           Delete User
         </button>
@@ -94,6 +142,35 @@ export default {
   props: {
     userDetails: Object
   },
+  data() {
+    return {
+      stars: 0
+    }
+  },
+  computed: {
+    incompleteTaskCount() {
+      return this.userDetails.tasks.filter((task) => !task.is_completed).length
+    },
+    completeTaskCount() {
+      return this.userDetails.tasks.filter((task) => task.is_completed).length
+    },
+    crossedDeadlineCount() {
+      const now = new Date()
+      return this.userDetails.tasks.filter(
+        (task) => !task.is_completed && new Date(task.deadline) < now
+      ).length
+    },
+    incompletePercentage() {
+      const totalTasks = this.userDetails.tasks.length
+      const incompleteTasks = this.incompleteTaskCount
+      return (incompleteTasks / totalTasks) * 100
+    },
+    completePercentage() {
+      const totalTasks = this.userDetails.tasks.length
+      const completeTasks = this.completeTaskCount
+      return (completeTasks / totalTasks) * 100
+    }
+  },
   methods: {
     formatDate(timestamp) {
       const options = {
@@ -106,43 +183,19 @@ export default {
       return new Date(timestamp).toLocaleDateString(undefined, options)
     },
     deleteUser() {
-      // Emit event to delete user
       this.$emit('delete-user', this.userDetails.id)
     },
     makeAdmin() {
-      // Emit event to make user admin
       this.$emit('make-admin', this.userDetails.id)
     },
     closeUserProfile() {
-      // Emit event to close user profile
       this.$emit('close-user-profile')
-    }
-  },
-  computed: {
-    getIncompleteTaskPercentage() {
-      const totalTasks = this.userDetails.tasks.length
-      const incompleteTasks = this.userDetails.tasks.filter((task) => !task.is_completed).length
-      return (incompleteTasks / totalTasks) * 100
-    },
-    getCompleteTaskPercentage() {
-      const totalTasks = this.userDetails.tasks.length
-      const completeTasks = this.userDetails.tasks.filter((task) => task.is_completed).length
-      return (completeTasks / totalTasks) * 100
-    },
-    efficiency() {
-      const incompletePercentage = this.getIncompleteTaskPercentage
-      const completePercentage = this.getCompleteTaskPercentage
-      return completePercentage > incompletePercentage ? 'Good' : 'Poor'
-    },
-    efficiencyClass() {
-      return this.efficiency === 'Good' ? 'text-green-600' : 'text-red-600'
     }
   }
 }
 </script>
 
 <style scoped>
-/* Add your custom CSS styles here */
 .pie-chart {
   border-radius: 50%;
   overflow: hidden;
@@ -151,15 +204,5 @@ export default {
 .pie-chart > div {
   clip: rect(0, 0, auto, auto);
   border-radius: 50%;
-}
-
-.bg-brown-300 {
-  --tw-bg-opacity: 1;
-  background-color: rgba(146, 64, 14, var(--tw-bg-opacity));
-}
-
-.bg-green-300 {
-  --tw-bg-opacity: 1;
-  background-color: rgba(16, 185, 129, var(--tw-bg-opacity));
 }
 </style>

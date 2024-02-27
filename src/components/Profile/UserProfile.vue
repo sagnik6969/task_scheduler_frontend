@@ -9,7 +9,7 @@
         />
       </div>
       <div class="flex justify-center items-center mt-5">
-        <h1 class="text-3xl font-bold">{{ name }}</h1>
+        <h1 class="text-3xl font-bold">{{ userDetails ? userDetails.name : name }}</h1>
       </div>
       <div class="p-5 md:p-14 flex flex-col justify-start">
         <div
@@ -18,12 +18,14 @@
           <h1 class="text-lg sm:text-2xl font-semibold">My profile</h1>
           <p class="text-sm sm:text-md">
             Last created at:
-            <span class="text-xs sm:text-sm block">{{ formatDate(date) }}</span>
+            <span class="text-xs sm:text-sm block">{{
+              userDetails ? formatDate(userDetails.created_at) : formatDate(date)
+            }}</span>
           </p>
         </div>
         <div class="flex w-full border-2 border-black items-center p-2 justify-between mb-2">
           <h1 class="text-lg sm:text-2xl font-semibold">Email:</h1>
-          <p class="text-sm sm:text-md">{{ Email }}</p>
+          <p class="text-sm sm:text-md">{{ userDetails ? userDetails.email : Email }}</p>
         </div>
       </div>
     </div>
