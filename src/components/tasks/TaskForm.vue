@@ -66,9 +66,11 @@ import '@vuepic/vue-datepicker/dist/main.css'
 import { ref, watch } from 'vue'
 import axios from 'axios'
 import { useToast } from 'vue-toast-notification'
+import { useStore } from 'vuex'
 
 const emit = defineEmits(['close'])
 const toast = useToast()
+const store = useStore()
 
 const date = ref(null)
 const title = ref('')
@@ -77,12 +79,13 @@ const priority = ref('')
 
 const handleSubmit = async () => {
   try {
-    await axios.post('api/user/tasks', {
+    await store.dispatch('createUserTask', {
       title: title.value,
       description: description.value,
       deadline: date.value,
       priority: priority.value
     })
+
     toast.success('Task added successfully')
     emit('close')
   } catch {

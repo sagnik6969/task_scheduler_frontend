@@ -6,15 +6,7 @@
       <greeting-vue></greeting-vue>
       <action-bar class="mt-8"></action-bar>
 
-      <div v-if="tasksLoading" class="text-center my-20 text-slate-900">
-        <v-progress-circular
-          :size="50"
-          :width="5"
-          color="purple"
-          indeterminate
-        ></v-progress-circular>
-      </div>
-      <router-view v-else :tasks="tasks" class="mt-5"></router-view>
+      <router-view class="mt-5"></router-view>
     </div>
 
     <div class="right flex-initial xl:flex-[0.4_0.4_0%] px-4 py-4 xl:py-0">
