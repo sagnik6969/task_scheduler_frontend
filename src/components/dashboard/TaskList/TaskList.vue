@@ -64,10 +64,10 @@ const store = useStore()
 const searchText = ref(route.query.search || '')
 const showFilter = ref(route.query.filter || 'latest_tasks')
 
-onMounted(() => {
-  const taskLoadingStatus = store.getters.userTasksLoadingStatus
-  if (taskLoadingStatus == null) store.dispatch('fetchUserTasks')
-})
+// onMounted(() => {
+//   const taskLoadingStatus = store.getters.userTasksLoadingStatus
+//   if (taskLoadingStatus == null) store.dispatch('fetchUserTasks')
+// })
 
 watch(searchText, (newVal) => {
   router.push({

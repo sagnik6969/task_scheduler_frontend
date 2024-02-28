@@ -3,7 +3,9 @@ import axios from 'axios'
 const state = () => {
   return {
     userTasks: [],
-    userTasksStatus: null
+    userTasksStatus: null,
+    userCompletedTaskCount: 0,
+    userIncompleteTaskCount: 0
   }
 }
 
@@ -13,6 +15,12 @@ const getters = {
   },
   userTasksLoadingStatus(state) {
     return state.userTasksStatus
+  },
+  getUserCompletedTaskCount(state) {
+    return state.userCompletedTaskCount
+  },
+  getUserIncompleteTaskCount(state) {
+    return state.userIncompleteTaskCount
   }
 }
 
@@ -24,12 +32,31 @@ const mutations = {
   addUserTask(state, task) {
     state.userTasks.unshift(task)
   },
+  updateTask(state, task) {
+    const idx = state.userTasks.findIndex((t) => {
+      return (t.data.task_id = task.data.task_id)
+    })
+    console.log(idx)
+
+    state.userTasks[idx] = task
+  },
   setUserTasksStatus(state, status) {
     state.userTasksStatus = status
+  },
+  setUserCompletedTaskCount(state, count) {
+    state.userCompletedTaskCount = count
+  },
+  setUserIncompleteTaskCount(state, count) {
+    state.userIncompleteTaskCount = count
   }
 }
 
 const actions = {
+  fetchDashboardData(context) {
+    context.dispatch('fetchUserTasks')
+    context.dispatch('fetchUserTaskCount')
+  },
+
   async fetchUserTasks(context) {
     try {
       context.commit('setUserTasksStatus', 'loading')
@@ -41,13 +68,39 @@ const actions = {
     }
   },
 
+  async fetchUserTaskCount(context) {
+    try {
+      const res = await axios.get('/api/user/analysis', {
+        params: {
+          time_range: 'all',
+          statistics: 'completed_vs_pending_tasks'
+        }
+      })
+      context.commit('setUserCompletedTaskCount', res.data.series[0])
+      context.commit('setUserIncompleteTaskCount', res.data.series[1])
+    } catch {
+      throw 'unable to fetch user task count'
+    }
+  },
   async createUserTask(context, payload) {
     try {
       const response = await axios.post('api/user/tasks', payload)
       context.commit('addUserTask', response.data)
+      context.dispatch('fetchUserTaskCount')
     } catch (err) {
       console.log(err)
       throw 'unable to add task'
+    }
+  },
+
+  async updateUserTask(context, payload) {
+    try {
+      const response = await axios.put(`/api/user/tasks/${payload.task_id}`, payload)
+      context.commit('updateTask', response.data)
+      context.dispatch('fetchUserTaskCount')
+    } catch (error) {
+      console.log(error)
+      throw 'unable to update task'
     }
   },
 
