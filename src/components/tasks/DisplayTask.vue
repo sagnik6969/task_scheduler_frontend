@@ -81,7 +81,7 @@ import { useToast } from 'vue-toast-notification'
 // import { comma } from 'postcss/lib/list'
 
 const props = defineProps(['task'])
-const taskCopy = reactive(props.task)
+const taskCopy = reactive(JSON.parse(JSON.stringify(props.task)))
 console.log(taskCopy.data.attributes.is_completed)
 const toast = useToast()
 const date = ref(null)

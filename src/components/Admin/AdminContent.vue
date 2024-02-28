@@ -5,6 +5,7 @@
     </div>
     <div v-else-if="selectedOption === 'analytics'">
       <!-- <AdminAnalytics :users="users" /> -->
+      <analytics :users="users"></analytics>
     </div>
     <div v-else-if="selectedOption === 'assigned_tasks'">
       <!-- <AdminAssignedTaskUser :users="users" /> -->
@@ -14,6 +15,7 @@
 
 <script>
 import AdminUserList from './AdminUserList.vue'
+import Analytics from './Analytics/Analytics.vue'
 
 export default {
   props: {
@@ -21,7 +23,8 @@ export default {
     users: Array
   },
   components: {
-    AdminUserList
+    AdminUserList,
+    Analytics
   },
   methods: {
     handleUserDeleted() {
