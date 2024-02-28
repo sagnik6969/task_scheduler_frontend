@@ -11,7 +11,5 @@ import 'vue-toast-notification/dist/theme-sugar.css'
 import { createApp } from 'vue'
 import App from './App.vue'
 import store from './store/index'
-const app = createApp(App)
-app.component('draggable', VueDraggableNext)
 
 createApp(App).use(store).use(vutify).use(router).use(VueApexCharts).use(ToastPlugin).mount('#app')

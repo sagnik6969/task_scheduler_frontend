@@ -17,7 +17,6 @@
           class="-z-10"
         />
       </div>
-
       <div class="">
         <KanbanBoard />
       </div>
