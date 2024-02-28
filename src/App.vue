@@ -1,13 +1,17 @@
 <template>
-  <div class="flex h-screen">
-    <Sidebar></Sidebar>
-    <!-- <dash-board class="flex-grow"></dash-board> -->
-    <router-view class="flex-grow h-full"></router-view>
-    <!-- <task-form></task-form> -->
-  </div>
+  <router-view></router-view>
 </template>
 <script setup>
-import Sidebar from './components/Sidebar/Sidebar.vue'
-// import DashBoard from './components/dashboard/DashBoard.vue'
-// import TaskForm from './components/tasks/TaskForm.vue'
+import { onMounted } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { useToast } from 'vue-toast-notification'
+const toast = useToast()
+const route = useRoute()
+const router = useRouter()
+onMounted(async () => {
+  await router.isReady()
+  const message = route.query.message
+  // console.log(message)
+  if (message) toast.info(message)
+})
 </script>

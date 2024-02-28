@@ -1,39 +1,69 @@
 import { createRouter, createWebHistory } from 'vue-router'
+
 import DashBoard from '@/components/dashboard/DashBoard.vue'
 import TaskList from '@/components/dashboard/TaskList/TaskList.vue'
 import AdminDashboard from '../components/Admin/AdminDashboard.vue'
+import LoginForm from '@/components/auth/LoginForm.vue'
+import RegisterForm from '@/components/auth/RegisterForm.vue'
+import Logout from '@/components/auth/Logout.vue'
+import ManageTasks from '@/components/Manangednd/ManageTasks.vue'
+import UserProfile from '@/components/Profile/UserProfile.vue'
+import VerifyEmail from '@/components/auth/VerifyEmail.vue'
+import UserTaskAssignedReview from '../components/Profile/UserTaskAssignedReview.vue'
+import Home from '../Home.vue'
 export default createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: '/',
-      name: 'DashBoard',
-      component: DashBoard,
+      name: 'Home',
+      component: Home,
       children: [
         {
           path: '',
-          name: 'TaskList',
-          component: TaskList
+          name: 'DashBoard',
+          component: DashBoard,
+          children: [
+            {
+              path: '',
+              name: 'TaskList',
+              component: TaskList
+            }
+          ]
         },
         {
-          path: 'admin',
+          path: '/admin',
           name: 'Admin',
           component: AdminDashboard
-        }
+        },
+        {
+          path: '/settings',
+          name: 'Settings',
+          component: UserProfile
+        },
+        { path: '/manage-tasks', name: 'ManageTasks', component: ManageTasks }
       ]
     },
-    // {
-    //   path: '/login',
-    //   name: 'Login'
-    // },
+    {
+      path: '/tasks/assign/:taskId/:token',
+      name: 'View-Assigned-Task',
+      component: UserTaskAssignedReview
+    },
     {
       path: '/logout',
-      name: 'Logout'
+      name: 'Logout',
+      component: Logout
     },
     {
-      path: '/settings',
-      name: 'Settings'
+      path: '/login',
+      name: 'Login',
+      component: LoginForm
     },
-    { path: '/manage-tasks', name: 'ManageTasks' }
+    {
+      path: '/register',
+      name: 'Register',
+      component: RegisterForm
+    },
+    { path: '/verify-email/:id/:hash', component: VerifyEmail }
   ]
 })

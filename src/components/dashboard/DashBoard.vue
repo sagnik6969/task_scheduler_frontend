@@ -1,48 +1,51 @@
 <template>
-  <div class="px-10 pt-6 flex xl:flex-row flex-col h-full">
+  <div class="px-10 pt-6 flex xl:flex-row xl:mt-0 flex-col h-full md:ml-10 mt-12">
     <div
-      class="left flex-initial h-full overflow-y-scroll [&::-webkit-scrollbar]:hidden px-4 xl:flex-[0.6_0.6_0%]"
+      class="left flex-initial xl:h-full xl:overflow-y-scroll [&::-webkit-scrollbar]:hidden px-4 xl:flex-[0.6_0.6_0%]"
     >
-      <!-- [&::-webkit-scrollbar]:hidden => to hide the scroll bar -->
       <greeting-vue></greeting-vue>
-      <div v-if="tasksLoading" class="text-center mt-20 text-slate-900">
-        <v-progress-circular
-          :size="50"
-          :width="5"
-          color="purple"
-          indeterminate
-        ></v-progress-circular>
-      </div>
-      <router-view v-else :tasks="tasks" class="mt-8"></router-view>
+      <action-bar class="mt-8"></action-bar>
+
+      <router-view class="mt-5"></router-view>
     </div>
 
-    <div class="right flex-initial xl:flex-[0.4_0.4_0%]"></div>
+    <div class="right flex-initial xl:flex-[0.4_0.4_0%] px-4 py-4 xl:py-0">
+      <user-notification-bar
+        class="fixed top-0 right-0 left-0 z-0 py-3 pr-14 w-full bg-white xl:static xl:mr-0 xl:mt-0 xl:pr-0"
+      ></user-notification-bar>
+      <task-counter></task-counter>
+      <statistics class="mt-5"></statistics>
+    </div>
   </div>
 </template>
+
 <script setup>
 import axios from 'axios'
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, computed } from 'vue'
 import GreetingVue from './Greeting.vue'
+import ActionBar from './ActionBar.vue'
+import UserNotificationBar from './right_column/notifications/UserNotificationBar.vue'
+
+import TaskCounter from './right_column/TaskCounter.vue'
+import Statistics from './right_column/statistics/Statistics.vue'
+import { useStore } from 'vuex'
 const tasks = ref([])
 const tasksLoading = ref(true)
 
+const store = useStore()
 onMounted(async () => {
- // await axios.get('/sanctum/csrf-cookie')
- // await axios.post('api/login', {
- //   email: 'amangangwani1101@gmail.com',
- //   password: '12345678'
- //})
-
-
-  axios
-    .get('/api/user/tasks')
-    .then((res) => {
-      // console.log(res.data)
-      tasks.value = res.data.data
-    })
-    .finally(() => {
-      tasksLoading.value = false
-    })
-
+  try {
+    const res = await axios.get('/api/user/tasks')
+    tasks.value = res.data.data
+  } finally {
+    tasksLoading.value = false
+  }
 })
+
+// watch(tasksLoading, (newValue) => {
+//   if (!newValue) {
+//     completedTasks.value = tasks.value.filter((task) => task.attributes.is_completed).length
+//     inProgressTasks.value = tasks.value.filter((task) => !task.attributes.is_completed).length
+//   }
+// })
 </script>

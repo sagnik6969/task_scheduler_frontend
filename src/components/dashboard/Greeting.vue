@@ -1,9 +1,13 @@
 <template>
   <div
-    class="bg-slate-200 py-10 px-5 rounded-lg flex flex-col items-center text-center text-slate-900"
+    class="gradient border-black border-2 justify-between shadow-xl py-8 px-5 rounded-lg flex items-center text-center text-black"
   >
-    <h1 class="text-5xl font-bold">Hello Sagnik!</h1>
-    <p class="mt-4 text-xl">It's good to see you again.</p>
+    <div class="">
+      <h1 class="text-5xl font-bold">Hello {{ $store?.state?.user?.name }}!</h1>
+      <p class="mt-4 text-xl">It's good to see you again.</p>
+    </div>
+    <img src="@/assets/images/higreeting.png" alt="greetings" class="" />
   </div>
 </template>
 <script setup></script>
+<style scoped></style>
