@@ -15,7 +15,7 @@ const props = defineProps(['percentage'])
 const width = computed(() => `${props.percentage}%`)
 </script>
 
-<style>
+<style scoped>
 .progress-bar {
   width: v-bind('width');
 }
