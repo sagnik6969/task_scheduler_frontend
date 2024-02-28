@@ -1,8 +1,8 @@
 <template>
   <div
     draggable="true"
-    @dragstart="onDragStart($event)"
-    class="rounded-lg border-2 border-black text-slate-900 px-6 py-4 flex justify-between items-center flex-col md:flex-row text-center md:text-left space-y-3 md:space-y-0 space-x-2"
+    @dragstart="onDragStart"
+    class="rounded-lg border-2 border-black text-slate-900 px-6 py-4 flex justify-between items-center flex-col lg:flex-row text-center lg:text-left space-y-3 lg:space-y-0 space-x-2"
   >
     <div class="flex-1">
       <h1 class="font-bold text-lg">{{ title }}</h1>
@@ -42,9 +42,8 @@ import ProgressBar from '@/components/ui/ProgressBar.vue'
 import IconButton from '@/components/ui/IconButton.vue'
 import DisplayTask from '@/components/tasks/DisplayTask.vue'
 import { computed, ref } from 'vue'
-const props = defineProps({
-  task: Object
-})
+const props = defineProps(['task'])
+
 const task = computed(() => props.task)
 
 const title = computed(() => {
@@ -85,18 +84,6 @@ const remainingTime = computed(() => {
 })
 const taskDetailsIsVisible = ref(false)
 const onDragStart = (event) => {
-  const taskData = {
-    tasks: [
-      {
-        task_id: props.task.data.task_id,
-        title: props.task.data.attributes.title,
-        priority: props.task.data.attributes.priority,
-        deadline: props.task.data.attributes.deadline,
-        progress: props.task.data.attributes.progress
-      }
-    ]
-  }
-  event.dataTransfer.setData('application/json', JSON.stringify(taskData))
-  localStorage.setItem('draggedTask', JSON.stringify(taskData))
+  event.dataTransfer.setData('text/plain', JSON.stringify(props.task))
 }
 </script>
