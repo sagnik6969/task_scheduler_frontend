@@ -97,6 +97,13 @@
         @task-closed="closeTaskList"
       />
     </div>
+    <Teleport to="body">
+      <task-form
+        v-if="isTaskFromVisisble !== null"
+        :userId="isTaskFromVisisble"
+        @close="isTaskFromVisisble = null"
+      ></task-form>
+    </Teleport>
   </div>
 </template>
 
@@ -105,6 +112,7 @@ import axios from 'axios'
 import SearchFilter from './SearchFilter.vue'
 import UserProfile from './UserSpecific/UserProfile.vue'
 import UserTaskList from './UserSpecific/UserTaskList.vue'
+import TaskForm from '../../components/tasks/TaskForm.vue'
 export default {
   props: {
     users: Array
@@ -112,7 +120,8 @@ export default {
   components: {
     SearchFilter,
     UserProfile,
-    UserTaskList
+    UserTaskList,
+    TaskForm
   },
   data() {
     return {
@@ -122,7 +131,8 @@ export default {
       selectedUser: null,
       taskListVisible: false,
       currentPage: 1,
-      usersPerPage: 3
+      usersPerPage: 3,
+      isTaskFromVisisble: null
     }
   },
   computed: {
@@ -164,8 +174,10 @@ export default {
     },
     async assignTask(userId) {
       try {
-        const response = await axios.post(`/admin/assign-task/${userId}`)
-        alert(response.data.message)
+        console.log(userId)
+        this.isTaskFromVisisble = userId
+        // const response = await axios.post(`/admin/assign-task/${userId}`)
+        // alert(response.data.message)
       } catch (error) {
         console.error('Error assigning task:', error)
         alert('Failed to assign task. Please try again.')
