@@ -65,7 +65,7 @@ const store = createStore({
         return 'Logged In Successfully'
       } catch (err) {
         console.log(err)
-        return err.response.data.message
+        throw err.response.data.message
       }
     },
     async register(context, payload) {
@@ -87,7 +87,7 @@ const store = createStore({
         return 'Registered Successfully'
       } catch (err) {
         console.log(err)
-        return err.response.data.message
+        throw err.response.data.message
       }
     },
 

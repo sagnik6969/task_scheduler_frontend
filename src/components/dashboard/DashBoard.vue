@@ -32,6 +32,6 @@ import { useStore } from 'vuex'
 const store = useStore()
 
 onMounted(async () => {
-  store.dispatch('fetchDashboardData')
+  if (store.getters.userTasksLoadingStatus == null) store.dispatch('fetchDashboardData')
 })
 </script>

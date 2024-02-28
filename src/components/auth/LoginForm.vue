@@ -29,7 +29,7 @@
             placeholder="*******"
           />
         </div>
-        <a class="text-blue-400 hover:text-blue-700 underline" href="#!">Forgot password?</a>
+        <a class="text-blue-600 hover:text-blue-800 underline" href="#!">Forgot password?</a>
         <span class="block" v-if="errorMessages">
           <span v-for="error in errorMessages" :key="error" class="text-red-500 text-xs">{{
             error
@@ -40,13 +40,14 @@
             class="bg-black w-full border-2 border-black transition-all duration-300 hover:bg-white text-white hover:text-black font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             type="submit"
           >
-            Sign In
+            <v-icon v-if="loading" class="animate-spin" icon="mdi-loading"></v-icon>
+            <span v-else> Sign In </span>
           </button>
         </div>
       </form>
       <div class="mt-10 justify-center flex text-black">
         <span class=""> Don't have an account? </span>
-        <router-link class="ml-2 underline hover:text-blue-700 text-blue-400" to="/register">
+        <router-link class="ml-2 underline hover:text-blue-800 text-blue-600" to="/register">
           Sign up
         </router-link>
       </div>
@@ -68,15 +69,18 @@ import axios from 'axios'
 import { onMounted } from 'vue'
 import { ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { useToast } from 'vue-toast-notification'
 import { useStore } from 'vuex'
 
 const store = useStore()
 const router = useRouter()
 const route = useRoute()
+const toast = useToast()
 
 const email = ref('')
 const emailValidity = ref('')
 const emailValidityMessage = ref('')
+const loading = ref(false)
 
 const password = ref('')
 const errorMessages = ref([])
@@ -87,13 +91,17 @@ const handleSubmit = async () => {
     return errorMessages.value.push('Email and password are required')
   } else {
     try {
+      loading.value = true
       await store.dispatch('login', {
         email: email.value,
         password: password.value
       })
       router.replace(redirectUrl)
-    } catch {
+    } catch (err) {
+      toast.error(err || 'Something went wrong')
       console.log('Login Failed')
+    } finally {
+      loading.value = false
     }
   }
 }
