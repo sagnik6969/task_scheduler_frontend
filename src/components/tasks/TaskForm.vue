@@ -63,12 +63,12 @@ import IconButton from '@/components/ui/IconButton.vue'
 import IconSelect from '@/components/ui/IconSelect.vue'
 import VueDatePicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
-import { ref, watch } from 'vue'
-import axios from 'axios'
+import { ref } from 'vue'
 import { useToast } from 'vue-toast-notification'
 import { useStore } from 'vuex'
 
 const emit = defineEmits(['close'])
+const props = defineProps(['userId'])
 const toast = useToast()
 const store = useStore()
 
@@ -79,14 +79,23 @@ const priority = ref('')
 
 const handleSubmit = async () => {
   try {
-    await store.dispatch('createUserTask', {
+    const taskData = {
       title: title.value,
       description: description.value,
       deadline: date.value,
       priority: priority.value
-    })
+    }
+    if (props.userId) {
+      await store.dispatch('createUserTaskByAdmin', {
+        userId: props.userId,
+        ...taskData
+      })
+      toast.success('Notification is sent to user . Check Assigned Task Section For Status')
+    } else {
+      await store.dispatch('createUserTask', taskData)
+      toast.success('Task added successfully')
+    }
 
-    toast.success('Task added successfully')
     emit('close')
   } catch {
     toast.error('something went wrong')

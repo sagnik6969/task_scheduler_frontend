@@ -10,11 +10,11 @@
             {{ averageEfficiency }}
           </h2>
           <div class="font-semibold text-black">
-            <p>Tasks</p>
-            <p>completed</p>
+            <p>Efficiency</p>
+            <p>Average</p>
           </div>
           <div class="mt-4">
-            <img src="../../../assets/images/Excellent.png" alt="Rating" class="w-60 mx-auto" />
+            <img :src="'/img/' + ratingImage + '.png'" alt="Rating" class="w-full mx-auto" />
           </div>
         </div>
         <div class="font-semibold text-2xl mt-2 text-black">
@@ -24,10 +24,7 @@
 
         <div class="flex justify-between">
           <template v-for="star in 5">
-            <v-icon
-              class="bg-red-50"
-              v-if="star <= overallEfficiencyRating"
-              :key="'star-filled-' + star"
+            <v-icon class="" v-if="star <= averageEfficiency" :key="'star-filled-' + star"
               >mdi-star</v-icon
             >
             <v-icon v-else :key="'star-outline-' + star">mdi-star-outline</v-icon>
@@ -45,7 +42,7 @@ import axios from 'axios'
 const totalTasks = ref(0)
 const averageEfficiency = ref(0)
 const overallEfficiencyRating = ref('')
-const ratingImage = ref('')
+const ratingImage = ref(null)
 
 onMounted(fetchEfficiencyData)
 
@@ -57,25 +54,25 @@ async function fetchEfficiencyData() {
   try {
     const response = await axios.get('/api/user/efficiency')
     totalTasks.value = response.data.total_tasks
-    averageEfficiency.value = response.data.average_efficiency
+    averageEfficiency.value = Math.min(parseFloat(response.data.average_efficiency).toFixed(2), 5)
+    console.log(averageEfficiency.value)
     overallEfficiencyRating.value = response.data.overall_efficiency_rating
+    setRatingImage(averageEfficiency.value)
   } catch (error) {
     console.error('Error fetching efficiency data:', error)
   }
 }
 function setRatingImage(overallEfficiencyRating) {
   if (overallEfficiencyRating >= 4.5) {
-    ratingImage.value = '../../../assets/images/Excellent.png'
+    ratingImage.value = 'Excellent'
   } else if (overallEfficiencyRating >= 3.5) {
-    ratingImage.value = '../../../assets/images/Good.png'
+    ratingImage.value = 'Good'
   } else if (overallEfficiencyRating >= 2.5) {
-    ratingImage.value = '../../../assets/images/Average.png'
+    ratingImage.value = 'belowavg'
   } else {
-    ratingImage.value = '../../../assets/images/NeedsImprovement.png'
+    ratingImage.value = 'Bad'
   }
 }
 </script>
 
-<style scoped>
-/* Add any additional styling here */
-</style>
+<style scoped></style>

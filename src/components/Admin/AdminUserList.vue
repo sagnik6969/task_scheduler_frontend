@@ -97,6 +97,9 @@
         @task-closed="closeTaskList"
       />
     </div>
+    <div v-if="isTaskFromVisisble !== null" class="user-task-assign-container">
+      <task-form :userId="isTaskFromVisisble" @close="isTaskFromVisisble = null"></task-form>
+    </div>
   </div>
 </template>
 
@@ -105,6 +108,7 @@ import axios from 'axios'
 import SearchFilter from './SearchFilter.vue'
 import UserProfile from './UserSpecific/UserProfile.vue'
 import UserTaskList from './UserSpecific/UserTaskList.vue'
+import TaskForm from '../../components/tasks/TaskForm.vue'
 export default {
   props: {
     users: Array
@@ -112,7 +116,8 @@ export default {
   components: {
     SearchFilter,
     UserProfile,
-    UserTaskList
+    UserTaskList,
+    TaskForm
   },
   data() {
     return {
@@ -122,7 +127,8 @@ export default {
       selectedUser: null,
       taskListVisible: false,
       currentPage: 1,
-      usersPerPage: 3
+      usersPerPage: 3,
+      isTaskFromVisisble: null
     }
   },
   computed: {
@@ -164,8 +170,10 @@ export default {
     },
     async assignTask(userId) {
       try {
-        const response = await axios.post(`/admin/assign-task/${userId}`)
-        alert(response.data.message)
+        console.log(userId)
+        this.isTaskFromVisisble = userId
+        // const response = await axios.post(`/admin/assign-task/${userId}`)
+        // alert(response.data.message)
       } catch (error) {
         console.error('Error assigning task:', error)
         alert('Failed to assign task. Please try again.')
@@ -257,12 +265,23 @@ export default {
   z-index: 9999; /* Ensure it appears above other content */
 }
 
+.user-task-assign-container {
+  position: fixed;
+  top: 0%;
+  left: 50%;
+  width: 100%;
+  /* height: 100%; */
+  transform: translate(-50%, -50%);
+  z-index: 9999; /* Ensure it appears above other content */
+}
+
 .overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
+
   background-color: rgba(0, 0, 0, 0.7);
   z-index: 999;
 }

@@ -75,21 +75,20 @@
 </template>
 
 <script setup>
-import { onMounted, onUnmounted, ref } from 'vue'
+import { onMounted, onUnmounted, ref, computed } from 'vue'
+import { useStore } from 'vuex'
 
+const store = useStore()
 const open = ref(false)
 const ismobile = ref(false)
+
 const toggle = () => {
   open.value = !open.value
 }
+
+const isAdmin = computed(() => store.getters.User.is_admin)
+
 const links = [
-  {
-    path: '/admin',
-    label: 'Admin dashboard',
-    icon: true,
-    iconClass: 'material-symbols-outlined ',
-    iconname: 'dashboard'
-  },
   {
     path: '/',
     label: 'Tasks',
@@ -113,6 +112,34 @@ const links = [
   },
   { path: '/logout', label: 'Logout', icon: true, iconClass: 'material-icons ', iconname: 'logout' }
 ]
+
+onMounted(() => {
+  if (window.innerWidth < 768) {
+    ismobile.value = true
+  }
+  window.addEventListener('resize', () => {
+    ismobile.value = window.innerWidth < 768
+  })
+})
+
+onUnmounted(() => {
+  window.removeEventListener('resize', () => {
+    ismobile.value = window.innerWidth < 680
+  })
+})
+
+// Dynamically add admin link if user is admin
+const adminLink = {
+  path: '/admin',
+  label: 'Admin dashboard',
+  icon: true,
+  iconClass: 'material-symbols-outlined',
+  iconname: 'dashboard'
+}
+
+if (isAdmin.value === 1) {
+  links.unshift(adminLink)
+}
 
 onMounted(() => {
   if (window.innerWidth < 768) {
