@@ -36,9 +36,11 @@ const mutations = {
   },
   updateTask(state, task) {
     const idx = state.userTasks.findIndex((t) => {
-      return (t.data.task_id = task.data.task_id)
+      return t.data.task_id == task.data.task_id
     })
-    console.log(idx)
+    // console.log(t.data.task_id)
+    console.log(state.userTasks[idx])
+    console.log(task)
 
     state.userTasks[idx] = task
   },

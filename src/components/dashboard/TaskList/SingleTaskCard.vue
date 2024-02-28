@@ -3,6 +3,9 @@
     draggable="true"
     @dragstart="onDragStart"
     class="rounded-lg border-2 border-black text-slate-900 px-6 py-4 flex justify-between items-center flex-col lg:flex-row text-center lg:text-left space-y-3 lg:space-y-0 space-x-2"
+    :class="{
+      'opacity-55': task.data.attributes.is_completed
+    }"
   >
     <div class="flex-1">
       <h1 class="font-bold text-lg">{{ title }}</h1>
@@ -11,7 +14,10 @@
 
     <div class="flex-1 font-medium">
       <Tooltip text="Time left until the deadline">
-        <div class="bg-green-200 w-fit py-2 px-4 space-x-2 rounded-full">
+        <div
+          class="bg-green-200 w-fit py-2 px-4 space-x-2 rounded-full"
+          :class="{ 'bg-orange-400': remainingTime == '0min' }"
+        >
           <v-icon icon="mdi-clock-time-four"></v-icon>
           <span class="font-medium text-slate-600">{{ remainingTime }}</span>
         </div>
