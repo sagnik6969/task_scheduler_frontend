@@ -48,7 +48,7 @@
             </icon-select>
           </div>
           <div class="flex space-x-2">
-            <icon-button class="bg-slate-900 text-slate-100 hover:bg-slate-950"
+            <icon-button class="bg-slate-900 text-slate-100 hover:bg-slate-950 hover:text-slate-100"
               >Add Task</icon-button
             >
           </div>
