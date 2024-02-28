@@ -18,8 +18,13 @@
       </Tooltip>
     </div>
 
-    <div class="flex-1">
-      <tooltip text="Task Progress">
+    <div class="flex-1 flex justify-center">
+      <tooltip text="completed" v-if="task.data.attributes.is_completed">
+        <div class="px-2 py-1 hover:bg-slate-200 rounded-full duration-200">
+          <v-icon icon="mdi-check-all" class="text-slate-700"></v-icon>
+        </div>
+      </tooltip>
+      <tooltip v-else text="Task Progress">
         <progress-bar class="flex-1" :percentage="task.data.attributes.progress"></progress-bar>
       </tooltip>
     </div>
