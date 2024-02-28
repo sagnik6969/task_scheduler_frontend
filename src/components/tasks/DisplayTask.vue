@@ -50,8 +50,8 @@
               <v-icon class="text-slate-600 px-5" icon="mdi-calendar-range"></v-icon>
             </template>
           </VueDatePicker>
-          <icon-select
-            class="bg-slate-700 text-slate-100 hover:bg-slate-800"
+          <select
+            class="bg-slate-700 text-slate-100 hover:bg-slate-800 rounded-md shadow"
             v-model="taskCopy.data.attributes.priority"
             icon="mdi-priority-high"
           >
@@ -64,7 +64,7 @@
             >
               {{ key }}
             </option>
-          </icon-select>
+          </select>
         </div>
       </div>
     </div>
@@ -100,10 +100,11 @@ const priorityOptions = computed(() => ({
 }))
 
 watch(taskCopy, async () => {
-  console.log(priorityOptions)
+  // console.log(priorityOptions)
   //   console.log(taskCopy)
   // if (props.task == taskCopy) return
-
+  // console.log(props.task)
+  // console.log(taskCopy)
   try {
     await store.dispatch('updateUserTask', {
       task_id: taskCopy.data.task_id,
