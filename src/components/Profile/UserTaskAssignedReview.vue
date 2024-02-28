@@ -1,13 +1,22 @@
 <template>
-  <div class="task-review-container">
-    <div v-if="loading" class="loading-container">
-      <div class="loading-spinner"></div>
-    </div>
-    <div v-else class="task-details-container">
-      <button class="close-button" @click="closeTaskReview">
+  <div
+    class="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-black bg-opacity-50"
+  >
+    <div
+      class="bg-white rounded-lg p-8 max-w-lg w-full relative border-2 border-gray-200 shadow-lg hover:shadow-2xl transition duration-300 ease-in-out"
+    >
+      <h2
+        class="text-lg font-semibold text-center mt-3 mb-4 text-gray-900 hover:text-gray-800 transition duration-300 ease-in-out tracking-wide uppercase border-b-2 border-gray-200 pb-2"
+      >
+        Admin Assigned Task Details
+      </h2>
+      <button
+        class="absolute top-0 right-0 mt-2 mr-2 p-2 rounded-full bg-gray-900 hover:bg-gray-700 transition duration-300 ease-in-out z-10"
+        @click="closeTaskReview"
+      >
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          class="close-icon"
+          class="h-6 w-6 text-white"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -20,16 +29,37 @@
           />
         </svg>
       </button>
-      <div class="priority-indicator">
-        <div class="priority-circle"></div>
-        <p class="priority-text">{{ taskData.priority }}</p>
+      <div v-if="loading" class="flex justify-center items-center">
+        <div
+          class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gray-900"
+        ></div>
       </div>
-      <h1 class="task-title">{{ taskData.title }}</h1>
-      <p class="task-description">{{ taskData.description }}</p>
-      <div class="task-deadline">Deadline: {{ formatDate(taskData.deadline) }}</div>
-      <div class="action-buttons">
-        <button class="decline-button" @click="declineTask">Decline Task</button>
-        <button class="accept-button" @click="acceptTask">Accept Task</button>
+      <div v-else>
+        <div class="priority-indicator flex items-center mb-4">
+          <div class="w-4 h-4 rounded-full bg-gray-900 mr-2"></div>
+          <p class="text-gray-900">{{ 0 }}</p>
+        </div>
+        <h1 class="text-2xl font-bold text-gray-900 mb-4">{{ taskData.title }}</h1>
+        <p v-if="taskData.description" class="text-gray-700 mb-4">{{ taskData.description }}</p>
+        <p v-else class="text-gray-700 mb-4">Description not available</p>
+        <div v-if="taskData.deadline" class="text-gray-700 mb-4">
+          Deadline: {{ formatDate(taskData.deadline) }}
+        </div>
+        <div v-else class="text-gray-700 mb-4">Deadline: Not specified</div>
+        <div class="flex justify-around mt-7">
+          <button
+            class="px-4 py-2 bg-gray-300 text-white rounded-lg hover:bg-gray-700 transition duration-300 ease-in-out"
+            @click="declineTask"
+          >
+            Decline Task
+          </button>
+          <button
+            class="px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-700 transition duration-300 ease-in-out"
+            @click="acceptTask"
+          >
+            Accept Task
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -56,9 +86,10 @@ export default {
     },
     async fetchTaskData() {
       await axios
-        .get('/api/tasks/assign/' + this.$route.params.taskId + this.$route.params.token) // Assuming you have an endpoint to fetch task data
+        .get('/api/tasks/assign/' + this.$route.params.taskId + '/' + this.$route.params.token) // Assuming you have an endpoint to fetch task data
         .then((response) => {
           this.taskData = response.data
+          console.log(response.data)
         })
         .catch((error) => {
           console.error('Error fetching task data:', error)
@@ -68,7 +99,7 @@ export default {
           this.loading = false
         })
     },
-    closeModal() {
+    closeTaskReview() {
       this.$router.push('/')
     },
     async declineTask() {

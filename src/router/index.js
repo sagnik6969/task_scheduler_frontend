@@ -41,13 +41,13 @@ export default createRouter({
           name: 'Settings',
           component: UserProfile
         },
-        {
-          path: '/tasks/assign/:taskId/:token',
-          name: 'View-Assigned-Task',
-          component: UserTaskAssignedReview
-        },
         { path: '/manage-tasks', name: 'ManageTasks', component: ManageTasks }
       ]
+    },
+    {
+      path: '/tasks/assign/:taskId/:token',
+      name: 'View-Assigned-Task',
+      component: UserTaskAssignedReview
     },
     {
       path: '/logout',

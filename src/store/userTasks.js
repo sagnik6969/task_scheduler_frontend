@@ -55,7 +55,7 @@ const actions = {
     try {
       console.log(payload)
       const { userId, ...taskData } = payload
-      await axios.post('api/assign-task/' + userId, taskData)
+      await axios.post('api/admin/assign-task/' + userId, taskData)
       // context.commit('addUserTask', response.data)
     } catch (err) {
       console.log(err)

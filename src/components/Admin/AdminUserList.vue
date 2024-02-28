@@ -97,13 +97,9 @@
         @task-closed="closeTaskList"
       />
     </div>
-    <Teleport to="body">
-      <task-form
-        v-if="isTaskFromVisisble !== null"
-        :userId="isTaskFromVisisble"
-        @close="isTaskFromVisisble = null"
-      ></task-form>
-    </Teleport>
+    <div v-if="isTaskFromVisisble !== null" class="user-task-assign-container">
+      <task-form :userId="isTaskFromVisisble" @close="isTaskFromVisisble = null"></task-form>
+    </div>
   </div>
 </template>
 
@@ -269,12 +265,23 @@ export default {
   z-index: 9999; /* Ensure it appears above other content */
 }
 
+.user-task-assign-container {
+  position: fixed;
+  top: 0%;
+  left: 50%;
+  width: 100%;
+  /* height: 100%; */
+  transform: translate(-50%, -50%);
+  z-index: 9999; /* Ensure it appears above other content */
+}
+
 .overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
+
   background-color: rgba(0, 0, 0, 0.7);
   z-index: 999;
 }
