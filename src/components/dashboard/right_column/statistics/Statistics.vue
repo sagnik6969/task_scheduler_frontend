@@ -1,5 +1,5 @@
 <template>
-  <div class="hidden sm:block" id="user-stats">
+  <div class="hidden sm:block">
     <h1 class="text-2xl font-semibold text-slate-900">Your Statistics</h1>
     <div class="mt-3 space-x-3">
       <select
@@ -30,7 +30,7 @@
     <apexchart
       v-else
       class="-z-10 relative mt-5 shadow-md rounded-xl border-black border-2 bg-white"
-      :width="currentDivWidth"
+      width="500"
       type="donut"
       :options="options"
       :series="series"
@@ -39,7 +39,7 @@
 </template>
 <script setup>
 import axios from 'axios'
-import { computed, onMounted, ref, watchEffect } from 'vue'
+import { computed, ref, watchEffect } from 'vue'
 
 const options = computed(() => ({
   labels: labels.value,
@@ -47,14 +47,6 @@ const options = computed(() => ({
     palette: 'palette7'
   }
 }))
-
-const currentDivWidth = computed(() => {
-  return document.getElementById('user-stats')?.offsetWidth || 500
-})
-
-onMounted(() => {
-  console.log(currentDivWidth.value)
-})
 
 const statLoading = ref(false)
 
@@ -83,4 +75,3 @@ watchEffect(async () => {
   }
 })
 </script>
-<style></style>
