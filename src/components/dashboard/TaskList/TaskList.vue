@@ -33,6 +33,12 @@
     >
       <v-progress-circular :size="50" :width="5" color="purple" indeterminate></v-progress-circular>
     </div>
+    <div
+      v-else-if="store.getters.userTasks.length == 0"
+      class="mt-4 py-10 px-14 flex items-center justify-center text-center bg-slate-100 text-slate-800 text-xl font-medium rounded-lg shadow"
+    >
+      <p>looks like you haven't added any task yet!</p>
+    </div>
     <div v-else class="mt-4">
       <single-task-card
         v-for="task in filteredTasks"
@@ -64,10 +70,10 @@ const store = useStore()
 const searchText = ref(route.query.search || '')
 const showFilter = ref(route.query.filter || 'latest_tasks')
 
-onMounted(() => {
-  const taskLoadingStatus = store.getters.userTasksLoadingStatus
-  if (taskLoadingStatus == null) store.dispatch('fetchUserTasks')
-})
+// onMounted(() => {
+//   const taskLoadingStatus = store.getters.userTasksLoadingStatus
+//   if (taskLoadingStatus == null) store.dispatch('fetchUserTasks')
+// })
 
 watch(searchText, (newVal) => {
   router.push({

@@ -78,12 +78,14 @@ import axios from 'axios'
 import { ref } from 'vue'
 import { computed, reactive, watch } from 'vue'
 import { useToast } from 'vue-toast-notification'
+import { useStore } from 'vuex'
 // import { comma } from 'postcss/lib/list'
 
 const props = defineProps(['task'])
 const taskCopy = reactive(JSON.parse(JSON.stringify(props.task)))
 console.log(taskCopy.data.attributes.is_completed)
 const toast = useToast()
+const store = useStore()
 const date = ref(null)
 
 watch(date, (newVal) => {
@@ -97,13 +99,14 @@ const priorityOptions = computed(() => ({
     taskCopy.data.attributes.priority == 'Very Important' ? 'Modify Priority' : 'Very Important'
 }))
 
-watch(taskCopy, () => {
+watch(taskCopy, async () => {
   console.log(priorityOptions)
   //   console.log(taskCopy)
-  if (props.task == taskCopy.value) return
-  axios
-    .put(`/api/user/tasks/${taskCopy.data.task_id}`, {
-      //   id: taskCopy.value.data.attributes.user_id,
+  // if (props.task == taskCopy) return
+
+  try {
+    await store.dispatch('updateUserTask', {
+      task_id: taskCopy.data.task_id,
       title: taskCopy.data.attributes.title,
       description: taskCopy.data.attributes.description,
       deadline: taskCopy.data.attributes.deadline,
@@ -111,12 +114,12 @@ watch(taskCopy, () => {
       progress: taskCopy.data.attributes.progress,
       priority: taskCopy.data.attributes.priority
     })
-    .then(() => {
-      toast.success('task updated successfully')
-    })
-    .catch(() => {
-      toast.error('Something went wrong please try again')
-    })
+
+    toast.success('task updated successfully')
+  } catch (err) {
+    console.log(err)
+    toast.error('Something went wrong please try again')
+  }
 })
 
 // console.log(taskCopy.value)

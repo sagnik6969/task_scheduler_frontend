@@ -37,7 +37,7 @@
       <div v-else>
         <div class="priority-indicator flex items-center mb-4">
           <div class="w-4 h-4 rounded-full bg-gray-900 mr-2"></div>
-          <p class="text-gray-900">{{ 0 }}</p>
+          <p class="text-gray-900">{{ taskData.priority }}</p>
         </div>
         <h1 class="text-2xl font-bold text-gray-900 mb-4">{{ taskData.title }}</h1>
         <p v-if="taskData.description" class="text-gray-700 mb-4">{{ taskData.description }}</p>
