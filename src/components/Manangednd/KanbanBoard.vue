@@ -1,79 +1,73 @@
 <template>
-  <div class="grid grid-row h-[650px] w-2/5 my-10 fixed gap-2">
+  <div class="flex flex-col h-full w-2/5 fixed p-10 mx-10 gap-10">
     <div
       @dragover.prevent
-      @drop="onDrop('complete')"
-      drop-zone="complete"
-      class="drop-zone flex flex-col items-center border-dashed border-black border-2 bg-green-200"
+      @drop="onDrop"
+      class="flex flex-col h-1/2 items-center border-dashed border-black border-2 bg-green-200"
     >
       <div class="font-semibold text-white text-lg bg-green-500 w-full text-center">
         Mark as Complete
       </div>
-      <div v-for="task in droppedTasks" :key="task.title" class="dropped-task">
-        <h3>{{ task.title }}</h3>
-        <p>{{ task.description }}</p>
-      </div>
-    </div>
-    <div
-      @dragover.prevent
-      @drop="onDrop('delete')"
-      draggable="true"
-      class="flex flex-col items-center border-dashed border-black border-2 bg-red-200"
-    >
-      <div class="font-semibold text-lg text-white bg-red-500 w-full text-center">Delete</div>
-      <div
-        class="list-group-item bg-gray-300 m-1 p-3 rounded-md text-center"
-        v-for="task in droppedTasks.filter((t) => t.dropZone === 'delete')"
-        :key="task.data.task_id"
-      >
-        <single-task-card :task="task" />
-      </div>
+
+      <template v-if="completedTasks.length > 0">
+        <img src="/img/completed.png" class="text-center w-96 items-center" alt="Completed" />
+      </template>
     </div>
 
     <div
       @dragover.prevent
-      @drop="onDrop('progress')"
-      draggable="true"
-      class="flex flex-col items-center border-dashed border-black border-2 bg-blue-200"
+      @drop="onDelete"
+      class="flex flex-col items-center h-1/2 border-dashed border-black border-2 bg-red-200"
     >
-      <div class="font-semibold text-lg text-white bg-blue-500 w-full text-center">In-Progress</div>
-      <div
-        class="list-group-item bg-gray-300 m-1 p-3 rounded-md text-center"
-        v-for="task in droppedTasks.filter((t) => t.dropZone === 'progress')"
-        :key="task.data.task_id"
-      >
-        <single-task-card :task="task" />
-      </div>
+      <div class="font-semibold text-lg text-white bg-red-500 w-full text-center">Delete</div>
+      <template v-if="deletedTasks.length > 0">
+        <img src="/img/deleted.png" class="object-cover w-80" alt="deleted" />
+      </template>
     </div>
   </div>
 </template>
 
 <script setup>
+import SingleTaskCard from '@/components/dashboard/TaskList/SingleTaskCard.vue'
 import axios from 'axios'
-import { ref } from 'vue'
-import SingleTaskCard from '../dashboard/TaskList/SingleTaskCard.vue'
-const droppedTasks = ref([])
+import { ref, onMounted } from 'vue'
+import ProgressBar from '@/components/ui/ProgressBar.vue'
+import { useStore } from 'vuex'
 
-const onDrop = (zone) => (event) => {
+const completedTasks = ref([])
+const deletedTasks = ref([])
+const store = useStore()
+const onDrop = async (event) => {
   event.preventDefault()
-  const taskData = JSON.parse(localStorage.getItem('draggedTask'))
-  console.log(taskData)
-  if (taskData) {
-    const zone = event.target.getAttribute('drop-zone')
-    droppedTasks.value.push({ ...taskData, dropZone: zone })
-    localStorage.removeItem('draggedTask')
+  const taskData = JSON.parse(event.dataTransfer.getData('text/plain'))
+  if (!completedTasks.value.some((task) => task.data.task_id === taskData.data.task_id)) {
+    completedTasks.value.push(taskData)
+    await store.dispatch('updateTask', {
+      task_id: taskData.data.task_id,
+      title: taskData.data.attributes.title,
+      description: taskData.data.attributes.description,
+      deadline: taskData.data.attributes.deadline,
+      is_completed: true,
+      progress: taskData.data.attributes.progress,
+      priority: taskData.data.attributes.priority
+    })
+  }
+}
+const onDelete = async (event) => {
+  event.preventDefault()
+  const taskData = JSON.parse(event.dataTransfer.getData('text/plain'))
+  if (!deletedTasks.value.some((task) => task.data.task_id === taskData.data.task_id)) {
+    deletedTasks.value.push(taskData)
+    await store.dispatch('deleteTask', taskData.data.task_id)
   }
 }
 </script>
-<style scoped>
-.drop-zone {
-  border: 2px dashed #aaa;
-  padding: 20px;
-  margin-bottom: 20px;
+
+<style>
+.dragArea {
+  width: 100%;
 }
-.dropped-task {
-  border: 1px solid #ccc;
-  padding: 10px;
-  margin-top: 10px;
+.progress-bar {
+  width: v-bind('width');
 }
 </style>

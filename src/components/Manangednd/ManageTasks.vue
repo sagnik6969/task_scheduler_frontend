@@ -1,9 +1,6 @@
 <template>
   <div class="flex relative flex-col">
-    <div class="flex">
-      <div v-if="tasksLoading" class="text-center my-20 text-slate-900">
-        <v-progress-circular :size="50" :width="5" color="purple"></v-progress-circular>
-      </div>
+    <div class="flex h-full">
       <div class="flex flex-col w-1/2 px-12 mx-10 gap-2">
         <div
           class="bg-white border-black border-2 p-4 m-3 rounded font-bold text-center text-3xl justify-center"
@@ -12,7 +9,7 @@
         </div>
         <single-task-card v-for="task in tasks" :key="task.data.task_id" :task="task" />
       </div>
-      <div class="">
+      <div class="w-1/2 h-full">
         <KanbanBoard />
       </div>
     </div>
