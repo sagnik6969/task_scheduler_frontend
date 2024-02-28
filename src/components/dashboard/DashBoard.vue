@@ -20,8 +20,7 @@
 </template>
 
 <script setup>
-import axios from 'axios'
-import { onMounted, ref, computed } from 'vue'
+import { onMounted } from 'vue'
 import GreetingVue from './Greeting.vue'
 import ActionBar from './ActionBar.vue'
 import UserNotificationBar from './right_column/notifications/UserNotificationBar.vue'
@@ -29,23 +28,10 @@ import UserNotificationBar from './right_column/notifications/UserNotificationBa
 import TaskCounter from './right_column/TaskCounter.vue'
 import Statistics from './right_column/statistics/Statistics.vue'
 import { useStore } from 'vuex'
-const tasks = ref([])
-const tasksLoading = ref(true)
 
 const store = useStore()
-onMounted(async () => {
-  try {
-    const res = await axios.get('/api/user/tasks')
-    tasks.value = res.data.data
-  } finally {
-    tasksLoading.value = false
-  }
-})
 
-// watch(tasksLoading, (newValue) => {
-//   if (!newValue) {
-//     completedTasks.value = tasks.value.filter((task) => task.attributes.is_completed).length
-//     inProgressTasks.value = tasks.value.filter((task) => !task.attributes.is_completed).length
-//   }
-// })
+onMounted(async () => {
+  store.dispatch('fetchDashboardData')
+})
 </script>
