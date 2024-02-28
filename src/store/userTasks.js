@@ -49,6 +49,18 @@ const actions = {
       console.log(err)
       throw 'unable to add task'
     }
+  },
+
+  async createUserTaskByAdmin(context, payload) {
+    try {
+      console.log(payload)
+      const { userId, ...taskData } = payload
+      await axios.post('api/admin/assign-task/' + userId, taskData)
+      // context.commit('addUserTask', response.data)
+    } catch (err) {
+      console.log(err)
+      throw 'unable to add task'
+    }
   }
 }
 

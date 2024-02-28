@@ -53,7 +53,10 @@ export default {
     },
     handleSectionChange(option) {
       this.selectedOption = option
-      this.fetchData() // Fetch data based on the newly selected option
+      if (option == 'users') {
+        // this.$router.push('/users')
+        this.fetchData() // Fetch data based on the newly selected option
+      }
     },
     async updatedData() {
       const response = await axios.get('/api/admin/tasks')
