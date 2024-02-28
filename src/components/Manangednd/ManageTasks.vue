@@ -10,12 +10,7 @@
         >
           All tasks
         </div>
-        <single-task-card
-          v-for="task in tasks"
-          :key="task.data.task_id"
-          :task="task"
-          class="-z-10"
-        />
+        <single-task-card v-for="task in tasks" :key="task.data.task_id" :task="task" />
       </div>
       <div class="">
         <KanbanBoard />
