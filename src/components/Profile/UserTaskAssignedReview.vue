@@ -118,7 +118,7 @@ export default {
     },
     async acceptTask() {
       await axios
-        .patch(`/api/tasks/assign/${this.$route.params.taskId}`, { status: 'accpet' })
+        .patch(`/api/tasks/assign/${this.$route.params.taskId}`, { status: 'accept' })
         .then((response) => {
           console.log('Task status updated successfully:', response.data)
           toast.info('bhai admin ko pta chl gya h')
