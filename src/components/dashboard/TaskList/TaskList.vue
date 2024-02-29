@@ -1,29 +1,31 @@
 <template>
   <div class="bg-white">
-    <h1 class="text-3xl font-bold text-slate-900">Tasks</h1>
-    <div class="stick p-3 bg-white flex justify-between">
-      <search-box
-        v-model="searchText"
-        placeholder="Search tasks....."
-        class="mt-2 font-medium"
-      ></search-box>
-      <div class="gap-4 flex">
-        <span
-          @click="handleDrop"
-          class="mdi mt-4 mdi-sort-ascending focus:[box-shadow:none] cursor-pointer text-slate-900 hover:text-black"
-        ></span>
-        <select
-          @change="handleCategoryChange"
-          class="border-none mt-2 sm:flex font-bold text-slate-500 hidden bg-white rounded-md shadow hover:text-black"
-        >
-          <option hidden selected value="">Select Category</option>
-          <option value="completed_tasks">Completed Task</option>
-          <option value="incompleted_tasks">Incompleted Task</option>
-        </select>
+    <div class="sticky top-0 bg-white z-10">
+      <h1 class="text-3xl font-bold text-slate-900">Tasks</h1>
+      <div class="py-1 bg-white flex justify-between">
+        <search-box
+          v-model="searchText"
+          placeholder="Search tasks....."
+          class="mt-2 font-medium"
+        ></search-box>
+        <div class="gap-4 flex">
+          <span
+            @click="handleDrop"
+            class="mdi mt-4 mdi-sort-ascending focus:[box-shadow:none] cursor-pointer text-slate-900 hover:text-black"
+          ></span>
+          <select
+            @change="handleCategoryChange"
+            class="border-none mt-2 sm:flex font-bold text-slate-500 hidden bg-white rounded-md shadow hover:text-black"
+          >
+            <option hidden selected value="">Select Category</option>
+            <option value="completed_tasks">Completed Task</option>
+            <option value="incompleted_tasks">Incompleted Task</option>
+          </select>
+        </div>
       </div>
-    </div>
-    <div class="flex justify-between">
-      <task-list-nav class="mt-4" :nav-links="navLinks"></task-list-nav>
+      <div class="flex justify-between pb-4">
+        <task-list-nav class="mt-4" :nav-links="navLinks"></task-list-nav>
+      </div>
     </div>
 
     <div
@@ -41,12 +43,13 @@
     >
       <p>looks like you haven't added any task yet!</p>
     </div>
-    <div v-else class="mt-4">
+    <div v-else class="mt-0">
       <single-task-card
-        v-for="task in filteredTasks"
+        v-for="(task, idx) in filteredTasks"
         :key="task.data.task_id"
         :task="task"
         class="mt-3"
+        :class="{ 'mt-0': idx == 0 }"
       ></single-task-card>
     </div>
   </div>
@@ -166,10 +169,10 @@ const sortByOldestTasks = (taskA, taskB) => {
   return new Date(taskA.data.attributes.created_at) - new Date(taskB.data.attributes.created_at)
 }
 </script>
-<style scoped>
+<!-- <style scoped>
 .stick {
   position: sticky;
   top: 0;
   z-index: 10;
 }
-</style>
+</style> -->
