@@ -1,9 +1,14 @@
 <template>
-  <div class="w-fit duration-300 bg-slate-200 rounded">
+  <div
+    class="w-fit duration-300 bg-slate-200 rounded origin-left hover:scale-x-105"
+    :class="{ 'scale-105': isInputOnFocus }"
+  >
     <input
       class="h-full rounded-tl-xl rounded-bl-xl border-0 outline-0 bg-transparent focus:[box-shadow:none]"
       :value="modelValue"
       @input="$emit('update:modelValue', $event.target.value)"
+      @focus="isInputOnFocus = true"
+      @blur="isInputOnFocus = false"
       :placeholder="placeholder"
       type="text"
     />
@@ -14,6 +19,9 @@
 </template>
 
 <script setup>
+import { ref } from 'vue'
+
 defineProps(['modelValue', 'placeholder'])
 defineEmits(['update:modelValue'])
+const isInputOnFocus = ref(false)
 </script>

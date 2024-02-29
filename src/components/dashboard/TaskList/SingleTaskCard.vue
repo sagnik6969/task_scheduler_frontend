@@ -1,8 +1,11 @@
 <template>
   <div
     draggable="true"
-    @dragstart="onDragStart($event)"
-    class="rounded-lg border-2 border-black text-slate-900 px-6 py-4 flex justify-between items-center flex-col md:flex-row text-center md:text-left space-y-3 md:space-y-0 space-x-2"
+    @dragstart="onDragStart"
+    class="rounded-lg border-2 border-black text-slate-900 px-6 py-4 flex justify-between items-center flex-col lg:flex-row text-center lg:text-left space-y-3 lg:space-y-0 space-x-2"
+    :class="{
+      'opacity-55': task.data.attributes.is_completed
+    }"
   >
     <div class="flex-1">
       <h1 class="font-bold text-lg">{{ title }}</h1>
@@ -11,15 +14,23 @@
 
     <div class="flex-1 font-medium">
       <Tooltip text="Time left until the deadline">
-        <div class="bg-green-200 w-fit py-2 px-4 space-x-2 rounded-full">
+        <div
+          class="bg-green-200 w-fit py-2 px-4 space-x-2 rounded-full"
+          :class="{ 'bg-orange-400': remainingTime == '0min' }"
+        >
           <v-icon icon="mdi-clock-time-four"></v-icon>
           <span class="font-medium text-slate-600">{{ remainingTime }}</span>
         </div>
       </Tooltip>
     </div>
 
-    <div class="flex-1">
-      <tooltip text="Task Progress">
+    <div class="flex-1 flex justify-center">
+      <tooltip text="completed" v-if="task.data.attributes.is_completed">
+        <div class="px-2 py-1 hover:bg-slate-200 rounded-full duration-200">
+          <v-icon icon="mdi-check-all" class="text-slate-700"></v-icon>
+        </div>
+      </tooltip>
+      <tooltip v-else text="Task Progress">
         <progress-bar class="flex-1" :percentage="task.data.attributes.progress"></progress-bar>
       </tooltip>
     </div>
@@ -37,9 +48,8 @@ import ProgressBar from '@/components/ui/ProgressBar.vue'
 import IconButton from '@/components/ui/IconButton.vue'
 import DisplayTask from '@/components/tasks/DisplayTask.vue'
 import { computed, ref } from 'vue'
-const props = defineProps({
-  task: Object
-})
+const props = defineProps(['task'])
+
 const task = computed(() => props.task)
 
 const title = computed(() => {
@@ -80,18 +90,6 @@ const remainingTime = computed(() => {
 })
 const taskDetailsIsVisible = ref(false)
 const onDragStart = (event) => {
-  const taskData = {
-    tasks: [
-      {
-        task_id: props.task.data.task_id,
-        title: props.task.data.attributes.title,
-        priority: props.task.data.attributes.priority,
-        deadline: props.task.data.attributes.deadline,
-        progress: props.task.data.attributes.progress
-      }
-    ]
-  }
-  event.dataTransfer.setData('application/json', JSON.stringify(taskData))
-  localStorage.setItem('draggedTask', JSON.stringify(taskData))
+  event.dataTransfer.setData('text/plain', JSON.stringify(props.task))
 }
 </script>

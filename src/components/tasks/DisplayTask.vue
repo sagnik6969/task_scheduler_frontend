@@ -10,6 +10,13 @@
       >
         <v-icon icon="mdi-close"></v-icon>
       </button>
+      <v-progress-linear
+        :active="loading"
+        indeterminate
+        absolute
+        bottom
+        color="#C6A969"
+      ></v-progress-linear>
       <div class="flex space-x-1 items-center font-medium text-slate-500">
         <v-icon icon="mdi-circle" class="text-red-500"></v-icon>
         <p class="text-lg">{{ taskCopy.data.attributes.priority }}</p>
@@ -25,35 +32,43 @@
           max="100"
           v-model="taskCopy.data.attributes.progress"
           id="task_progress"
+          :disabled="loading"
         />
       </div>
-      <div class="mt-5 flex justify-between space-x-2">
-        <div class="flex items-center space-x-2 font-medium text-slate-900">
-          <input
-            v-model="taskCopy.data.attributes.is_completed"
-            type="checkbox"
-            name=""
-            id="mark-as-complete"
-          />
-          <label for="mark-as-complete">Mark as complete</label>
-        </div>
+
+      <div class="flex items-center space-x-2 font-medium text-slate-900 mt-5">
+        <input
+          v-model="taskCopy.data.attributes.is_completed"
+          type="checkbox"
+          name=""
+          id="mark-as-complete"
+          :disabled="loading"
+          :class="{ 'opacity-50': loading }"
+        />
+        <label :class="{ 'opacity-75': loading }" for="mark-as-complete">Mark as complete</label>
+      </div>
+      <div class="mt-3 flex justify-between sm:space-x-2 flex-col sm:flex-row space-y-3 space-x-0">
+        <!-- <div class="flex space-x-2"> -->
+        <VueDatePicker
+          model-type="yyyy-MM-dd hh:mm:ss"
+          placeholder="Update Due Date"
+          v-model="date"
+          :min-date="new Date()"
+          :min-time="new Date()"
+          class="date-picker rounded-md bg-slate-100 flex items-center !w-fit"
+          :class="{ 'opacity-75': loading }"
+          :disabled="loading"
+        >
+          <template #input-icon>
+            <v-icon class="text-slate-600 px-5" icon="mdi-calendar-range"></v-icon>
+          </template>
+        </VueDatePicker>
         <div class="flex space-x-2">
-          <VueDatePicker
-            model-type="yyyy-MM-dd hh:mm:ss"
-            placeholder="Update Due Date"
-            v-model="date"
-            :min-date="new Date()"
-            :min-time="new Date()"
-            class="date-picker rounded-md bg-slate-100 flex items-center !w-fit"
-          >
-            <template #input-icon>
-              <v-icon class="text-slate-600 px-5" icon="mdi-calendar-range"></v-icon>
-            </template>
-          </VueDatePicker>
-          <icon-select
-            class="bg-slate-700 text-slate-100 hover:bg-slate-800"
+          <select
+            class="bg-slate-700 text-slate-100 hover:bg-slate-800 rounded-md shadow"
             v-model="taskCopy.data.attributes.priority"
             icon="mdi-priority-high"
+            :disabled="loading"
           >
             <option
               class="bg-slate-700"
@@ -64,8 +79,17 @@
             >
               {{ key }}
             </option>
-          </icon-select>
+          </select>
+          <button
+            @click="deleteTask"
+            class="bg-slate-700 text-slate-100 hover:bg-slate-800 rounded-md shadow px-5 disabled:opacity-75"
+            :disabled="loading"
+          >
+            Delete
+          </button>
         </div>
+
+        <!-- </div> -->
       </div>
     </div>
   </div>
@@ -88,6 +112,8 @@ const toast = useToast()
 const store = useStore()
 const date = ref(null)
 
+const loading = ref(false)
+
 watch(date, (newVal) => {
   if (newVal) taskCopy.data.attributes.deadline = newVal
 })
@@ -100,11 +126,8 @@ const priorityOptions = computed(() => ({
 }))
 
 watch(taskCopy, async () => {
-  console.log(priorityOptions)
-  //   console.log(taskCopy)
-  // if (props.task == taskCopy) return
-
   try {
+    loading.value = true
     await store.dispatch('updateUserTask', {
       task_id: taskCopy.data.task_id,
       title: taskCopy.data.attributes.title,
@@ -119,8 +142,22 @@ watch(taskCopy, async () => {
   } catch (err) {
     console.log(err)
     toast.error('Something went wrong please try again')
+  } finally {
+    loading.value = false
   }
 })
+
+const deleteTask = async () => {
+  try {
+    loading.value = true
+    await store.dispatch('deleteTask', taskCopy.data.task_id)
+    toast.success('Task deleted successfully')
+  } catch (error) {
+    toast.error(error)
+  } finally {
+    loading.value = false
+  }
+}
 
 // console.log(taskCopy.value)
 </script>

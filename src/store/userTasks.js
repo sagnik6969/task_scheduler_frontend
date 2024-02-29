@@ -28,15 +28,19 @@ const mutations = {
   setUserTasks(state, userTasks) {
     state.userTasks = userTasks
   },
-
+  setTaskDeleted(state) {
+    state.userTasksStatus = 'taskDeleted'
+  },
   addUserTask(state, task) {
     state.userTasks.unshift(task)
   },
   updateTask(state, task) {
     const idx = state.userTasks.findIndex((t) => {
-      return (t.data.task_id = task.data.task_id)
+      return t.data.task_id == task.data.task_id
     })
-    console.log(idx)
+    // console.log(t.data.task_id)
+    console.log(state.userTasks[idx])
+    console.log(task)
 
     state.userTasks[idx] = task
   },
@@ -113,6 +117,32 @@ const actions = {
     } catch (err) {
       console.log(err)
       throw 'unable to add task'
+    }
+  },
+  async deleteTask(context, taskId) {
+    try {
+      await axios.delete('api/user/tasks/' + taskId)
+      context.dispatch('fetchUserTasks')
+      context.commit('setTaskDeleted', true)
+    } catch (err) {
+      console.log(err)
+      throw 'unable to delete task'
+    }
+  },
+  async updateTask(context, payload) {
+    try {
+      await axios.put('api/user/tasks/' + payload.task_id, {
+        title: payload.title,
+        description: payload.description,
+        deadline: payload.deadline,
+        is_completed: payload.is_completed,
+        progress: payload.progress,
+        priority: payload.priority
+      })
+      context.dispatch('fetchUserTasks')
+    } catch (err) {
+      console.log(err)
+      throw 'unable to update task'
     }
   }
 }

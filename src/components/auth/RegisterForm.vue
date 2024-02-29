@@ -72,13 +72,14 @@
             class="bg-black w-full border-2 border-black transition-all duration-300 hover:bg-white text-white hover:text-black font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             type="submit"
           >
-            Sign up
+            <v-icon v-if="loading" class="animate-spin" icon="mdi-loading"></v-icon>
+            <span v-else>Sign up</span>
           </button>
         </div>
       </form>
       <div class="mt-10 justify-center flex text-black">
         <span class=""> Already have an account? </span>
-        <router-link class="ml-2 underline hover:text-blue-700 text-blue-400" to="/login">
+        <router-link class="ml-2 underline hover:text-blue-800 text-blue-600" to="/login">
           Sign in
         </router-link>
       </div>
@@ -90,13 +91,13 @@
 import axios from 'axios'
 import { onMounted } from 'vue'
 import { ref } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+// import { useRoute, useRouter } from 'vue-router'
 import { useToast } from 'vue-toast-notification'
 import { useStore } from 'vuex'
 
 const store = useStore()
-const router = useRouter()
-const route = useRoute()
+// const router = useRouter()
+// const route = useRoute()
 
 const name = ref(null)
 const nameValidity = ref(null)
@@ -115,6 +116,8 @@ const confirmPasswordValidity = ref(null)
 const confirmPasswordValidityMessage = ref(null)
 
 const errorMessages = ref([])
+
+const loading = ref(false)
 // const redirectUrl = route.query.redirect || '/login'
 const toast = useToast()
 
@@ -128,6 +131,7 @@ const handleSubmit = async () => {
     errorMessages.value = ['Please enter the required fields!']
   } else {
     try {
+      loading.value = true
       await store.dispatch('register', {
         name: name.value,
         email: email.value,
@@ -136,8 +140,10 @@ const handleSubmit = async () => {
 
       toast.success('Verification email sent. Check your mailbox for more details')
       // router.replace(redirectUrl)
-    } catch {
-      console.log('error')
+    } catch (err) {
+      toast.error(err || 'Something went wrong')
+    } finally {
+      loading.value = false
     }
   }
 }
