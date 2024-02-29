@@ -48,9 +48,11 @@
             </icon-select>
           </div>
           <div class="flex space-x-2">
-            <icon-button class="bg-slate-900 text-slate-100 hover:bg-slate-950 hover:text-slate-100"
-              >Add Task</icon-button
+            <icon-button
+              class="bg-slate-900 text-slate-100 hover:bg-slate-950 hover:text-slate-100"
             >
+              {{ props.admin ? 'Assign Task' : 'Add Task' }}
+            </icon-button>
           </div>
         </div>
       </div>
@@ -68,7 +70,7 @@ import { useToast } from 'vue-toast-notification'
 import { useStore } from 'vuex'
 
 const emit = defineEmits(['close'])
-const props = defineProps(['userId'])
+const props = defineProps(['userId', 'admin'])
 const toast = useToast()
 const store = useStore()
 
