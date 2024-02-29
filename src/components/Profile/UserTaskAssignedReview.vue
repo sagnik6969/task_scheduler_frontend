@@ -68,6 +68,7 @@
 <script>
 import axios from 'axios'
 import { useToast } from 'vue-toast-notification'
+
 const toast = useToast()
 export default {
   data() {
@@ -90,8 +91,13 @@ export default {
         .then((response) => {
           this.taskData = response.data
           console.log(response.data)
+          if (response.data.error) {
+            this.$router.push(response.data.link)
+            toast.info(response.data.error)
+          }
         })
-        .catch((error) => {
+        .catch((response, error) => {
+          this.$router.push(response.data.link)
           console.error('Error fetching task data:', error)
           toast.info('ku pagal panti krte ho')
         })
@@ -104,7 +110,7 @@ export default {
     },
     async declineTask() {
       await axios
-        .patch(`/api/tasks/assign/${this.$route.params.taskId}`, { status: 'decline' })
+        .patch(`/api/tasks/assign/${this.$route.params.taskId}`, { status: 'Decline' })
         .then((response) => {
           console.log('Task status updated successfully:', response.data)
           toast.info('bhai admin ko pta chl gya h')
@@ -118,7 +124,7 @@ export default {
     },
     async acceptTask() {
       await axios
-        .patch(`/api/tasks/assign/${this.$route.params.taskId}`, { status: 'accpet' })
+        .patch(`/api/tasks/assign/${this.$route.params.taskId}`, { status: 'Accepted' })
         .then((response) => {
           console.log('Task status updated successfully:', response.data)
           toast.info('bhai admin ko pta chl gya h')

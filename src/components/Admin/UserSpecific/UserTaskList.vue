@@ -16,11 +16,11 @@
     <div class="flex justify-between items-center mb-3 md:mb-6">
       <h3 class="text-lg md:text-2xl font-bold text-gray-800">Tasks List</h3>
       <!-- Filter button -->
-      <button
+      <!-- <button
         class="bg-black hover:opacity-50 text-white px-3 md:px-4 py-2 rounded-lg text-sm md:text-base"
       >
         Filter
-      </button>
+      </button> -->
     </div>
     <!-- Search bar -->
     <div class="mb-3 md:mb-4 relative">
@@ -244,12 +244,17 @@
 </template>
 
 <script>
+import axios from 'axios'
+import { useToast } from 'vue-toast-notification'
+const toast = useToast()
 export default {
   props: {
-    tasks: Array
+    alltasks: Array,
+    user: Number
   },
   data() {
     return {
+      tasks: this.alltasks,
       searchQuery: '',
       currentPage: 1,
       pageSize: 3,
@@ -286,9 +291,28 @@ export default {
         this.deleteTask(task)
       }
     },
-    deleteTask(task) {
-      alert(`Task "${task.title}" deleted successfully.`)
-      this.$emit('delete-task', task.id)
+    async deleteTask(task) {
+      await axios
+        .delete('/api/admin/tasks/' + task.id) // Assuming you have an endpoint to fetch task data
+        .then(async (response) => {
+          toast.info(response.data.message)
+          console.log(this.user)
+          await axios
+            .get('/api/admin/users/' + this.user) // Assuming you have an endpoint to fetch task data
+            .then((response) => {
+              console.log(response.data)
+              this.tasks = response.data.user.tasks
+              console.log(this.tasks)
+            })
+            .catch((response, error) => {
+              toast.info(response.data.error)
+              console.log(error)
+            })
+        })
+        .catch((response, error) => {
+          toast.info(response.data.error)
+          console.log(error)
+        })
     },
     searchTasks(event) {
       this.searchQuery = event.target.value

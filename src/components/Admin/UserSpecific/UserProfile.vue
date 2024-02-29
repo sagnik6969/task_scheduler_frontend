@@ -183,10 +183,10 @@ export default {
       return new Date(timestamp).toLocaleDateString(undefined, options)
     },
     deleteUser() {
-      this.$emit('delete-user', this.userDetails.id)
+      this.$emit('delete-user', this.userDetails)
     },
     makeAdmin() {
-      this.$emit('make-admin', this.userDetails.id)
+      this.$emit('make-admin', this.userDetails)
     },
     closeUserProfile() {
       this.$emit('close-user-profile')
