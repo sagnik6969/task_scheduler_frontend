@@ -6,7 +6,7 @@
         <search-box
           v-model="searchText"
           placeholder="Search tasks....."
-          class="mt-2 font-medium"
+          class="mt-2 font-medium w-1/2"
         ></search-box>
         <div class="gap-4 flex">
           <span

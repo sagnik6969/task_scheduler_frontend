@@ -1,6 +1,6 @@
 <template>
   <div
-    class="w-2/4 flex justify-between items-center duration-300 bg-slate-200 rounded origin-left hover:scale-x-105"
+    class="flex justify-between items-center duration-300 bg-slate-200 rounded origin-left hover:scale-x-105"
     :class="{ 'scale-105': isInputOnFocus }"
   >
     <input
