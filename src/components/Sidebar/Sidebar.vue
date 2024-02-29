@@ -3,7 +3,7 @@
     <div
       v-if="!ismobile"
       :class="{ 'w-64': open, 'w-16': !open }"
-      class="bg-black text-black h-screen overflow-hidden transition-all duration-300 fixed z-10 shadow-md"
+      class="bg-black text-black h-screen overflow-hidden transition-all duration-300 fixed z-50 shadow-md"
     >
       <!-- fixed top-0 start-0 z-50 -->
       <div class="py-4 flex items-center justify-center">
