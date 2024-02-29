@@ -31,7 +31,8 @@
         </div>
       </tooltip>
       <tooltip v-else text="Task Progress">
-        <progress-bar class="flex-1" :percentage="task.data.attributes.progress"></progress-bar>
+        <!-- <progress-bar class="flex-1" :percentage="task.data.attributes.progress"></progress-bar> -->
+        <circular-progress :value="task.data.attributes.progress"></circular-progress>
       </tooltip>
     </div>
     <icon-button class="" @click="taskDetailsIsVisible = true">View</icon-button>
@@ -43,8 +44,8 @@
 
 <script setup>
 import Tooltip from '@/components/ui/Tooltip.vue'
-
-import ProgressBar from '@/components/ui/ProgressBar.vue'
+import CircularProgress from '@/components/ui/CircularProgress.vue'
+// import ProgressBar from '@/components/ui/ProgressBar.vue'
 import IconButton from '@/components/ui/IconButton.vue'
 import DisplayTask from '@/components/tasks/DisplayTask.vue'
 import { computed, ref } from 'vue'

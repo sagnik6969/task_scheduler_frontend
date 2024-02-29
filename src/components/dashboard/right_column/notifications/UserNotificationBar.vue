@@ -27,7 +27,7 @@
           <v-icon class="" icon="mdi-account-circle"></v-icon>
         </div>
       </tooltip>
-      <p>Sagnik Jana</p>
+      <p>{{ $store.getters.userName }}</p>
     </div>
   </div>
 </template>

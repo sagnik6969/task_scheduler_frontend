@@ -8,6 +8,10 @@
 <script setup>
 import axios from 'axios'
 import { computed, ref, watchEffect } from 'vue'
+import { useToast } from 'vue-toast-notification'
+const emit = defineEmits(['initialLoadingCompleted'])
+
+const toast = useToast()
 
 const series = ref([
   {
@@ -18,6 +22,8 @@ const series = ref([
 
 const labels = ref([])
 const loading = ref(false)
+
+const initialLoadingComplete = ref(false)
 
 const options = computed(() => ({
   redrawOnParentResize: true,
@@ -45,16 +51,21 @@ const options = computed(() => ({
 }))
 
 watchEffect(async () => {
-  loading.value = true
-  const res = await axios.get(`/api/admin/analysis/all_user_task_progress_analysis`)
-  //   console.log(res.data.series)
-  series.value[0].data = res.data.series
-  console.log(series.value)
+  try {
+    loading.value = true
+    const res = await axios.get(`/api/admin/analysis/all_user_task_progress_analysis`)
+    //   console.log(res.data.series)
+    series.value[0].data = res.data.series
+    // console.log(series.value)
 
-  labels.value = res.data.labels
-  loading.value = false
-  //   } catch {
-
-  //   }
+    labels.value = res.data.labels
+    loading.value = false
+    if (initialLoadingComplete.value == false) {
+      initialLoadingComplete.value = true
+      emit('initialLoadingCompleted')
+    }
+  } catch (error) {
+    toast.error('Unable to fetch data')
+  }
 })
 </script>
