@@ -111,7 +111,11 @@
       />
     </div>
     <div v-if="isTaskFromVisisble !== null" class="user-task-assign-container">
-      <task-form :userId="isTaskFromVisisble" @close="isTaskFromVisisble = null"></task-form>
+      <task-form
+        :userId="isTaskFromVisisble"
+        :admin="currentRouteName"
+        @close="isTaskFromVisisble = null"
+      ></task-form>
     </div>
   </div>
 </template>
@@ -144,7 +148,8 @@ export default {
       taskListVisible: false,
       currentPage: 1,
       usersPerPage: 3,
-      isTaskFromVisisble: null
+      isTaskFromVisisble: null,
+      isAdmin: null
     }
   },
   computed: {
@@ -155,6 +160,10 @@ export default {
     },
     totalPages() {
       return Math.ceil(this.displayedUsers.length / this.usersPerPage)
+    },
+    currentRouteName() {
+      console.log(this.$route.name)
+      return this.$route.name
     }
   },
   created() {

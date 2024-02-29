@@ -55,7 +55,6 @@ async function fetchEfficiencyData() {
     const response = await axios.get('/api/user/efficiency')
     totalTasks.value = response.data.total_tasks
     averageEfficiency.value = Math.min(parseFloat(response.data.average_efficiency).toFixed(2), 5)
-    console.log(averageEfficiency.value)
     overallEfficiencyRating.value = response.data.overall_efficiency_rating
     setRatingImage(averageEfficiency.value)
   } catch (error) {

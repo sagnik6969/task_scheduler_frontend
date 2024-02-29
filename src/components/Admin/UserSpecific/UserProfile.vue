@@ -36,7 +36,7 @@
         <div class="flex items-center">
           <div class="pie-chart w-24 h-24 relative" v-if="userDetails.tasks.length > 0">
             <div
-              class="absolute inset-0 bg-brown-300 rounded-full transform rotate-180"
+              class="absolute inset-0 bg-red-300 rounded-full transform rotate-180"
               :style="{ width: incompletePercentage + '%' }"
             ></div>
             <div
@@ -60,29 +60,9 @@
       <div class="flex items-center mb-6" v-if="userDetails.tasks.length > 0">
         <div class="text-gray-800 text-lg font-bold mr-4">Rating:</div>
         <div class="flex items-center">
-          <template v-for="star in 5" :key="star">
-            <svg
-              v-if="star <= stars"
-              class="h-6 w-6 fill-current text-yellow-500 mr-1 cursor-pointer"
-              @click="stars = star"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-            >
-              <path
-                d="M12 2c-.2 0-.4.08-.55.24L8.22 7.29 2 8.25l4.66 4.26L5.6 19.2l6.6-3.9v8.34l3.8-2.26 3.8 2.26V15.06l6.6 3.9-1.06-6.66 4.66-4.26-6.23-.96L12 2z"
-              />
-            </svg>
-            <svg
-              v-else
-              class="h-6 w-6 fill-current text-gray-400 mr-1 cursor-pointer"
-              @click="stars = star"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-            >
-              <path
-                d="M12 2c-.2 0-.4.08-.55.24L8.22 7.29 2 8.25l4.66 4.26L5.6 19.2l6.6-3.9v8.34l3.8-2.26 3.8 2.26V15.06l6.6 3.9-1.06-6.66 4.66-4.26-6.23-.96L12 2z"
-              />
-            </svg>
+          <template v-for="star in 5">
+            <v-icon v-if="star <= filledStars" :key="'star-filled-' + star"> mdi-star </v-icon>
+            <v-icon v-else :key="'star-outline-' + star"> mdi-star-outline </v-icon>
           </template>
         </div>
       </div>
@@ -169,6 +149,27 @@ export default {
       const totalTasks = this.userDetails.tasks.length
       const completeTasks = this.completeTaskCount
       return (completeTasks / totalTasks) * 100
+    },
+    filledStars() {
+      const completedTaskCount = this.completeTaskCount
+      const crossedDeadlineTaskCount = this.crossedDeadlineCount
+      const totalTasks = completedTaskCount + crossedDeadlineTaskCount
+      const completionRate = totalTasks > 0 ? (completedTaskCount / totalTasks) * 100 : 0
+
+      let rating = 0
+      if (completionRate <= 20) {
+        rating = 1
+      } else if (completionRate <= 40) {
+        rating = 2
+      } else if (completionRate <= 65) {
+        rating = 3
+      } else if (completionRate <= 80) {
+        rating = 4
+      } else {
+        rating = 5
+      }
+
+      return rating
     }
   },
   methods: {
@@ -190,6 +191,9 @@ export default {
     },
     closeUserProfile() {
       this.$emit('close-user-profile')
+    },
+    setRating(star) {
+      this.stars = star
     }
   }
 }
