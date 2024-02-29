@@ -16,7 +16,9 @@
       <Tooltip text="Time left until the deadline">
         <div
           class="bg-green-200 w-fit py-2 px-4 space-x-2 rounded-full"
-          :class="{ 'bg-orange-400': remainingTime == '0min' }"
+          :class="{
+            'bg-orange-400': remainingTime == '0min' && !task.data.attributes.is_completed
+          }"
         >
           <v-icon icon="mdi-clock-time-four"></v-icon>
           <span class="font-medium text-slate-600">{{ remainingTime }}</span>
