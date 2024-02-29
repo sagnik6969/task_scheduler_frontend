@@ -24,30 +24,35 @@
             <img
               src="@/assets/images/view_user.png"
               alt="Profile"
-              class="h-6 w-6 cursor-pointer transform transition duration-300 hover:scale-110"
+              :title="'View Profile : ' + user.name"
+              class="h-6 w-6 cursor-pointer transform transition duration-300 hover:scale-110 tooltip"
               @click="viewProfile(user)"
             />
             <img
               src="@/assets/images/assign_task.png"
               alt="Assign Task"
+              :title="'Assign Task To ' + user.name"
               class="h-6 w-6 cursor-pointer transform transition duration-300 hover:scale-110"
               @click="assignTask(user.id)"
             />
             <img
               src="@/assets/images/delete.png"
               alt="Delete"
+              :title="'Delete : ' + user.name"
               class="h-6 w-6 cursor-pointer transform transition duration-300 hover:scale-110"
-              @click="deleteUser(user.id)"
+              @click="deleteUser(user)"
             />
             <img
               src="@/assets/images/admin.png"
               alt="Admin"
+              :title="'Make ' + user.name + ' Admin'"
               class="h-6 w-6 cursor-pointer transform transition duration-300 hover:scale-110"
-              @click="makeAdmin(user.id)"
+              @click="makeAdmin(user)"
             />
             <img
               src="@/assets/images/view.png"
               alt="View Tasks"
+              :title="'View All Tasks : ' + user.name"
               class="h-6 w-6 cursor-pointer transform transition duration-300 hover:scale-110"
               @click="openTaskList(user)"
             />
@@ -55,16 +60,23 @@
         </div>
         <div class="flex justify-center mt-8">
           <button
-            v-if="currentPage !== 1"
-            class="px-4 py-2 bg-black text-white rounded-md hover:opacity-50 focus:outline-none focus:bg-purple-700"
+            v-if="displayedUsers.length !== 0"
+            :class="{ 'opacity-50 cursor-not-allowed': currentPage === 1 }"
+            class="px-4 py-2 bg-black text-white rounded-md hover:opacity-50 focus:outline-none"
             @click="prevPage"
+            :disabled="currentPage === 1"
           >
             Previous
           </button>
           <button
-            v-if="currentPage !== totalPages"
-            class="px-4 py-2 bg-black text-white rounded-md hover:opacity-50 focus:outline-none focus:bg-purple-700 ml-2"
+            v-if="displayedUsers.length !== 0"
+            :class="{
+              'opacity-50 cursor-not-allowed':
+                currentPage === totalPages || displayedUsers.length === 0
+            }"
+            class="px-4 py-2 bg-black text-white rounded-md hover:opacity-50 focus:outline-none ml-2"
             @click="nextPage"
+            :disabled="currentPage === totalPages || displayedUsers.length === 0"
           >
             Next
           </button>
@@ -92,7 +104,8 @@
     </div>
     <div v-if="taskListVisible" class="user-task-list-container">
       <user-task-list
-        :tasks="selectedUserTasks"
+        :alltasks="selectedUserTasks"
+        :user="currentUser"
         @close-task-list="closeTaskList"
         @task-closed="closeTaskList"
       />
@@ -113,6 +126,8 @@ import SearchFilter from './SearchFilter.vue'
 import UserProfile from './UserSpecific/UserProfile.vue'
 import UserTaskList from './UserSpecific/UserTaskList.vue'
 import TaskForm from '../../components/tasks/TaskForm.vue'
+import { useToast } from 'vue-toast-notification'
+const toast = useToast()
 export default {
   props: {
     users: Array
@@ -129,6 +144,7 @@ export default {
       loading: true,
       isViewingProfile: false,
       selectedUser: null,
+      currentUser: null,
       taskListVisible: false,
       currentPage: 1,
       usersPerPage: 3,
@@ -151,10 +167,11 @@ export default {
     }
   },
   created() {
-    setTimeout(() => {
-      this.displayedUsers = [...this.users]
-      this.loading = false
-    }, 2000)
+    // setTimeout(() => {
+    //   this.displayedUsers = [...this.users]
+    //   this.loading = false
+    // }, 2000)
+    this.fetchFirstData()
   },
   methods: {
     viewProfile(user) {
@@ -188,22 +205,46 @@ export default {
         alert('Failed to assign task. Please try again.')
       }
     },
-    async deleteUser(userId) {
+    async deleteUser(user) {
       try {
-        this.isViewingProfile = false
-        const response = await axios.delete(`/api/admin/users/${userId}`)
-        alert(response.data.message)
-        this.$emit('update-users')
+        if (window.confirm(`Are you sure you want to delete ${user.name}"?`)) {
+          this.isViewingProfile = false
+          await axios.delete(`/api/admin/users/${user.id}`)
+          toast.info(`${user.name} is deleted successfully`)
+          this.fetchData()
+        }
       } catch (error) {
         console.error('Error deleting user:', error)
         alert('Failed to delete user. Please try again.')
       }
     },
-    async makeAdmin(userId) {
+    async fetchData() {
       try {
-        const response = await axios.patch(`/api/admin/users/${userId}`)
-        alert(response.data.message)
-        this.$emit('update-users')
+        const response = await axios.get('/api/admin/tasks')
+        this.displayedUsers = response.data.users
+        console.log(this.displayedUsers)
+      } catch (error) {
+        console.error('Error fetching data:', error)
+      }
+    },
+    async fetchFirstData() {
+      try {
+        const response = await axios.get('/api/admin/tasks')
+        this.displayedUsers = response.data.users
+        console.log(this.displayedUsers)
+        this.loading = false
+      } catch (error) {
+        console.error('Error fetching data:', error)
+      }
+    },
+    async makeAdmin(user) {
+      try {
+        if (window.confirm(`Are you sure you want to make ${user.name} Admin"?`)) {
+          this.isViewingProfile = false
+          await axios.patch(`/api/admin/users/${user.id}`)
+          toast.info(`${user.name} is now admin .`)
+          this.fetchData()
+        }
       } catch (error) {
         console.error('Error deleting user:', error)
         alert('Failed to delete user. Please try again.')
@@ -213,6 +254,7 @@ export default {
       try {
         // Fetch tasks for the selected user
         this.selectedUserTasks = user.tasks
+        this.currentUser = user.id
         console.log(this.selectedUserTasks)
         this.taskListVisible = true
         // this.isViewingProfile = true
@@ -293,5 +335,29 @@ export default {
 
   background-color: rgba(0, 0, 0, 0.7);
   z-index: 999;
+}
+.tooltip {
+  position: relative;
+}
+
+.tooltip:hover::before {
+  content: attr(title);
+  position: absolute;
+  bottom: calc(100% + 0.5rem);
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: black;
+  color: white;
+  padding: 0.5rem;
+  border-radius: 0.25rem;
+  border: 1px solid black;
+  white-space: nowrap;
+  z-index: 9999;
+  transition: opacity 0.3s ease;
+  opacity: 0;
+}
+
+.tooltip:hover::before {
+  opacity: 1;
 }
 </style>

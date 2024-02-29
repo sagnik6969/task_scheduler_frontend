@@ -25,7 +25,8 @@ export default {
     return {
       currentUser: {},
       selectedOption: 'users',
-      users: []
+      users: [],
+      assignTasks: []
     }
   },
   // computed:{
@@ -41,11 +42,11 @@ export default {
     async fetchData() {
       try {
         if (this.selectedOption === 'users') {
-          console.log(11)
           const response = await axios.get('/api/admin/tasks')
           this.users = response.data.users
-          console.log(1111)
           console.log(this.users)
+        } else if (this.selectedOption === 'assigned_tasks') {
+          console.log(1)
         }
       } catch (error) {
         console.error('Error fetching data:', error)
@@ -75,5 +76,11 @@ export default {
 .extracss {
   display: flex;
   justify-content: center;
+}
+@media screen and (max-width: 1280px) {
+  .extracss {
+    margin: auto;
+    width: 80%;
+  }
 }
 </style>
