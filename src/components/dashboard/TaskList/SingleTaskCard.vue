@@ -45,7 +45,7 @@
 <script setup>
 import Tooltip from '@/components/ui/Tooltip.vue'
 import CircularProgress from '@/components/ui/CircularProgress.vue'
-import ProgressBar from '@/components/ui/ProgressBar.vue'
+// import ProgressBar from '@/components/ui/ProgressBar.vue'
 import IconButton from '@/components/ui/IconButton.vue'
 import DisplayTask from '@/components/tasks/DisplayTask.vue'
 import { computed, ref } from 'vue'
