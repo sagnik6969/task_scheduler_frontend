@@ -133,12 +133,6 @@ const sortFn = computed(() => {
 })
 
 const filteredTasks = computed(() => {
-  // const searchQuery = searchText.value.toLowerCase()
-  // return store.getters.userTasks.toSorted(sortFn.value).filter((task) => {
-  //   const title = task.data.attributes.title.toLowerCase()
-  //   const description = task.data.attributes.description?.toLowerCase() || ''
-  //   return searchQuery === '' || title.includes(searchQuery) || description.includes(searchQuery)
-  // })
   const searchQuery = searchText.value.toLowerCase()
   let tasksToShow = []
 
