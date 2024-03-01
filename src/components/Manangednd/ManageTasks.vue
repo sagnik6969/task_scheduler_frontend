@@ -1,5 +1,7 @@
 <template>
   <div class="flex relative flex-col">
+    <UserNotificationBar />
+
     <div class="flex h-full">
       <div class="flex flex-col w-1/2 px-12 mx-10 gap-2">
         <div
@@ -16,6 +18,7 @@
   </div>
 </template>
 <script setup>
+import UserNotificationBar from '@/components/dashboard/right_column/notifications/UserNotificationBar.vue'
 import { ref, onMounted } from 'vue'
 import KanbanBoard from './KanbanBoard.vue'
 import SingleTaskCard from '@/components/dashboard/TaskList/SingleTaskCard.vue'

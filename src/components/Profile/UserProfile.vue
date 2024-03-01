@@ -1,45 +1,51 @@
 <template>
-  <div class="sm:flex w-full p-5 md:p-20 gap-5 h-full">
-    <div class="shadow-md border-2 border-black bg-green-200 rounded-lg">
-      <div class="flex justify-center items-center mt-5">
-        <img
-          class="object-cover rounded-full h-48 w-48 min-h-12 min-w-12"
-          src="https://avatars.githubusercontent.com/u/47273253?v=4"
-          alt="profile pic"
-        />
-      </div>
-      <div class="flex justify-center items-center mt-5">
-        <h1 class="text-3xl font-bold">{{ userDetails ? userDetails.name : name }}</h1>
-      </div>
-      <div class="p-5 md:p-14 flex flex-col justify-start">
-        <div
-          class="flex p-2 border-2 border-black rounded-sm items-center w-full justify-between mb-2"
-        >
-          <h1 class="text-lg sm:text-2xl font-semibold">My profile</h1>
-          <p class="text-sm sm:text-md">
-            Last created at:
-            <span class="text-xs sm:text-sm block">{{
-              userDetails ? formatDate(userDetails.created_at) : formatDate(date)
-            }}</span>
-          </p>
+  <div class="">
+    <user-notification-bar
+      class="fixed top-0 right-0 left-0 z-0 py-3 pr-14 w-full bg-white xl:static xl:mr-0 xl:mt-0 xl:pr-0"
+    ></user-notification-bar>
+    <div class="sm:flex w-full p-5 md:p-20 gap-5 h-full">
+      <div class="shadow-md border-2 border-black bg-green-200 rounded-lg">
+        <div class="flex justify-center items-center mt-5">
+          <img
+            class="object-cover rounded-full h-48 w-48 min-h-12 min-w-12"
+            src="https://avatars.githubusercontent.com/u/47273253?v=4"
+            alt="profile pic"
+          />
         </div>
-        <div class="flex w-full border-2 border-black items-center p-2 justify-between mb-2">
-          <h1 class="text-lg sm:text-2xl font-semibold">Email:</h1>
-          <p class="text-sm sm:text-md">{{ userDetails ? userDetails.email : Email }}</p>
+        <div class="flex justify-center items-center mt-5">
+          <h1 class="text-3xl font-bold">{{ userDetails ? userDetails.name : name }}</h1>
+        </div>
+        <div class="p-5 md:p-14 flex flex-col justify-start">
+          <div
+            class="flex p-2 border-2 border-black rounded-sm items-center w-full justify-between mb-2"
+          >
+            <h1 class="text-lg sm:text-2xl font-semibold">My profile</h1>
+            <p class="text-sm sm:text-md">
+              Last created at:
+              <span class="text-xs sm:text-sm block">{{
+                userDetails ? formatDate(userDetails.created_at) : formatDate(date)
+              }}</span>
+            </p>
+          </div>
+          <div class="flex w-full border-2 border-black items-center p-2 justify-between mb-2">
+            <h1 class="text-lg sm:text-2xl font-semibold">Email:</h1>
+            <p class="text-sm sm:text-md">{{ userDetails ? userDetails.email : Email }}</p>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="flex flex-col w-full sm:w-1/2 md:w-1/2 lg:w-1/3 xl:w-2/3">
-      <TaskCounter />
-      <div class="flex">
-        <Statistics class="xl:w-[500px]" />
-        <Efficiency />
+      <div class="flex flex-col w-full sm:w-1/2 md:w-1/2 lg:w-1/3 xl:w-2/3">
+        <TaskCounter />
+        <div class="flex">
+          <Statistics class="xl:w-[500px]" />
+          <Efficiency />
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
+import UserNotificationBar from '@/components/dashboard/right_column/notifications/UserNotificationBar.vue'
 import TaskCounter from '@/components/dashboard/right_column/TaskCounter.vue'
 import Statistics from '@/components/dashboard/right_column/statistics/Statistics.vue'
 import Efficiency from '@/components/dashboard/right_column/Efficiency.vue'
