@@ -65,5 +65,5 @@ function formatDate(dateString) {
   })
 }
 
-console.log(props.task)
+// console.log(props.task)
 </script>

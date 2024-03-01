@@ -56,7 +56,7 @@ onMounted(async () => {
     .get('/api/admin/assign/tasks') // Assuming you have an endpoint to fetch task data
     .then((response) => {
       tasks.value = response.data.data
-      console.log(tasks.value)
+      // console.log(tasks.value)
     })
     .catch((error) => {
       console.log(error)

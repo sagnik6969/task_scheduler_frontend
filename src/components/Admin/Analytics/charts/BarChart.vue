@@ -3,13 +3,7 @@
     <div v-if="loading" class="w-full h-96 flex items-center justify-center z-50">
       <div class="loading-pillar"></div>
     </div>
-    <apexchart
-      v-else
-      type="bar"
-      :options="chartOptions"
-      :series="chartSeries"
-      @data-loaded="dataLoaded"
-    ></apexchart>
+    <apexchart v-else type="bar" :options="chartOptions" :series="chartSeries"></apexchart>
   </div>
 </template>
 
