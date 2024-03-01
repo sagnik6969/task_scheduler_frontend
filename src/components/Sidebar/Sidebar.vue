@@ -128,7 +128,6 @@ onUnmounted(() => {
   })
 })
 
-// Dynamically add admin link if user is admin
 const adminLink = {
   path: '/admin',
   label: 'Admin dashboard',
@@ -164,7 +163,7 @@ onUnmounted(() => {
 })
 </script>
 
-<style>
+<style scoped>
 .menu-toggle-wrap .material-icons {
   font-size: 24px;
 }

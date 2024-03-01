@@ -64,6 +64,7 @@ import { useRoute, useRouter } from 'vue-router'
 import sortByDeadLine from './filter_functions/sortByDeadline.js'
 import sortByPriority from './filter_functions/sortByPriority.js'
 import sortByProgress from './filter_functions/sortByProgress.js'
+import sortByLatestTasks from './filter_functions/sortByLatestTasks.js'
 import { useStore } from 'vuex'
 
 // const props = defineProps(['tasks'])
@@ -110,8 +111,9 @@ const navLinks = computed(() => [
 ])
 const handleCategoryChange = () => {
   showCategory.value = event.target.value
-  if (event.target.value == '') {
-    route.query.filter == null
+  if (route.query.filter == '') {
+    showCategory.value = category === 'All Tasks' ? '' : category.toLowerCase().replace(' ', '_')
+    router.push({ query: { ...route.query, filter: showCategory.value } })
   }
   router.push({ query: { ...route.query, filter: showCategory.value } })
 }
@@ -127,7 +129,6 @@ const sortFn = computed(() => {
   else if (route.query.filter == 'most_important') return sortByPriority
   else if (route.query.filter == 'least_progress') return sortByProgress
   else if (route.query.filter == 'latest_tasks') return sortByLatestTasks
-  // else if (route.query.filter == 'assigned_by_admin') return sortByassignedAdmin
   else return undefined
 })
 
@@ -145,11 +146,9 @@ const filteredTasks = computed(() => {
     tasksToShow = store.getters.userTasks.filter((task) => task.data.attributes.is_completed)
   } else if (showCategory.value === 'incompleted_tasks') {
     tasksToShow = store.getters.userTasks.filter((task) => !task.data.attributes.is_completed)
-  }
-  // }else if(route.query.filter==='assigned_by_admin'){
-  //   tasksToShow =
-  // }
-  else {
+  } else if (route.query.filter == 'assigned_by_admin') {
+    tasksToShow = store.getters.userTasks.filter((task) => task.data.attributes.admin_id)
+  } else {
     tasksToShow = store.getters.userTasks
   }
 
@@ -159,19 +158,4 @@ const filteredTasks = computed(() => {
     return searchQuery === '' || title.includes(searchQuery) || description.includes(searchQuery)
   })
 })
-
-const sortByLatestTasks = (taskA, taskB) => {
-  return new Date(taskB.data.attributes.created_at) - new Date(taskA.data.attributes.created_at)
-}
-
-const sortByOldestTasks = (taskA, taskB) => {
-  return new Date(taskA.data.attributes.created_at) - new Date(taskB.data.attributes.created_at)
-}
 </script>
-<!-- <style scoped>
-.stick {
-  position: sticky;
-  top: 0;
-  z-index: 10;
-}
-</style> -->
