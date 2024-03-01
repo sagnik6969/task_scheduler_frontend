@@ -33,9 +33,9 @@
         $store.getters.userTasksLoadingStatus == 'loading' ||
         $store.getters.userTasksLoadingStatus == null
       "
-      class="text-center my-20 text-slate-900"
+      class="text-center text-slate-900"
     >
-      <v-progress-circular :size="50" :width="5" color="purple" indeterminate></v-progress-circular>
+      <TaskSkeleton />
     </div>
     <div
       v-else-if="store.getters.userTasks.length == 0"
@@ -58,7 +58,7 @@
 import SearchBox from '@/components/ui/SearchBox.vue'
 import SingleTaskCard from './SingleTaskCard.vue'
 import TaskListNav from './TaskListNav.vue'
-
+import TaskSkeleton from '@/components/ui/Shimmer/TasksSkeleton.vue'
 import { computed, onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import sortByDeadLine from './filter_functions/sortByDeadline.js'
