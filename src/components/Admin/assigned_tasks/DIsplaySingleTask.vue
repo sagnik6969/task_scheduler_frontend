@@ -41,9 +41,7 @@
       >
         <span>Progress: {{ task.progress ?? 0 }}%</span>
         <div class="bg-blue-300 h-2 rounded-3xl flex-1">
-          <div
-            :class="`w-[${task.progress ? task.progress : 0}%] bg-blue-700 h-full rounded-3xl`"
-          ></div>
+          <div class="progress-bar bg-blue-700 h-full rounded-3xl"></div>
         </div>
       </div>
       <div class="mt-2">
@@ -53,6 +51,8 @@
   </div>
 </template>
 <script setup>
+import { computed } from 'vue'
+
 defineEmits(['close'])
 const props = defineProps(['task'])
 
@@ -64,6 +64,12 @@ function formatDate(dateString) {
     day: 'numeric'
   })
 }
+const width = computed(() => `${props.task.progress}%`)
 
 // console.log(props.task)
 </script>
+<style scoped>
+.progress-bar {
+  width: v-bind('width');
+}
+</style>

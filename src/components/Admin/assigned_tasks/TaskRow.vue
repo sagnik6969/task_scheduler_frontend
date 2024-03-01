@@ -17,7 +17,13 @@
       {{ task.user.name }}
     </td>
     <td class="border px-4 py-2 w-1/5 text-center font-medium text-green-500">
-      <span>{{ task.status }}</span>
+      <span
+        :class="{
+          'text-red-600': task.status == 'Pending',
+          'text-green-500': task.status == 'Accepted'
+        }"
+        >{{ task.status }}</span
+      >
     </td>
     <!-- <td class="border px-4 py-2 text-slate-500 font-semibold text-sm w-1/5 text-center">
       {{ task.created_at }}
