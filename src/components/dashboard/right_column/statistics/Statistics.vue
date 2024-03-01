@@ -24,8 +24,9 @@
       </select>
     </div>
 
-    <div v-if="statLoading" class="w-full my-24 flex items-center justify-center">
-      <v-progress-circular :size="50" :width="5" color="purple" indeterminate></v-progress-circular>
+    <div v-if="statLoading" class="w-full mt-5 h-80 overflow-hidden">
+      <!-- <v-progress-circular :size="50" :width="5" color="purple" indeterminate></v-progress-circular> -->
+      <v-skeleton-loader class="w-full h-40" type="card, card"> </v-skeleton-loader>
     </div>
     <apexchart
       v-else

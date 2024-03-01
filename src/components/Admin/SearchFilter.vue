@@ -11,11 +11,16 @@
         @mouseover="showHelpText = true"
         @mouseleave="showHelpText = false"
       />
-      <img
+      <!-- <img
         src="../../assets/images/search.png"
         alt="search_icon"
         class="absolute right-3 top-3 h-6 w-6 text-gray-400"
-      />
+      /> -->
+      <div
+        class="absolute top-0 bottom-0 right-0 flex w-10 items-center justify-center text-slate-600 text-xl"
+      >
+        <v-icon icon="mdi-magnify"></v-icon>
+      </div>
     </div>
 
     <!-- Filter Dropdown -->

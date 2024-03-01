@@ -15,9 +15,11 @@
 
 <script setup>
 import axios from 'axios'
-import { computed, ref, onMounted, defineEmits } from 'vue'
+import { computed, ref, watchEffect } from 'vue'
+import { useToast } from 'vue-toast-notification'
+const emit = defineEmits(['initialLoadingCompleted'])
 
-const { emit } = defineEmits(['data-loaded'])
+const toast = useToast()
 
 const chartSeries = ref([
   {
@@ -28,6 +30,8 @@ const chartSeries = ref([
 
 const chartLabels = ref([])
 const loading = ref(false)
+
+const initialLoadingComplete = ref(false)
 
 const chartOptions = computed(() => ({
   chart: {
@@ -85,23 +89,24 @@ const chartOptions = computed(() => ({
   }
 }))
 
-onMounted(() => {
-  fetchData()
-})
-
-const fetchData = async () => {
-  loading.value = true
+watchEffect(async () => {
   try {
+    loading.value = true
     const res = await axios.get(`/api/admin/analysis/all_user_task_progress_analysis`)
+    //   console.log(res.data.series)
     chartSeries.value[0].data = res.data.series
+    // console.log(series.value)
+
     chartLabels.value = res.data.labels
-  } catch (error) {
-    console.error('Error fetching data:', error)
-  } finally {
     loading.value = false
-    emit('data-loaded') // Emit event to parent component
+    if (initialLoadingComplete.value == false) {
+      initialLoadingComplete.value = true
+      emit('initialLoadingCompleted')
+    }
+  } catch (error) {
+    toast.error('Unable to fetch data')
   }
-}
+})
 </script>
 
 <style scoped>

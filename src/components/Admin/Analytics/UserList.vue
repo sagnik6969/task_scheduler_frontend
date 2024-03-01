@@ -1,7 +1,7 @@
 <template>
   <div class="space-y-3 h-screen overflow-x-scroll [&::-webkit-scrollbar]:hidden">
     <h1 class="text-2xl font-semibold text-slate-900">User List</h1>
-    <search-box v-model="filterText" class="mb-3" placeholder="Search users...."></search-box>
+    <search-box v-model="filterText" class="mb-3 w-3/4" placeholder="Search users...."></search-box>
     <single-user-card
       v-for="user in filteredUsers"
       :key="user.id"

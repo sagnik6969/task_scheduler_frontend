@@ -40,43 +40,42 @@
               <p>Last Updated: {{ formatDate(user.updated_at) }}</p>
             </div>
           </div>
-
-          <div class="flex items-center justify-between w-full md:w-1/4">
-            <img
-              src="@/assets/images/view_user.png"
-              alt="Profile"
-              :title="'View Profile : ' + user.name"
-              class="h-6 w-6 cursor-pointer transform transition duration-300 hover:scale-110 tooltip"
-              @click="viewProfile(user)"
-            />
-            <img
-              src="@/assets/images/assign_task.png"
-              alt="Assign Task"
-              :title="'Assign Task To ' + user.name"
-              class="h-6 w-6 cursor-pointer transform transition duration-300 hover:scale-110"
-              @click="assignTask(user.id)"
-            />
-            <img
-              src="@/assets/images/delete.png"
-              alt="Delete"
-              :title="'Delete : ' + user.name"
-              class="h-6 w-6 cursor-pointer transform transition duration-300 hover:scale-110"
-              @click="deleteUser(user)"
-            />
-            <img
-              src="@/assets/images/admin.png"
-              alt="Admin"
-              :title="'Make ' + user.name + ' Admin'"
-              class="h-6 w-6 cursor-pointer transform transition duration-300 hover:scale-110"
-              @click="makeAdmin(user)"
-            />
-            <img
-              src="@/assets/images/view.png"
-              alt="View Tasks"
-              :title="'View All Tasks : ' + user.name"
-              class="h-6 w-6 cursor-pointer transform transition duration-300 hover:scale-110"
-              @click="openTaskList(user)"
-            />
+          <div class="flex items-center justify-between w-full md:w-1/4 text-lg">
+            <tooltip text="View Profile">
+              <v-icon
+                icon="mdi-table-account"
+                class="transform transition duration-300 hover:scale-110"
+                @click="viewProfile(user)"
+              ></v-icon>
+            </tooltip>
+            <tooltip text="Assign Task">
+              <v-icon
+                icon="mdi-list-box-outline"
+                class="transform transition duration-300 hover:scale-110"
+                @click="assignTask(user.id)"
+              ></v-icon>
+            </tooltip>
+            <tooltip text="Delete User">
+              <v-icon
+                icon="mdi-delete"
+                class="transform transition duration-300 hover:scale-110"
+                @click="deleteUser(user)"
+              ></v-icon>
+            </tooltip>
+            <tooltip text="Make Admin">
+              <v-icon
+                icon="mdi-account-star"
+                class="h-6 w-6 cursor-pointer transform transition duration-300 hover:scale-110"
+                @click="makeAdmin(user)"
+              />
+            </tooltip>
+            <tooltip text="View Tasks">
+              <v-icon
+                icon="mdi-eye"
+                class="h-6 w-6 cursor-pointer transform transition duration-300 hover:scale-110"
+                @click="openTaskList(user)"
+              />
+            </tooltip>
           </div>
         </div>
         <div class="flex justify-center" v-if="totalPages !== 1">
@@ -164,7 +163,11 @@
       </div>
     </transition>
     <div v-if="isTaskFromVisisble !== null" class="user-task-assign-container">
-      <task-form :userId="isTaskFromVisisble" @close="isTaskFromVisisble = null"></task-form>
+      <task-form
+        :userId="isTaskFromVisisble"
+        :admin="currentRouteName"
+        @close="isTaskFromVisisble = null"
+      ></task-form>
     </div>
   </div>
 </template>
@@ -176,6 +179,8 @@ import UserProfile from './UserSpecific/UserProfile.vue'
 import UserTaskList from './UserSpecific/UserTaskList.vue'
 import TaskForm from '../../components/tasks/TaskForm.vue'
 import { useToast } from 'vue-toast-notification'
+import Tooltip from '../ui/Tooltip.vue'
+// import Tooltip from '../ui/Tooltip.vue'
 const toast = useToast()
 export default {
   props: {
@@ -185,7 +190,8 @@ export default {
     SearchFilter,
     UserProfile,
     UserTaskList,
-    TaskForm
+    TaskForm,
+    Tooltip
   },
   data() {
     return {
@@ -210,6 +216,10 @@ export default {
     },
     totalPages() {
       return Math.ceil(this.displayedUsers.length / this.usersPerPage)
+    },
+    currentRouteName() {
+      console.log(this.$route.name)
+      return this.$route.name
     }
   },
   created() {
