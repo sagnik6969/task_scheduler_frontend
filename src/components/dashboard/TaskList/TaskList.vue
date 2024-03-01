@@ -90,7 +90,7 @@ watch(searchText, (newVal) => {
 })
 
 const navLinks = computed(() => [
-  { name: 'All Tasks', filter: '', active: route.query.filter == null },
+  { name: 'All Tasks', filter: '', active: route.query.filter == null || route.query.filter == '' },
   {
     name: 'Most Important',
     filter: 'most_important',
