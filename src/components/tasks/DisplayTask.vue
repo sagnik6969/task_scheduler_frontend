@@ -1,12 +1,12 @@
 <template>
   <div
-    class="top-0 left-0 h-screen w-full flex items-center justify-center bg bg-slate-500 bg-opacity-80 absolute z-10"
+    class="top-0 left-0 h-screen w-full flex items-center justify-center bg bg-slate-900 bg-opacity-80 absolute z-10"
   >
     <div class="py-5 px-10 flex flex-col max-w-2xl w-10/12 shadow-2xl rounded-lg bg-white relative">
       <button
         type="button"
         @click="$emit('close')"
-        class="absolute top-2 right-2 p-1 rounded-full text-slate-600 hover:bg-slate-300 duration-300"
+        class="absolute top-2 right-4 p-1 rounded-full text-slate-600 hover:bg-slate-300 duration-300"
       >
         <v-icon icon="mdi-close"></v-icon>
       </button>
@@ -17,22 +17,71 @@
         bottom
         color="#C6A969"
       ></v-progress-linear>
-      <div class="flex space-x-1 items-center font-medium text-slate-500">
-        <v-icon icon="mdi-circle" class="text-red-500"></v-icon>
-        <p class="text-lg">{{ taskCopy.data.attributes.priority }}</p>
+      <div class="flex justify-between mt-2">
+        <h1 class="mt-3 text-2xl font-medium text-slate-900">
+          {{ taskCopy.data.attributes.title }}
+        </h1>
+        <div
+          class="flex space-x-1 items-center font-medium text-slate-500 mt-4 cursor-pointer"
+          @mouseover="showHelpText = true"
+          @mouseleave="showHelpText = false"
+        >
+          <v-icon
+            icon="mdi-circle"
+            :class="
+              taskCopy.data.attributes.priority === 'Very Important'
+                ? 'text-red-500'
+                : taskCopy.data.attributes.priority === 'Important'
+                  ? 'text-green-500'
+                  : 'text-blue-500'
+            "
+          ></v-icon>
+          <p
+            class="text-lg"
+            :class="
+              taskCopy.data.attributes.priority === 'Very Important'
+                ? 'text-red-500'
+                : taskCopy.data.attributes.priority === 'Important'
+                  ? 'text-green-500'
+                  : 'text-blue-500'
+            "
+          >
+            {{ taskCopy.data.attributes.priority }}
+          </p>
+        </div>
+        <div
+          v-if="showHelpText"
+          class="absolute bg-black opacity-80 p-2 shadow-md rounded text-sm mt-2 right-9 top-20"
+        >
+          <p class="text-white">Task Priority</p>
+          <!-- <p class="text-white">
+            Red for Very Important, Green for Important, and Blue for other priorities.
+          </p> -->
+        </div>
       </div>
-      <h1 class="mt-3 text-2xl font-medium text-slate-900">{{ taskCopy.data.attributes.title }}</h1>
       <p class="mt-3 text-slate-500 font-medium">{{ taskCopy.data.attributes.description }}</p>
       <div class="mt-5 flex items-center text-lg space-x-3 text-slate-900 font-medium">
         <label for="task_progress">Progress: {{ taskCopy.data.attributes.progress }}%</label>
         <input
-          class="border-none flex-grow"
+          class="border-none flex-grow appearance-none relative"
           type="range"
+          :class="{
+            'bg-red-500': taskCopy.data.attributes.progress <= 34,
+            'bg-yellow-500':
+              taskCopy.data.attributes.progress >= 35 && taskCopy.data.attributes.progress <= 67,
+            'bg-green-500': taskCopy.data.attributes.progress >= 68
+          }"
           min="0"
           max="100"
           v-model="taskCopy.data.attributes.progress"
           id="task_progress"
           :disabled="loading"
+          style="
+            height: 7px; /* Make the track thinner */
+            outline: none; /* Remove default focus style */
+            -webkit-appearance: none;
+            border-radius: 20px;
+          "
         />
       </div>
 
@@ -111,6 +160,7 @@ console.log(taskCopy.data.attributes.is_completed)
 const toast = useToast()
 const store = useStore()
 const date = ref(null)
+const showHelpText = ref(false)
 
 const loading = ref(false)
 
@@ -165,5 +215,16 @@ const deleteTask = async () => {
 <style>
 .date-picker input {
   @apply font-medium bg-slate-100 focus:[box-shadow:none] hover:bg-slate-200 duration-300 placeholder:text-black border-none w-48;
+}
+input[type='range']::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 25px;
+  height: 25px;
+  background-color: white;
+  border: 3px solid #4f46e5;
+  border-radius: 50%;
+  cursor: pointer;
+  margin-top: 0px;
 }
 </style>

@@ -1,6 +1,6 @@
 <template>
   <div
-    class="admin-section-selector flex mx-auto md:space-x-30 sm:space-x-20 lg:space-x-20 xl:space-x-40 justify-center mb-10"
+    class="admin-section-selector flex mx-auto md:space-x-30 sm:space-x-20 lg:space-x-20 xl:space-x-40 justify-center mb-6"
   >
     <div
       v-for="option in options"
