@@ -14,7 +14,7 @@
             <th class="px-4 py-2">Completion</th>
           </tr>
         </thead>
-        <!-- Table body -->
+        <!-- Table body  -->
         <tbody>
           <tr v-for="task in tasks" :key="task.id" class="hover:bg-gray-100">
             <td class="border px-4 py-2">{{ task.task.title }}</td>
