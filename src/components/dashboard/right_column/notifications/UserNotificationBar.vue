@@ -44,15 +44,12 @@ const toast = useToast()
 
 const notifications = ref([])
 
-onMounted(() => {
-  axios
-    .get('/api/user/notifications')
-    .then((res) => {
-      notifications.value = res.data.data
-      console.log(notifications.value)
-    })
-    .catch(() => {
-      toast.error('something went wrong')
-    })
+onMounted(async () => {
+  try {
+    const res = await axios.get('/api/user/notifications')
+    notifications.value = res?.data?.data
+  } catch {
+    toast.error('something went wrong ')
+  }
 })
 </script>

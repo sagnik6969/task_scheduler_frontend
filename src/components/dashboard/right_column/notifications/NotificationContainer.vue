@@ -24,9 +24,11 @@ import { useToast } from 'vue-toast-notification'
 const toast = useToast()
 
 defineProps(['notifications'])
-onMounted(() => {
-  axios.post('/api/user/notifications/mark_as_read').catch(() => {
+onMounted(async () => {
+  try {
+    await axios.post('/api/user/notifications/mark_as_read')
+  } catch {
     toast.error('something went wrong')
-  })
+  }
 })
 </script>

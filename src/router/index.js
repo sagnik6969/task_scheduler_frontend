@@ -8,8 +8,8 @@ import RegisterForm from '@/components/auth/RegisterForm.vue'
 import Logout from '@/components/auth/Logout.vue'
 import ManageTasks from '@/components/Manangednd/ManageTasks.vue'
 import UserProfile from '@/components/Profile/UserProfile.vue'
-import VerifyEmail from '@/components/auth/VerifyEmail.vue'
 import UserTaskAssignedReview from '../components/Profile/UserTaskAssignedReview.vue'
+import NotFound from '../components/ui/NotFound.vue'
 import Home from '../Home.vue'
 export default createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -64,6 +64,10 @@ export default createRouter({
       name: 'Register',
       component: RegisterForm
     },
-    { path: '/verify-email/:id/:hash', component: VerifyEmail }
+    {
+      path: '/:pathMatch(.*)*',
+      name: 'NotFound',
+      component: NotFound
+    }
   ]
 })
