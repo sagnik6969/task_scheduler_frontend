@@ -101,6 +101,7 @@ const actions = {
     try {
       const response = await axios.put(`/api/user/tasks/${payload.task_id}`, payload)
       context.commit('updateTask', response.data)
+      // console.log(response.data)
       context.dispatch('fetchUserTaskCount')
     } catch (error) {
       console.log(error)

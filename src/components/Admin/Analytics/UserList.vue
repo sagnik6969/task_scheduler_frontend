@@ -32,21 +32,15 @@
 <script setup>
 import SingleUserCard from './SingleUserCard.vue'
 import SearchBox from '@/components/ui/SearchBox.vue'
-import { computed, ref, defineProps, defineEmits } from 'vue'
+import { computed, ref, defineProps } from 'vue'
 
 const props = defineProps({
   users: Array
 })
 
-const { emit } = defineEmits(['userSelected'])
-
 const filterText = ref('')
 const currentPage = ref(1)
-const usersPerPage = 4 // Adjust as needed
-
-const handleUserSelected = (user) => {
-  emit('userSelected', user)
-}
+const usersPerPage = 4
 
 const filteredUsers = computed(() => {
   return props.users.filter((user) => {

@@ -44,9 +44,9 @@ export default {
         if (this.selectedOption === 'users') {
           const response = await axios.get('/api/admin/tasks')
           this.users = response.data.users
-          console.log(this.users)
+          // console.log(this.users)
         } else if (this.selectedOption === 'assigned_tasks') {
-          console.log(1)
+          // console.log(1)
         }
       } catch (error) {
         console.error('Error fetching data:', error)

@@ -48,7 +48,7 @@ import axios from 'axios'
 import { computed, onMounted, ref, watchEffect } from 'vue'
 
 const props = defineProps(['user'])
-console.log(props.user)
+// console.log(props.user)
 
 const options = computed(() => ({
   labels: labels.value,
