@@ -1,60 +1,123 @@
 <template>
-  <div v-if="loading" class="w-full h-40 flex items-center justify-center">
-    <v-progress-circular :size="50" :width="5" color="purple" indeterminate></v-progress-circular>
+  <div>
+    <div v-if="loading" class="w-full h-96 flex items-center justify-center z-50">
+      <div class="loading-pillar"></div>
+    </div>
+    <apexchart
+      v-else
+      type="bar"
+      :options="chartOptions"
+      :series="chartSeries"
+      @data-loaded="dataLoaded"
+    ></apexchart>
   </div>
-  <apexchart v-else type="bar" :options="options" :series="series"></apexchart>
 </template>
 
 <script setup>
 import axios from 'axios'
-import { computed, ref, watchEffect } from 'vue'
+import { computed, ref, onMounted, defineEmits } from 'vue'
 
-const series = ref([
+const { emit } = defineEmits(['data-loaded'])
+
+const chartSeries = ref([
   {
     name: 'series-1',
     data: []
   }
 ])
 
-const labels = ref([])
+const chartLabels = ref([])
 const loading = ref(false)
 
-const options = computed(() => ({
-  redrawOnParentResize: true,
-  redrawOnWindowResize: true,
+const chartOptions = computed(() => ({
+  chart: {
+    toolbar: {
+      show: true
+    }
+  },
+  plotOptions: {
+    bar: {
+      horizontal: false,
+      columnWidth: '40%',
+      borderRadius: 2
+    }
+  },
+  dataLabels: {
+    enabled: true
+  },
+  xaxis: {
+    categories: chartLabels.value,
+    labels: {
+      style: {
+        fontSize: '14px',
+        fontWeight: 500,
+        colors: '#333'
+      }
+    }
+  },
+  yaxis: {
+    labels: {
+      style: {
+        fontSize: '14px',
+        fontWeight: 500,
+        colors: '#333'
+      }
+    }
+  },
   title: {
-    text: 'Task distribution by progress',
+    text: 'Task Distribution by Progress',
     align: 'left',
-    margin: 10,
-    offsetX: 0,
-    offsetY: 0,
-    floating: false,
     style: {
-      fontSize: '25px',
-      fontWeight: 'bold',
-      fontFamily: undefined,
+      fontSize: '20px',
+      fontWeight: 600,
       color: '#263238'
     }
   },
-  chart: {
-    id: 'vuechart-example'
+  colors: ['#4CAF50'],
+  grid: {
+    borderColor: '#f1f1f1'
   },
-  xaxis: {
-    categories: labels.value
+  tooltip: {
+    theme: 'dark',
+    x: {
+      show: false
+    }
   }
 }))
 
-watchEffect(async () => {
-  loading.value = true
-  const res = await axios.get(`/api/admin/analysis/all_user_task_progress_analysis`)
-  //   console.log(res.data.series)
-  series.value[0].data = res.data.series
-  console.log(series.value)
-
-  labels.value = res.data.labels
-  loading.value = false
-  //   } catch {
-
-  //   }
+onMounted(() => {
+  fetchData()
 })
+
+const fetchData = async () => {
+  loading.value = true
+  try {
+    const res = await axios.get(`/api/admin/analysis/all_user_task_progress_analysis`)
+    chartSeries.value[0].data = res.data.series
+    chartLabels.value = res.data.labels
+  } catch (error) {
+    console.error('Error fetching data:', error)
+  } finally {
+    loading.value = false
+    emit('data-loaded') // Emit event to parent component
+  }
+}
 </script>
+
+<style scoped>
+.loading-pillar {
+  width: 50px;
+  height: 19rem;
+  background-color: rgba(128, 128, 128, 0.12);
+  animation: movePillar 1s infinite alternate; /* Alternate the animation direction */
+}
+
+@keyframes movePillar {
+  from {
+    transform: translateX(-370px);
+  }
+  to {
+    transform: translateX(370px);
+  }
+}
+</style>

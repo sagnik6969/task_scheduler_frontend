@@ -1,6 +1,6 @@
 <template>
   <div
-    class="flex justify-center items-center h-full fixed top-0 left-0 w-full bg-gray-900 bg-opacity-50 z-50"
+    class="flex justify-center items-center h-full fixed top-0 left-0 w-full bg-gray-900 bg-opacity-80 z-50"
   >
     <div class="bg-white p-10 rounded-lg shadow-md relative w-3/3">
       <button
