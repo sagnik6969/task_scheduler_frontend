@@ -15,7 +15,7 @@
 
 <script>
 import AdminUserList from './AdminUserList.vue'
-import AdminAssignedTaskUser from './AdminAssignedTaskUser.vue'
+import AdminAssignedTaskUser from './assigned_tasks/AdminAssignedTaskUser.vue'
 import Analytics from './Analytics/Analytics.vue'
 
 export default {
