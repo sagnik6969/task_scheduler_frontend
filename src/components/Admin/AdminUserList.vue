@@ -218,7 +218,7 @@ export default {
       return Math.ceil(this.displayedUsers.length / this.usersPerPage)
     },
     currentRouteName() {
-      console.log(this.$route.name)
+      // console.log(this.$route.name)
       return this.$route.name
     }
   },
@@ -231,7 +231,7 @@ export default {
   },
   methods: {
     viewProfile(user) {
-      console.log(user)
+      // console.log(user)
       this.selectedUser = user
       this.isViewingProfile = true
     },
@@ -264,7 +264,7 @@ export default {
     },
     async assignTask(userId) {
       try {
-        console.log(userId)
+        // console.log(userId)
         this.isTaskFromVisisble = userId
         // const response = await axios.post(`/admin/assign-task/${userId}`)
         // alert(response.data.message)
@@ -291,7 +291,7 @@ export default {
       try {
         const response = await axios.get('/api/admin/tasks')
         this.displayedUsers = response.data.users
-        console.log(this.displayedUsers)
+        // console.log(this.displayedUsers)
         this.isDeleting = false
       } catch (error) {
         console.error('Error fetching data:', error)
@@ -301,7 +301,7 @@ export default {
       try {
         const response = await axios.get('/api/admin/tasks')
         this.displayedUsers = response.data.users
-        console.log(this.displayedUsers)
+        // console.log(this.displayedUsers)
         this.loading = false
       } catch (error) {
         console.error('Error fetching data:', error)
@@ -325,7 +325,7 @@ export default {
         // Fetch tasks for the selected user
         this.selectedUserTasks = user.tasks
         this.currentUser = user.id
-        console.log(this.selectedUserTasks)
+        // console.log(this.selectedUserTasks)
         this.taskListVisible = true
         // this.isViewingProfile = true
       } catch (error) {
