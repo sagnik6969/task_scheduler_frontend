@@ -49,7 +49,7 @@
                 @click="makeAdmin(user)"
               />
             </tooltip>
-            <tooltip>
+            <tooltip text="View Tasks">
               <v-icon
                 icon="mdi-eye"
                 class="h-6 w-6 cursor-pointer transform transition duration-300 hover:scale-110"

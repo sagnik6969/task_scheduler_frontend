@@ -45,11 +45,10 @@
     </div>
     <div v-else class="mt-0">
       <single-task-card
-        v-for="(task, idx) in filteredTasks"
+        v-for="task in filteredTasks"
         :key="task.data.task_id"
         :task="task"
-        class="mt-3"
-        :class="{ 'mt-0': idx == 0 }"
+        class="mt-3 first:mt-0"
       ></single-task-card>
     </div>
   </div>
