@@ -2,10 +2,13 @@
   <div
     draggable="true"
     @dragstart="onDragStart"
+    @dragend="onDragEnd"
     class="rounded-lg border-2 border-black text-slate-900 px-6 py-4 flex justify-between items-center flex-col md:flex-row text-center md:text-left space-y-3 md:space-y-0 space-x-2"
     :class="{
-      'opacity-55': task.data.attributes.is_completed
+      'opacity-55': task.data.attributes.is_completed,
+      'border-dashed': task.data.attributes.is_completed
     }"
+    :style="draggable ? 'border: 2px dashed #4a5568' : ''"
   >
     <div class="">
       <h1 class="font-bold text-lg">{{ title }}</h1>
@@ -33,7 +36,6 @@
         </div>
       </tooltip>
       <tooltip v-else text="Task Progress">
-        <!-- <progress-bar class="flex-1" :percentage="task.data.attributes.progress"></progress-bar> -->
         <circular-progress :value="task.data.attributes.progress"></circular-progress>
       </tooltip>
     </div>
@@ -47,14 +49,13 @@
 <script setup>
 import Tooltip from '@/components/ui/Tooltip.vue'
 import CircularProgress from '@/components/ui/CircularProgress.vue'
-// import ProgressBar from '@/components/ui/ProgressBar.vue'
 import IconButton from '@/components/ui/IconButton.vue'
 import DisplayTask from '@/components/tasks/DisplayTask.vue'
 import { computed, ref } from 'vue'
 const props = defineProps(['task'])
 
 const task = computed(() => props.task)
-
+const draggable = ref(false)
 const title = computed(() => {
   const fullTitle = task.value.data.attributes.title
   if (fullTitle.length <= 14) return fullTitle
@@ -93,6 +94,24 @@ const remainingTime = computed(() => {
 })
 const taskDetailsIsVisible = ref(false)
 const onDragStart = (event) => {
+  draggable.value = true
   event.dataTransfer.setData('text/plain', JSON.stringify(props.task))
 }
+const onDragEnd = () => {
+  draggable.value = false
+}
 </script>
+<style scoped>
+.grabbable {
+  cursor: move !important;
+  cursor: grab !important;
+  cursor: -moz-grab !important;
+  cursor: -webkit-grab !important;
+}
+
+.grabbable:active {
+  cursor: grabbing;
+  cursor: -moz-grabbing;
+  cursor: -webkit-grabbing;
+}
+</style>
