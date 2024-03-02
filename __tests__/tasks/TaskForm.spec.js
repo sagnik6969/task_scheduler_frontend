@@ -1,11 +1,10 @@
 import TaskForm from '@/components/tasks/TaskForm.vue'
 import { render, screen, waitFor } from '@testing-library/vue'
-import { describe, expect, it, vi } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import * as matchers from '@testing-library/jest-dom/matchers'
 import { useStore } from 'vuex'
 import userEvent from '@testing-library/user-event'
-import { ref } from 'vue'
-import { beforeEach } from 'node:test'
+// import { ref } from 'vue'
 expect.extend(matchers)
 
 vi.mock('vuex')
@@ -129,7 +128,6 @@ describe('Task form', () => {
 
   describe('when admin submits task form', () => {
     it('calls appropriate dispatch function on store', async () => {
-      dispatchFn.mockClear()
       await setup(true, 12)
       const user = userEvent.setup()
       const title = screen.getByPlaceholderText('Title')
