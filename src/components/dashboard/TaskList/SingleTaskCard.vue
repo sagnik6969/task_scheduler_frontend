@@ -19,7 +19,7 @@
         <div
           class="bg-green-200 w-fit py-2 px-4 space-x-2 rounded-full"
           :class="{
-            'bg-orange-400': remainingTime == '0min' && !task.data.attributes.is_completed
+            'bg-orange-400': remainingTime == 'expired' && !task.data.attributes.is_completed
           }"
         >
           <v-icon icon="mdi-clock-time-four"></v-icon>
@@ -70,7 +70,7 @@ const remainingTime = computed(() => {
 
   const differenceInMinutes = (deadline.getTime() - today.getTime()) / (1000 * 60)
 
-  if (differenceInMinutes < 0) return '0min'
+  if (differenceInMinutes < 0) return 'expired'
 
   if (differenceInMinutes < 60) return Math.round(differenceInMinutes) + 'min'
 

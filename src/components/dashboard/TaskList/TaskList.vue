@@ -17,9 +17,9 @@
             class="border-none mt-2 sm:flex font-bold text-slate-500 hidden bg-white rounded-md shadow hover:text-black"
             v-model="categoryFilter"
           >
-            <option selected value="">All Tasks</option>
-            <option value="1">Completed Task</option>
-            <option value="0">Incomplete Task</option>
+            <option selected value="all">All</option>
+            <option value="completed_tasks">Completed Task</option>
+            <option value="incomplete_tasks">Incomplete Task</option>
           </select>
         </div>
       </div>
@@ -72,7 +72,7 @@ const router = useRouter()
 const store = useStore()
 const searchText = ref(route.query.search || '')
 
-const categoryFilter = ref(route.query.completed || '')
+const categoryFilter = ref(route.query.completed || 'all')
 
 watch(categoryFilter, (newVal) => {
   router.push({
@@ -120,6 +120,11 @@ const sortFn = computed(() => {
   else return undefined
 })
 
+const isCompletedInBoolean = {
+  incomplete_tasks: 0,
+  completed_tasks: 1
+}
+
 const filteredTasks = computed(() => {
   const searchQuery = searchText.value.toLowerCase()
 
@@ -130,7 +135,8 @@ const filteredTasks = computed(() => {
       return (
         (title.includes(searchQuery) || description.includes(searchQuery)) &&
         task.data.attributes.admin_id &&
-        (!categoryFilter.value || task.data.attributes.is_completed == categoryFilter.value)
+        (categoryFilter.value == 'all' ||
+          task.data.attributes.is_completed == isCompletedInBoolean[categoryFilter.value])
       )
     })
 
@@ -139,8 +145,19 @@ const filteredTasks = computed(() => {
     const description = task.data.attributes.description?.toLowerCase() || ''
     return (
       (title.includes(searchQuery) || description.includes(searchQuery)) &&
-      (!categoryFilter.value || task.data.attributes.is_completed == categoryFilter.value)
+      (categoryFilter.value == 'all' ||
+        task.data.attributes.is_completed == isCompletedInBoolean[categoryFilter.value])
     )
   })
 })
+
+const handleDrop = () => {
+  const options = ['all', 'completed_tasks', 'incomplete_tasks']
+  const index = options.findIndex((x) => x === categoryFilter.value)
+  console.log(categoryFilter.value)
+  console.log(index)
+
+  const nextIndex = (index + 1) % 3
+  categoryFilter.value = options[nextIndex]
+}
 </script>
