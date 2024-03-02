@@ -5,17 +5,16 @@
     @dragend="onDragEnd"
     class="rounded-lg border-2 border-black text-slate-900 px-6 py-4 flex justify-between items-center flex-col md:flex-row text-center md:text-left space-y-3 md:space-y-0 space-x-2"
     :class="{
-      'opacity-55': task.data.attributes.is_completed,
-      'border-dashed': task.data.attributes.is_completed
+      'opacity-55 border-dashed': task.data.attributes.is_completed
     }"
     :style="draggable ? 'border: 2px dashed #4a5568' : ''"
   >
-    <div class="">
+    <div class="flex-1">
       <h1 class="font-bold text-lg">{{ title }}</h1>
       <p class="text-slate-700 font-medium">{{ task.data.attributes.priority }}</p>
     </div>
 
-    <div class="font-medium">
+    <div class="font-medium flex-1">
       <Tooltip text="Time left until the deadline">
         <div
           class="bg-green-200 w-fit py-2 px-4 space-x-2 rounded-full"
@@ -29,7 +28,7 @@
       </Tooltip>
     </div>
 
-    <div class="flex justify-center">
+    <div class="flex-1">
       <tooltip text="completed" v-if="task.data.attributes.is_completed">
         <div class="px-2 py-1 hover:bg-slate-200 rounded-full duration-200">
           <v-icon icon="mdi-check-all" class="text-slate-700"></v-icon>
@@ -39,7 +38,9 @@
         <circular-progress :value="task.data.attributes.progress"></circular-progress>
       </tooltip>
     </div>
-    <icon-button class="" @click="taskDetailsIsVisible = true">View</icon-button>
+    <div class="flex justify-end">
+      <icon-button class="" @click="taskDetailsIsVisible = true">View</icon-button>
+    </div>
     <teleport to="body" v-if="taskDetailsIsVisible">
       <display-task :task="task" @close="taskDetailsIsVisible = false"></display-task>
     </teleport>

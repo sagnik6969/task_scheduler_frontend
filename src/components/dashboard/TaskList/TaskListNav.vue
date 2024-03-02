@@ -10,7 +10,7 @@
       :to="{
         query: {
           ...$route.query,
-          filter: link.filter
+          sort: link.sort
         }
       }"
     >
