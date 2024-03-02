@@ -1,5 +1,5 @@
 <template>
-  <div class="flex px-4 py-2 border-2 border-slate-800 rounded-xl bg-slate-100">
+  <div class="flex px-4 py-2 border-2 extras border-slate-800 rounded-xl bg-slate-100">
     <div class="flex-[3] flex items-center">
       <h1 class="text-slate-800 text-lg font-medium">{{ user.name }}</h1>
     </div>
@@ -32,3 +32,11 @@ import Tooltip from '@/components/ui/Tooltip.vue'
 defineProps(['user'])
 defineEmits(['userSelected'])
 </script>
+
+<style scoped>
+@media screen and (max-width: 763px) {
+  .extras {
+    /* height: 0; */
+  }
+}
+</style>

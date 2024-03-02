@@ -4,7 +4,8 @@
     :class="{ 'scale-105': isInputOnFocus }"
   >
     <input
-      class="rounded-tl-xl flex-1 h-full rounded-bl-xl border-0 outline-0 bg-transparent focus:[box-shadow:none]"
+      class="rounded-tl-xl sm:flex-1 h-full rounded-bl-xl border-0 outline-none bg-transparent focus:ring-0 focus:border-none focus:bg-transparent"
+      :class="{ 'sm:rounded-bl-xl': !isInputOnFocus }"
       :value="modelValue"
       @input="$emit('update:modelValue', $event.target.value)"
       @focus="isInputOnFocus = true"
@@ -13,7 +14,7 @@
       type="text"
     />
     <button
-      class="px-2 h-full flex-0 text-lg text-slate-700 bg-transparent rounded-tr-xl rounded-br-xl"
+      class="px-2 h-full sm:flex-0 text-lg text-slate-700 bg-transparent rounded-tr-xl rounded-br-xl"
     >
       <v-icon class="duration-300 items-end" icon="mdi-magnify"></v-icon>
     </button>

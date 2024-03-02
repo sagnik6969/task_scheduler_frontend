@@ -1,18 +1,19 @@
+<!-- user-stats.vue -->
 <template>
-  <div id="user-stats">
+  <div id="user-stats" class="px-4 md:px-0">
     <h1 class="text-2xl font-semibold text-slate-900">{{ user.name }}'s Statistics</h1>
-    <div class="mt-3 space-x-3">
+    <div class="mt-3 space-y-3 md:space-y-0 md:flex md:space-x-3">
       <select
-        class="border-none focus:[box-shadow:none] bg-black rounded-md shadow font-medium text-white"
+        class="w-full md:w-auto border-none focus:[box-shadow:none] bg-black rounded-md shadow font-medium text-white"
         v-model="statistics"
       >
         <option value="completed_vs_pending_tasks" selected>Completed vs Pending Tasks</option>
         <option value="task_distribution_by_progress">Task Distribution by Progress</option>
         <option value="task_distribution_by_priority">Task Distribution by Priority</option>
-        <!-- <option value="">Task Distribution by Deadline</option> -->
+        <option value="">Task Distribution by Deadline</option>
       </select>
       <select
-        class="border-none focus:[box-shadow:none] bg-black rounded-md shadow font-medium text-white"
+        class="w-full md:w-auto border-none focus:[box-shadow:none] bg-black rounded-md shadow font-medium text-white"
         v-model="timeFilter"
       >
         <option value="last_hour">Last Hour</option>
@@ -24,8 +25,13 @@
       </select>
     </div>
 
-    <div v-if="statLoading" class="w-full my-24 flex items-center justify-center">
-      <v-progress-circular :size="50" :width="5" color="purple" indeterminate></v-progress-circular>
+    <div v-if="statLoading" class="w-full my-10 md:my-24 flex items-center justify-center">
+      <v-progress-circular
+        :size="isMobile ? 30 : 50"
+        :width="isMobile ? 3 : 5"
+        color="purple"
+        indeterminate
+      ></v-progress-circular>
     </div>
     <div
       class="py-10 flex justify-center text-slate-800 text-xl font-medium px-14 text-center bg-slate-100 mt-5 rounded-lg"
@@ -43,12 +49,14 @@
     ></apexchart>
   </div>
 </template>
+
 <script setup>
 import axios from 'axios'
-import { computed, onMounted, ref, watchEffect } from 'vue'
+import { computed, defineProps, ref, watchEffect } from 'vue'
 
 const props = defineProps(['user'])
-// console.log(props.user)
+
+const isMobile = computed(() => window.innerWidth <= 768)
 
 const options = computed(() => ({
   labels: labels.value,
@@ -61,15 +69,9 @@ const currentDivWidth = computed(() => {
   return document.getElementById('user-stats')?.offsetWidth || 500
 })
 
-// onMounted(() => {
-//   console.log(currentDivWidth.value)
-// })
-
 const statLoading = ref(false)
-
 const series = ref([])
 const labels = ref([])
-
 const timeFilter = ref('all')
 const statistics = ref('completed_vs_pending_tasks')
 
@@ -82,7 +84,6 @@ watchEffect(async () => {
         statistics: statistics.value
       }
     })
-    // console.log(res.data.series)
     series.value = res.data.series
     labels.value = res.data.labels
     statLoading.value = false
@@ -93,4 +94,7 @@ watchEffect(async () => {
   }
 })
 </script>
-<style></style>
+
+<style scoped>
+/* Add any additional styles here */
+</style>

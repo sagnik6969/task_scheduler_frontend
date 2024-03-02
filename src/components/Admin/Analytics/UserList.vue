@@ -1,5 +1,5 @@
 <template>
-  <div class="space-y-3 h-screen overflow-x-scroll [&::-webkit-scrollbar]:hidden">
+  <div class="space-y-3 extras overflow-x-scroll [&::-webkit-scrollbar]:hidden">
     <h1 class="text-2xl font-semibold text-slate-900">User List</h1>
     <search-box v-model="filterText" class="mb-3 w-3/4" placeholder="Search users...."></search-box>
     <div style="margin-bottom: 1.6rem"></div>
@@ -10,21 +10,39 @@
       @userSelected="() => $emit('userSelected', user)"
     >
     </single-user-card>
-    <div class="flex justify-between w-full px-4">
+    <div class="flex justify-center w-full px-4" v-if="filteredUsers.length !== 0">
       <button
-        class="px-4 py-2 bg-black text-white rounded-md hover:bg-gray-800 focus:outline-none"
+        class="px-4 py-2 bg-black text-white rounded-md hover:bg-gray-600 focus:outline-none mr-2"
         :disabled="currentPage === 1"
+        :class="{ 'bg-gray-600': currentPage === 1 }"
         @click="prevPage"
       >
-        Previous
+        <img src="@/assets/images/db-arrow-rev.png" alt="Previous" width="16" height="20" />
       </button>
+      <div class="flex">
+        <button
+          v-for="pageNumber in totalPageButtons"
+          :key="pageNumber"
+          :class="[
+            'px-3 py-2 mx-1 bg-white text-black rounded-md hover:bg-gray-500 focus:outline-none border-b',
+            { 'border-b-2 border-black ': pageNumber === currentPage }
+          ]"
+          @click="gotoPage(pageNumber)"
+        >
+          {{ pageNumber }}
+        </button>
+      </div>
       <button
-        class="px-4 py-2 bg-black text-white rounded-md hover:bg-gray-800 focus:outline-none"
+        class="px-4 py-2 bg-black text-white rounded-md hover:bg-gray-600 focus:outline-none ml-2"
         :disabled="currentPage === totalPages"
+        :class="{ 'bg-gray-600': currentPage === totalPages }"
         @click="nextPage"
       >
-        Next
+        <img src="@/assets/images/db-arrow-fwd.png" alt="Next" width="16" height="20" />
       </button>
+    </div>
+    <div v-else class="text-center py-4">
+      <p class="text-gray-500">No users found.</p>
     </div>
   </div>
 </template>
@@ -56,6 +74,10 @@ const paginatedUsers = computed(() => {
 
 const totalPages = computed(() => Math.ceil(filteredUsers.value.length / usersPerPage))
 
+const totalPageButtons = computed(() => {
+  return Array.from({ length: totalPages.value }, (_, index) => index + 1)
+})
+
 const prevPage = () => {
   currentPage.value -= 1
 }
@@ -63,8 +85,16 @@ const prevPage = () => {
 const nextPage = () => {
   currentPage.value += 1
 }
+
+const gotoPage = (pageNumber) => {
+  currentPage.value = pageNumber
+}
 </script>
 
 <style scoped>
-/* Your styling for pagination buttons */
+@media screen and (max-width: 763px) {
+  .extras {
+    /* height: 0; */
+  }
+}
 </style>

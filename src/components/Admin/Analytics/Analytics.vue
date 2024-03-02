@@ -3,8 +3,11 @@
     <div>
       <bar-chart @initialLoadingCompleted="canDisplayBottomPart = true"></bar-chart>
     </div>
-    <div v-show="canDisplayBottomPart" class="flex space-x-10">
-      <div class="left flex-1">
+    <div
+      v-show="canDisplayBottomPart"
+      class="flex flex-col md:flex-row space-y-10 md:space-y-0 md:space-x-10"
+    >
+      <div class="md:w-1/2">
         <user-list
           @userSelected="
             (user) => {
@@ -14,12 +17,13 @@
           :users="users"
         ></user-list>
       </div>
-      <div class="right flex-1">
+      <div class="md:w-1/2">
         <pie-chart :user="selectedUser"></pie-chart>
       </div>
     </div>
   </div>
 </template>
+
 <script setup>
 import { ref } from 'vue'
 import PieChart from './charts/PieChart.vue'

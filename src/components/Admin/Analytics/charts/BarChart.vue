@@ -1,9 +1,23 @@
 <template>
   <div>
     <div v-if="loading" class="w-full h-96 flex items-center justify-center z-50">
-      <div class="loading-pillar"></div>
+      <!-- Skeleton Loader -->
+      <div class="skeleton-chart flex flex-col sm:flex-row items-center justify-center">
+        <div class="skeleton-bar bg-gray-300 h-4 w-16 mb-2 sm:mb-0 sm:mr-2"></div>
+        <div class="skeleton-bar bg-gray-300 h-8 w-16 mb-2 sm:mb-0 sm:mr-2"></div>
+        <div class="skeleton-bar bg-gray-300 h-12 w-16 mb-2 sm:mb-0 sm:mr-2"></div>
+        <div class="skeleton-bar bg-gray-300 h-16 w-16 mb-2 sm:mb-0 sm:mr-2"></div>
+        <div class="skeleton-bar bg-gray-300 h-20 w-16 mb-2 sm:mb-0 sm:mr-2"></div>
+      </div>
     </div>
-    <apexchart v-else type="bar" :options="chartOptions" :series="chartSeries"></apexchart>
+
+    <apexchart
+      v-else
+      type="bar"
+      :options="chartOptions"
+      :series="chartSeries"
+      class="responsive-chart"
+    ></apexchart>
   </div>
 </template>
 
@@ -80,7 +94,17 @@ const chartOptions = computed(() => ({
     x: {
       show: false
     }
-  }
+  },
+  responsive: [
+    {
+      breakpoint: 768,
+      options: {
+        chart: {
+          width: '100%'
+        }
+      }
+    }
+  ]
 }))
 
 watchEffect(async () => {
@@ -104,19 +128,34 @@ watchEffect(async () => {
 </script>
 
 <style scoped>
-.loading-pillar {
-  width: 50px;
-  height: 19rem;
-  background-color: rgba(128, 128, 128, 0.12);
-  animation: movePillar 1s infinite alternate; /* Alternate the animation direction */
+.skeleton-chart {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  width: 100%;
 }
 
-@keyframes movePillar {
+.skeleton-bar {
+  animation: loadingAnimation 1s infinite alternate;
+}
+
+@keyframes loadingAnimation {
   from {
-    transform: translateX(-370px);
+    opacity: 0.5;
   }
   to {
-    transform: translateX(370px);
+    opacity: 1;
   }
+}
+
+/* Responsive Layout */
+@media (max-width: 768px) {
+  .skeleton-chart {
+    flex-direction: row;
+    justify-content: space-around;
+  }
+}
+.responsive-chart {
+  width: 100%;
 }
 </style>

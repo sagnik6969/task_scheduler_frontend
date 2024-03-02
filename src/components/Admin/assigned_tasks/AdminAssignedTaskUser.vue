@@ -4,7 +4,7 @@
     <div class="flex justify-between items-center">
       <search-box
         v-model="searchQuery"
-        placeholder="Search Users....."
+        placeholder="Search Your Assisned Tasks....."
         class="w-1/2 mt-5"
       ></search-box>
       <div class="flex space-x-1">
@@ -30,7 +30,6 @@
           <th class="px-4 py-2">Action</th>
         </tr>
       </thead>
-      <!-- Table body -->
       <tbody>
         <task-row v-for="task in filteredTasks" :key="task.id" :task="task"></task-row>
       </tbody>
@@ -53,7 +52,7 @@ const priorityFilter = ref('')
 
 onMounted(async () => {
   await axios
-    .get('/api/admin/assign/tasks') // Assuming you have an endpoint to fetch task data
+    .get('/api/admin/assign/tasks')
     .then((response) => {
       tasks.value = response.data.data
       // console.log(tasks.value)
