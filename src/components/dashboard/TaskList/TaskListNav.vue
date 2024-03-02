@@ -13,7 +13,6 @@
           filter: link.filter
         }
       }"
-      @click="handleCategoryChange(link.name)"
     >
       {{ link.name }}
     </router-link>
@@ -24,14 +23,4 @@
 defineProps({
   navLinks: Array
 })
-import { useRouter } from 'vue-router'
-
-const router = useRouter()
-const handleCategoryChange = (value) => {
-  let filter = ''
-  if (link.name !== 'All Tasks') {
-    filter = link.filter
-  }
-  router.push({ query: { ...$route.query, filter } })
-}
 </script>
