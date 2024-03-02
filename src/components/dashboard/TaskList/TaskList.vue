@@ -17,7 +17,7 @@
             class="border-none mt-2 sm:flex font-bold text-slate-500 hidden bg-white rounded-md shadow hover:text-black"
             v-model="categoryFilter"
           >
-            <option selected value="all">All Tasks</option>
+            <option selected value="all">All</option>
             <option value="completed_tasks">Completed Task</option>
             <option value="incomplete_tasks">Incomplete Task</option>
           </select>
