@@ -51,12 +51,14 @@
               :min-date="new Date()"
               :min-time="new Date()"
               :disabled="loading"
+              :required="true"
             >
               <template #input-icon>
                 <v-icon class="text-slate-600 px-5" icon="mdi-calendar-range"></v-icon>
               </template>
             </VueDatePicker>
             <select
+              data-testid="task-form-select"
               v-model="priority"
               icon="mdi-priority-high"
               :required="true"
