@@ -19,7 +19,7 @@
             :class="{ 'opacity-100': isDraggingOverComplete }"
             alt="Completed"
           />
-          <div v-if="showMessage == 'complete'" class="bg-white text-center rounded shadow">
+          <div v-if="showCompleteMessage" class="bg-white text-center rounded shadow">
             Task marked as completed!
           </div>
         </div>
@@ -35,7 +35,7 @@
         <div class="font-semibold text-lg text-white bg-red-500 w-full text-center">Delete</div>
         <div>
           <img src="/img/delete.png" class="object-cover w-60 m-4 opacity-15" alt="deleted" />
-          <div v-if="showMessage == 'delete'" class="bg-white text-center rounded shadow">
+          <div v-if="showDeleteMessage" class="bg-white text-center rounded shadow">
             Task marked as deleted!
           </div>
         </div>
@@ -54,7 +54,8 @@ const isDraggingOverComplete = ref(false)
 const isDraggingOverDelete = ref(false)
 const completedTasks = ref([])
 const deletedTasks = ref([])
-const showMessage = ref('')
+const showCompleteMessage = ref(false)
+const showDeleteMessage = ref(false)
 const store = useStore()
 const onDrop = async (event) => {
   event.preventDefault()
@@ -73,9 +74,9 @@ const onDrop = async (event) => {
       priority: taskData.data.attributes.priority
     })
   }
-  showMessage.value = 'complete'
+  showCompleteMessage.value = true
   setTimeout(() => {
-    showMessage.value = 'complete'
+    showCompleteMessage.value = false
   }, 3000)
 }
 const onDragOver = (event) => {
@@ -99,9 +100,9 @@ const onDelete = async (event) => {
     deletedTasks.value.push(taskData)
     await store.dispatch('deleteTask', taskData.data.task_id)
   }
-  showMessage.value = 'delete'
+  showDeleteMessage.value = true
   setTimeout(() => {
-    showMessage.value = 'delete'
+    showDeleteMessage.value = false
   }, 3000)
 }
 </script>
