@@ -16,7 +16,7 @@
               name="email"
               v-model.trim="email"
               required
-              placeholder="email"
+              placeholder="Email"
               @blur="validateEmail"
               class="mt-1 p-2 w-full border rounded-md focus:border-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300 transition-colors duration-300"
             />
