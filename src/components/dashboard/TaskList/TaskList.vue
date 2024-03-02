@@ -143,4 +143,14 @@ const filteredTasks = computed(() => {
     )
   })
 })
+
+const handleDrop = () => {
+  const options = ['', 1, 0]
+  const index = options.findIndex((x) => x === categoryFilter.value)
+  console.log(categoryFilter.value)
+  console.log(index)
+
+  const nextIndex = (index + 1) % 3
+  categoryFilter.value = options[nextIndex]
+}
 </script>
