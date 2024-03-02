@@ -38,7 +38,7 @@
       <TaskSkeleton />
     </div>
     <div
-      v-else-if="store.getters.userTasks.length == 0"
+      v-else-if="$store.getters.userTasks.length == 0"
       class="mt-4 py-10 px-14 flex items-center justify-center text-center bg-slate-100 text-slate-800 text-xl font-medium rounded-lg shadow"
     >
       <p>looks like you haven't added any task yet!</p>
