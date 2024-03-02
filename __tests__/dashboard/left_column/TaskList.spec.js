@@ -65,8 +65,6 @@ const routerLink = {
   }
 }
 
-const routerPushFn = vi.fn()
-
 const setup = async () => {
   render(TaskList, {
     global: {
