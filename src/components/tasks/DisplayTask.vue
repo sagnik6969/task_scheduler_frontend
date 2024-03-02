@@ -118,6 +118,7 @@
             v-model="taskCopy.data.attributes.priority"
             icon="mdi-priority-high"
             :disabled="loading"
+            data-testid="display-task-select"
           >
             <option
               class="bg-slate-700"
@@ -156,7 +157,7 @@ import { useStore } from 'vuex'
 
 const props = defineProps(['task'])
 const taskCopy = reactive(JSON.parse(JSON.stringify(props.task)))
-console.log(taskCopy.data.attributes.is_completed)
+// console.log(taskCopy.data.attributes.is_completed)
 const toast = useToast()
 const store = useStore()
 const date = ref(null)
