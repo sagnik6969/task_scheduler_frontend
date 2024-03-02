@@ -25,23 +25,4 @@
     </div>
   </div>
 </template>
-<script setup>
-import axios from 'axios'
-import { onMounted, ref } from 'vue'
-
-const completedTasks = ref(0)
-const pendingTasks = ref(0)
-
-onMounted(async () => {
-  try {
-    const res = await axios.get('/api/user/analysis', {
-      params: {
-        time_range: 'all',
-        statistics: 'completed_vs_pending_tasks'
-      }
-    })
-    completedTasks.value = res.data.series[0]
-    pendingTasks.value = res.data.series[1]
-  } catch {}
-})
-</script>
+<script setup></script>
