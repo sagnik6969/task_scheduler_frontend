@@ -1,41 +1,43 @@
 <template>
-  <div class="flex flex-col h-2/3 w-1/2 fixed mx-10 gap-10">
-    <div
-      @dragover.prevent="onDragOver"
-      @dragleave="onDragLeave"
-      @drop="onDrop"
-      :class="{ 'border-solid bg-green-300 border-4 border-green-500': isDraggingOverComplete }"
-      class="flex flex-col w-1/2 h-full items-center border-dashed border-black border-2 bg-green-200"
-    >
-      <div class="font-semibold text-white text-lg bg-green-400 w-full text-center">
-        Mark as Complete
-      </div>
+  <div class="flex flex-col md:w-full md:mx-10 mx-4">
+    <div class="flex flex-row md:flex-col md:w-1/2 gap-10 md:fixed">
+      <div
+        @dragover.prevent="onDragOver"
+        @dragleave="onDragLeave"
+        @drop="onDrop"
+        :class="{ 'border-solid bg-green-300 border-4 border-green-500': isDraggingOverComplete }"
+        class="flex flex-col flex-1 md:w-2/3 w-1/2 h-full items-center border-dashed border-black border-2 bg-green-200"
+      >
+        <div class="font-semibold text-white text-lg bg-green-400 w-full text-center">
+          Mark as Complete
+        </div>
 
-      <div>
-        <img
-          src="/img/complete.png"
-          class="m-4 opacity-20 text-center w-60 items-center"
-          :class="{ 'opacity-100': isDraggingOverComplete }"
-          alt="Completed"
-        />
-        <div v-if="showMessage == 'complete'" class="bg-white text-center rounded shadow">
-          Task marked as completed!
+        <div>
+          <img
+            src="/img/complete.png"
+            class="m-4 opacity-20 text-center w-60 items-center"
+            :class="{ 'opacity-100': isDraggingOverComplete }"
+            alt="Completed"
+          />
+          <div v-if="showMessage == 'complete'" class="bg-white text-center rounded shadow">
+            Task marked as completed!
+          </div>
         </div>
       </div>
-    </div>
 
-    <div
-      @dragover.prevent="onDragOver"
-      @dragleave="onDragLeave"
-      @drop="onDelete"
-      :class="{ 'border-solid border-4 bg-red-300 border-red-500': isDraggingOverDelete }"
-      class="flex flex-col items-center w-1/2 h-full border-dashed border-black border-2 bg-red-200"
-    >
-      <div class="font-semibold text-lg text-white bg-red-500 w-full text-center">Delete</div>
-      <div>
-        <img src="/img/delete.png" class="object-cover w-60 m-4 opacity-15" alt="deleted" />
-        <div v-if="showMessage == 'delete'" class="bg-white text-center rounded shadow">
-          Task marked as deleted!
+      <div
+        @dragover.prevent="onDragOver"
+        @dragleave="onDragLeave"
+        @drop="onDelete"
+        :class="{ 'border-solid border-4 bg-red-300 border-red-500': isDraggingOverDelete }"
+        class="flex flex-col flex-1 md:w-2/3 items-center w-1/2 h-full border-dashed border-black border-2 bg-red-200"
+      >
+        <div class="font-semibold text-lg text-white bg-red-500 w-full text-center">Delete</div>
+        <div>
+          <img src="/img/delete.png" class="object-cover w-60 m-4 opacity-15" alt="deleted" />
+          <div v-if="showMessage == 'delete'" class="bg-white text-center rounded shadow">
+            Task marked as deleted!
+          </div>
         </div>
       </div>
     </div>
