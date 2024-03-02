@@ -183,7 +183,7 @@ const validatePassword = () => {
     passwordValidityMessage.value = 'Password cannot be empty'
   } else if (password.value.length < 6) {
     passwordValidity.value = 'invalid'
-    passwordValidityMessage.value = 'Password must be of length greater than 6'
+    passwordValidityMessage.value = 'Password length must be greater than 6'
   } else {
     passwordValidity.value = 'valid'
   }
@@ -195,7 +195,7 @@ const validateConfirmPassword = () => {
     confirmPasswordValidityMessage.value = 'Confirm Password cannot be empty'
   } else if (confirmPassword.value !== password.value) {
     confirmPasswordValidity.value = 'invalid'
-    confirmPasswordValidityMessage.value = 'Passwords do not match'
+    confirmPasswordValidityMessage.value = 'Input Passwords do not match'
   } else {
     confirmPasswordValidity.value = 'valid'
   }
