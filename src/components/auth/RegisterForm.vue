@@ -5,7 +5,7 @@
       <div class="max-w-md w-full p-6">
         <header class="text-3xl font-semibold mb-6 text-black text-center">Sign Up</header>
         <h1 class="text-sm font-semibold mb-6 text-gray-500 text-center">
-          Join to Our TaskSchedular tool with all time access and free
+          Join to Our Task Scheduler Tool with all time access and free
         </h1>
 
         <form @submit.prevent="handleSubmit" class="space-y-4">

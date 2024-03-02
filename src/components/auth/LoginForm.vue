@@ -5,7 +5,7 @@
       <div class="max-w-md w-full p-6">
         <h1 class="text-3xl font-semibold mb-6 text-black text-center">Sign in</h1>
         <h1 class="text-sm font-semibold mb-6 text-gray-500 text-center">
-          welcome backe to our TaskSchedular tool
+          Welcome back to our Task Scheduler Tool
         </h1>
 
         <form @submit.prevent="handleSubmit" class="space-y-4">
@@ -45,7 +45,7 @@
               type="submit"
             >
               <v-icon v-if="loading" class="animate-spin" icon="mdi-loading"></v-icon>
-              <span v-else>Sign in</span>
+              <span v-else>Sign In</span>
             </button>
           </div>
         </form>
