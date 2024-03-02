@@ -100,7 +100,9 @@ const chartOptions = computed(() => ({
       breakpoint: 768,
       options: {
         chart: {
-          width: '100%'
+          width: '100%',
+          innerHeight: '100%',
+          outerHeight: '100%'
         }
       }
     }

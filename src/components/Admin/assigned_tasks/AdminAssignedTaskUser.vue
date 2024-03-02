@@ -10,7 +10,7 @@
       <div class="flex space-x-1">
         <select
           v-model="priorityFilter"
-          class="border-none sm:flex font-bold text-slate-500 hidden bg-white rounded-md shadow hover:text-black"
+          class="border-none hover:text-black sm:flex font-bold text-slate-500 bg-white rounded-md shadow"
         >
           <option selected value="">All</option>
           <option value="Normal">Normal</option>

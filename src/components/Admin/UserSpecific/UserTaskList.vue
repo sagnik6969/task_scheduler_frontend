@@ -16,11 +16,33 @@
     <div class="flex justify-between items-center mb-3 md:mb-6">
       <h3 class="text-lg md:text-2xl font-bold text-gray-800">Tasks List</h3>
       <!-- Filter button -->
-      <!-- <button
+      <button
         class="bg-black hover:opacity-50 text-white px-3 md:px-4 py-2 rounded-lg text-sm md:text-base"
+        @click="toggleFilterMenu"
       >
         Filter
-      </button> -->
+      </button>
+    </div>
+    <!-- Filter Menu -->
+    <div
+      v-show="showFilterMenu"
+      class="absolute top-10 right-0 mt-2 mr-3 bg-white shadow-md rounded-lg py-1"
+    >
+      <button
+        @click="filterTasks('all')"
+        class="block w-full text-left px-4 py-2 hover:bg-gray-100"
+      >
+        All Tasks
+      </button>
+      <button @click="filterTasks(true)" class="block w-full text-left px-4 py-2 hover:bg-gray-100">
+        Completed Tasks
+      </button>
+      <button
+        @click="filterTasks(false)"
+        class="block w-full text-left px-4 py-2 hover:bg-gray-100"
+      >
+        Incomplete Tasks
+      </button>
     </div>
     <!-- Search bar -->
     <div class="mb-3 md:mb-4 relative">
@@ -35,201 +57,224 @@
     <div class="task-list-container h-80 md:h-auto overflow-x-auto md:overflow-y-auto">
       <!-- Task List -->
       <div class="min-w-full">
-        <div
-          class="md:overflow-scroll sm:overflow-scroll overflow-hidden border border-gray-200 rounded-lg"
-        >
-          <table class="min-w-full divide-y divide-gray-200">
-            <!-- Column Headers -->
-            <thead class="bg-gray-50">
-              <tr>
-                <th
-                  scope="col"
-                  class="px-3 md:px-6 py-2 md:py-3 text-left text-xs md:text-sm font-semibold text-gray-500 uppercase tracking-wider cursor-pointer"
-                  @click="sortBy('title')"
-                >
-                  Task Title
-                  <span class="ml-1">
-                    <svg
-                      v-if="sortColumn === 'title'"
-                      :class="{ 'rotate-180': sortOrder === 'desc' }"
-                      class="w-4 h-4 inline transform transition-transform duration-300"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                    >
-                      <path
-                        fill-rule="evenodd"
-                        d="M7.293 7.293a1 1 0 011.414 0L10 8.586l1.293-1.293a1 1 0 111.414 1.414l-2 2a1 1 0 01-1.414 0l-2-2a1 1 0 010-1.414z"
-                        clip-rule="evenodd"
-                      />
-                    </svg>
-                    <svg v-else class="w-4 h-4 inline" viewBox="0 0 20 20" fill="currentColor">
-                      <path
-                        fill-rule="evenodd"
-                        d="M7.293 12.293a1 1 0 011.414 0L10 13.586l1.293-1.293a1 1 0 111.414 1.414l-2 2a1 1 0 01-1.414 0l-2-2a1 1 0 010-1.414z"
-                        clip-rule="evenodd"
-                      />
-                    </svg>
-                  </span>
-                </th>
-                <th
-                  scope="col"
-                  class="px-3 md:px-6 py-2 md:py-3 text-left text-xs md:text-sm font-semibold text-gray-500 uppercase tracking-wider cursor-pointer"
-                  @click="sortBy('deadline')"
-                >
-                  Deadline
-                  <span class="ml-1">
-                    <svg
-                      v-if="sortColumn === 'deadline'"
-                      :class="{ 'rotate-180': sortOrder === 'desc' }"
-                      class="w-4 h-4 inline transform transition-transform duration-300"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                    >
-                      <path
-                        fill-rule="evenodd"
-                        d="M7.293 7.293a1 1 0 011.414 0L10 8.586l1.293-1.293a1 1 0 111.414 1.414l-2 2a1 1 0 01-1.414 0l-2-2a1 1 0 010-1.414z"
-                        clip-rule="evenodd"
-                      />
-                    </svg>
-                    <svg v-else class="w-4 h-4 inline" viewBox="0 0 20 20" fill="currentColor">
-                      <path
-                        fill-rule="evenodd"
-                        d="M7.293 12.293a1 1 0 011.414 0L10 13.586l1.293-1.293a1 1 0 111.414 1.414l-2 2a1 1 0 01-1.414 0l-2-2a1 1 0 010-1.414z"
-                        clip-rule="evenodd"
-                      />
-                    </svg>
-                  </span>
-                </th>
+        <!-- Task Table -->
+        <table class="min-w-full divide-y divide-gray-200">
+          <!-- Column Headers -->
+          <thead class="bg-gray-50">
+            <tr>
+              <th
+                scope="col"
+                class="px-3 md:px-6 py-2 md:py-3 text-left text-xs md:text-sm font-semibold text-gray-500 uppercase tracking-wider cursor-pointer"
+                @click="sortBy('title')"
+              >
+                Task Title
+                <span class="ml-1">
+                  <svg
+                    v-if="sortColumn === 'title'"
+                    :class="{ 'rotate-180': sortOrder === 'desc' }"
+                    class="w-4 h-4 inline transform transition-transform duration-300"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M7.293 7.293a1 1 0 011.414 0L10 8.586l1.293-1.293a1 1 0 111.414 1.414l-2 2a1 1 0 01-1.414 0l-2-2a1 1 0 010-1.414z"
+                      clip-rule="evenodd"
+                    />
+                  </svg>
+                  <svg v-else class="w-4 h-4 inline" viewBox="0 0 20 20" fill="currentColor">
+                    <path
+                      fill-rule="evenodd"
+                      d="M7.293 12.293a1 1 0 011.414 0L10 13.586l1.293-1.293a1 1 0 111.414 1.414l-2 2a1 1 0 01-1.414 0l-2-2a1 1 0 010-1.414z"
+                      clip-rule="evenodd"
+                    />
+                  </svg>
+                </span>
+              </th>
+              <th
+                scope="col"
+                class="px-3 md:px-6 py-2 md:py-3 text-left text-xs md:text-sm font-semibold text-gray-500 uppercase tracking-wider cursor-pointer"
+                @click="sortBy('deadline')"
+              >
+                Deadline
+                <span class="ml-1">
+                  <svg
+                    v-if="sortColumn === 'deadline'"
+                    :class="{ 'rotate-180': sortOrder === 'desc' }"
+                    class="w-4 h-4 inline transform transition-transform duration-300"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M7.293 7.293a1 1 0 011.414 0L10 8.586l1.293-1.293a1 1 0 111.414 1.414l-2 2a1 1 0 01-1.414 0l-2-2a1 1 0 010-1.414z"
+                      clip-rule="evenodd"
+                    />
+                  </svg>
+                  <svg v-else class="w-4 h-4 inline" viewBox="0 0 20 20" fill="currentColor">
+                    <path
+                      fill-rule="evenodd"
+                      d="M7.293 12.293a1 1 0 011.414 0L10 13.586l1.293-1.293a1 1 0 111.414 1.414l-2 2a1 1 0 01-1.414 0l-2-2a1 1 0 010-1.414z"
+                      clip-rule="evenodd"
+                    />
+                  </svg>
+                </span>
+              </th>
 
-                <th
-                  scope="col"
-                  class="px-3 md:px-6 py-2 md:py-3 text-left text-xs md:text-sm font-semibold text-gray-500 uppercase tracking-wider cursor-pointer"
-                  @click="sortBy('is_completed')"
-                >
-                  Status
-                  <span class="ml-1">
-                    <svg
-                      v-if="sortColumn === 'is_completed'"
-                      :class="{ 'rotate-180': sortOrder === 'desc' }"
-                      class="w-4 h-4 inline transform transition-transform duration-300"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                    >
-                      <path
-                        fill-rule="evenodd"
-                        d="M7.293 7.293a1 1 0 011.414 0L10 8.586l1.293-1.293a1 1 0 111.414 1.414l-2 2a1 1 0 01-1.414 0l-2-2a1 1 0 010-1.414z"
-                        clip-rule="evenodd"
-                      />
-                    </svg>
-                    <svg v-else class="w-4 h-4 inline" viewBox="0 0 20 20" fill="currentColor">
-                      <path
-                        fill-rule="evenodd"
-                        d="M7.293 12.293a1 1 0 011.414 0L10 13.586l1.293-1.293a1 1 0 111.414 1.414l-2 2a1 1 0 01-1.414 0l-2-2a1 1 0 010-1.414z"
-                        clip-rule="evenodd"
-                      />
-                    </svg>
-                  </span>
-                </th>
-                <th
-                  scope="col"
-                  class="px-3 md:px-6 py-2 md:py-3 text-left text-xs md:text-sm font-semibold text-gray-500 uppercase tracking-wider"
-                >
-                  Progress
-                </th>
-                <th
-                  scope="col"
-                  class="px-3 md:px-6 py-2 md:py-3 text-left text-xs md:text-sm font-semibold text-gray-500 uppercase tracking-wider"
-                >
-                  Action
-                </th>
-              </tr>
-            </thead>
-            <!-- Task Items -->
-            <tbody class="bg-white divide-y divide-gray-200">
-              <tr v-for="task in paginatedTasks" :key="task.id" class="hover:bg-gray-50">
-                <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap">{{ task.title }}</td>
-                <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap">
-                  {{ formatDate(task.deadline) }}
-                </td>
-                <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap">
-                  <span
-                    :class="{
-                      'text-green-500': task.is_completed,
-                      'text-red-500': !task.is_completed
-                    }"
-                    class="text-xs md:text-sm"
+              <th
+                scope="col"
+                class="px-3 md:px-6 py-2 md:py-3 text-left text-xs md:text-sm font-semibold text-gray-500 uppercase tracking-wider cursor-pointer"
+                @click="sortBy('is_completed')"
+              >
+                Status
+                <span class="ml-1">
+                  <svg
+                    v-if="sortColumn === 'is_completed'"
+                    :class="{ 'rotate-180': sortOrder === 'desc' }"
+                    class="w-4 h-4 inline transform transition-transform duration-300"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
                   >
-                    {{ task.is_completed ? 'Completed' : 'Pending' }}
-                  </span>
-                </td>
-                <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap">
+                    <path
+                      fill-rule="evenodd"
+                      d="M7.293 7.293a1 1 0 011.414 0L10 8.586l1.293-1.293a1 1 0 111.414 1.414l-2 2a1 1 0 01-1.414 0l-2-2a1 1 0 010-1.414z"
+                      clip-rule="evenodd"
+                    />
+                  </svg>
+                  <svg v-else class="w-4 h-4 inline" viewBox="0 0 20 20" fill="currentColor">
+                    <path
+                      fill-rule="evenodd"
+                      d="M7.293 12.293a1 1 0 011.414 0L10 13.586l1.293-1.293a1 1 0 111.414 1.414l-2 2a1 1 0 01-1.414 0l-2-2a1 1 0 010-1.414z"
+                      clip-rule="evenodd"
+                    />
+                  </svg>
+                </span>
+              </th>
+              <th
+                scope="col"
+                class="px-3 md:px-6 py-2 md:py-3 text-left text-xs md:text-sm font-semibold text-gray-500 uppercase tracking-wider"
+              >
+                Progress
+                <span class="ml-1">
+                  <svg
+                    v-if="sortColumn === 'progress'"
+                    :class="{ 'rotate-180': sortOrder === 'desc' }"
+                    class="w-4 h-4 inline transform transition-transform duration-300"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M7.293 7.293a1 1 0 011.414 0L10 8.586l1.293-1.293a1 1 0 111.414 1.414l-2 2a1 1 0 01-1.414 0l-2-2a1 1 0 010-1.414z"
+                      clip-rule="evenodd"
+                    />
+                  </svg>
+                  <svg v-else class="w-4 h-4 inline" viewBox="0 0 20 20" fill="currentColor">
+                    <path
+                      fill-rule="evenodd"
+                      d="M7.293 12.293a1 1 0 011.414 0L10 13.586l1.293-1.293a1 1 0 111.414 1.414l-2 2a1 1 0 01-1.414 0l-2-2a1 1 0 010-1.414z"
+                      clip-rule="evenodd"
+                    />
+                  </svg>
+                </span>
+              </th>
+              <th
+                scope="col"
+                class="px-3 md:px-6 py-2 md:py-3 text-left text-xs md:text-sm font-semibold text-gray-500 uppercase tracking-wider"
+              >
+                Action
+              </th>
+            </tr>
+          </thead>
+          <!-- Task Items -->
+          <tbody class="bg-white divide-y divide-gray-200">
+            <tr v-for="task in paginatedTasks" :key="task.id" class="hover:bg-gray-50">
+              <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap">{{ task.title }}</td>
+              <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap">
+                {{ formatDate(task.deadline) }}
+              </td>
+              <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap">
+                <span
+                  :class="{
+                    'text-green-500': task.is_completed,
+                    'text-red-500': !task.is_completed
+                  }"
+                  class="text-xs md:text-sm"
+                >
+                  {{ task.is_completed ? 'Completed' : 'Pending' }}
+                </span>
+              </td>
+              <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap">
+                <div
+                  class="relative flex items-center justify-center"
+                  style="width: 4rem; height: 4rem"
+                >
                   <div
-                    class="relative flex items-center justify-center"
-                    style="width: 4rem; height: 4rem"
+                    class="absolute inset-0 flex items-center justify-center text-gray-800 font-semibold"
+                    style="padding: 0.25rem"
                   >
-                    <div
-                      class="absolute inset-0 flex items-center justify-center text-gray-800 font-semibold"
-                      style="padding: 0.25rem"
-                    >
-                      {{ task.progress }}%
-                    </div>
-                    <svg
-                      class="absolute top-0 left-0 w-full h-full text-gray-200"
-                      viewBox="0 0 36 36"
-                    >
-                      <circle
-                        cx="18"
-                        cy="18"
-                        r="15"
-                        fill="none"
-                        stroke-width="3.8"
-                        stroke="#f3f3f3"
-                      ></circle>
-                      <circle
-                        :stroke-dasharray="`${task.progress * 0.94} 94`"
-                        cx="18"
-                        cy="18"
-                        r="15"
-                        fill="none"
-                        stroke-width="3.8"
-                        :stroke="task.is_completed ? '#4CAF50' : '#FF5722'"
-                      ></circle>
-                    </svg>
+                    {{ task.progress }}%
                   </div>
-                </td>
-                <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap">
-                  <button
-                    v-if="!task.is_completed"
-                    @click="confirmDeleteTask(task)"
-                    class="bg-black text-white px-3 md:px-4 py-2 rounded-lg hover:bg-red-600 text-xs md:text-sm"
+                  <svg
+                    class="absolute top-0 left-0 w-full h-full text-gray-200"
+                    viewBox="0 0 36 36"
                   >
-                    Delete
-                  </button>
-                  <span
-                    v-else
-                    class="relative inline-block bg-black text-white px-3 md:px-4 py-2 rounded-lg cursor-not-allowed opacity-50 text-xs md:text-sm"
-                  >
-                    Delete
-                  </span>
-                </td>
-              </tr>
-              <tr v-if="filteredTasks.length === 0">
-                <td
-                  class="px-3 md:px-6 py-4 whitespace-nowrap text-center text-gray-500"
-                  colspan="5"
+                    <circle
+                      cx="18"
+                      cy="18"
+                      r="15"
+                      fill="none"
+                      stroke-width="3.8"
+                      stroke="#f3f3f3"
+                    ></circle>
+                    <circle
+                      :stroke-dasharray="`${task.progress * 0.94} 94`"
+                      cx="18"
+                      cy="18"
+                      r="15"
+                      fill="none"
+                      stroke-width="3.8"
+                      :stroke="task.is_completed ? '#4CAF50' : '#FF5722'"
+                    ></circle>
+                  </svg>
+                </div>
+              </td>
+              <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap">
+                <button
+                  v-if="!task.is_completed"
+                  @click="confirmDeleteTask(task)"
+                  class="bg-black text-white px-3 md:px-4 py-2 rounded-lg hover:bg-red-600 text-xs md:text-sm"
                 >
-                  <div class="flex-center no-tasks-message">
-                    <p>No tasks found.</p>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+                  Delete
+                </button>
+                <span
+                  v-else
+                  class="relative inline-block bg-black text-white px-3 md:px-4 py-2 rounded-lg cursor-not-allowed opacity-50 text-xs md:text-sm"
+                >
+                  Delete
+                </span>
+              </td>
+            </tr>
+            <tr v-if="filteredTasks.length === 0">
+              <td class="px-3 md:px-6 py-4 whitespace-nowrap text-center text-gray-500" colspan="5">
+                <div class="flex-center no-tasks-message">
+                  <p>No tasks found.</p>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
     <!-- Pagination controls -->
     <div class="flex justify-center mt-4" v-if="totalPages > 1">
+      <button
+        @click="changePage(currentPage - 1)"
+        :disabled="currentPage === 1"
+        class="px-3 py-2 rounded-md hover:opacity-50 focus:outline-none"
+      >
+        Previous
+      </button>
       <button
         v-for="page in totalPages"
         :key="page"
@@ -238,6 +283,13 @@
         class="px-3 py-2 rounded-md hover:opacity-50 focus:outline-none"
       >
         {{ page }}
+      </button>
+      <button
+        @click="changePage(currentPage + 1)"
+        :disabled="currentPage === totalPages"
+        class="px-3 py-2 rounded-md hover:opacity-50 focus:outline-none"
+      >
+        Next
       </button>
     </div>
   </div>
@@ -259,7 +311,8 @@ export default {
       currentPage: 1,
       pageSize: 3,
       sortColumn: '',
-      sortOrder: 'asc'
+      sortOrder: 'asc',
+      showFilterMenu: false
     }
   },
   computed: {
@@ -292,27 +345,14 @@ export default {
       }
     },
     async deleteTask(task) {
-      await axios
-        .delete('/api/admin/tasks/' + task.id) // Assuming you have an endpoint to fetch task data
-        .then(async (response) => {
-          toast.info(response.data.message)
-          console.log(this.user)
-          await axios
-            .get('/api/admin/users/' + this.user) // Assuming you have an endpoint to fetch task data
-            .then((response) => {
-              console.log(response.data)
-              this.tasks = response.data.user.tasks
-              console.log(this.tasks)
-            })
-            .catch((response, error) => {
-              toast.info(response.data.error)
-              console.log(error)
-            })
-        })
-        .catch((response, error) => {
-          toast.info(response.data.error)
-          console.log(error)
-        })
+      try {
+        const response = await axios.delete('/api/admin/tasks/' + task.id)
+        toast.info(response.data.message)
+        const userResponse = await axios.get('/api/admin/users/' + this.user)
+        this.tasks = userResponse.data.user.tasks
+      } catch (error) {
+        toast.error(error.response.data.error)
+      }
     },
     searchTasks(event) {
       this.searchQuery = event.target.value
@@ -330,44 +370,39 @@ export default {
         this.sortColumn = column
         this.sortOrder = 'asc'
       }
-      this.filteredTasks.sort((a, b) => {
-        let comparison = 0
-        if (column === 'deadline') {
-          const dateA = new Date(a[column])
-          const dateB = new Date(b[column])
-          comparison = dateA - dateB
-        } else {
-          if (a[column] > b[column]) {
-            comparison = 1
-          } else if (a[column] < b[column]) {
-            comparison = -1
+      if (column === 'progress') {
+        this.filteredTasks.sort((a, b) => {
+          if (this.sortOrder === 'asc') {
+            return a[column] - b[column]
+          } else {
+            return b[column] - a[column]
           }
-        }
-        return this.sortOrder === 'asc' ? comparison : -comparison
-      })
+        })
+      } else {
+        this.filteredTasks.sort((a, b) => {
+          if (this.sortOrder === 'asc') {
+            return a[column] < b[column] ? -1 : 1
+          } else {
+            return a[column] > b[column] ? -1 : 1
+          }
+        })
+      }
+    },
+    toggleFilterMenu() {
+      this.showFilterMenu = !this.showFilterMenu
+    },
+    filterTasks(status) {
+      if (status === 'all') {
+        this.filteredTasks = this.tasks
+      } else {
+        this.filteredTasks = this.tasks.filter((task) => task.is_completed === status)
+      }
+      this.showFilterMenu = false
     }
   }
 }
 </script>
 
 <style scoped>
-.relative:hover .absolute {
-  opacity: 1;
-}
-.flex-center {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.no-tasks-message {
-  padding: 10px;
-  background-color: #f3f4f6;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.rotate-180 {
-  transform: rotate(180deg);
-}
+/* Styles specific to this component */
 </style>

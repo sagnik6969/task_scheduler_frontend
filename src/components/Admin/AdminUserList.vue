@@ -19,7 +19,7 @@
         <div
           v-for="user in paginatedUsers"
           :key="user.id"
-          :class="{ 'bg-gray-200  animate-pulse': isDeleting }"
+          :class="{ 'bg-gray-200  animate-pulse': isDeleting || makingAdmin }"
           class="border border-black rounded-lg p-4 mb-4 flex flex-col md:flex-row items-center justify-between font-bold text-gray-800 transition duration-300 ease-in-out hover:border-purple-500 hover:bg-gray-100"
         >
           <div
@@ -205,6 +205,7 @@ export default {
       usersPerPage: 3,
       isTaskFromVisisble: null,
       isDeleting: false,
+      makingAdmin: false,
       hoveredUser: null
     }
   },
@@ -276,10 +277,10 @@ export default {
     async deleteUser(user) {
       try {
         if (window.confirm(`Are you sure you want to delete ${user.name}"?`)) {
-          this.isViewingProfile = false
           this.isDeleting = true
           await axios.delete(`/api/admin/users/${user.id}`)
           toast.info(`${user.name} is deleted successfully`)
+          this.isViewingProfile = false
           this.fetchData()
         }
       } catch (error) {
@@ -293,6 +294,7 @@ export default {
         this.displayedUsers = response.data.users
         // console.log(this.displayedUsers)
         this.isDeleting = false
+        this.makingAdmin = false
       } catch (error) {
         console.error('Error fetching data:', error)
       }
@@ -310,9 +312,10 @@ export default {
     async makeAdmin(user) {
       try {
         if (window.confirm(`Are you sure you want to make ${user.name} Admin"?`)) {
-          this.isViewingProfile = false
+          this.makingAdmin = true
           await axios.patch(`/api/admin/users/${user.id}`)
           toast.info(`${user.name} is now admin .`)
+          this.isViewingProfile = false
           this.fetchData()
         }
       } catch (error) {
@@ -383,7 +386,7 @@ export default {
   width: 100%;
   /* height: 100%; */
   transform: translate(-50%, -50%);
-  z-index: 9999; /* Ensure it appears above other content */
+  z-index: 9999;
 }
 
 .user-task-assign-container {
@@ -393,7 +396,7 @@ export default {
   width: 100%;
   /* height: 100%; */
   transform: translate(-50%, -50%);
-  z-index: 9999; /* Ensure it appears above other content */
+  z-index: 9999;
 }
 
 .overlay {
