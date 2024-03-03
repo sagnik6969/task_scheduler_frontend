@@ -16,7 +16,7 @@
       </div>
 
       <div class="flex justify-end mb-4">
-        <button class="focus:outline-none" @click="toggle">
+        <button class="focus:outline-none" @click="toggle" @mouseover="openSidebar">
           <span v-if="open" class="material-symbols-outlined text-white"> switch_left </span>
           <span v-if="!open" class="material-symbols-outlined text-white"> switch_right </span>
         </button>
@@ -31,12 +31,14 @@
         <router-link
           v-for="link in links"
           :to="link.path"
-          class="button flex items-center"
+          class="button flex items-center text-center"
           :key="link.path"
         >
-          <span v-if="link.icon" class="text-white mr-4" :class="link.iconClass">{{
-            link.iconname
-          }}</span>
+          <tooltip :text="link.name" location="right">
+            <span v-if="link.icon" class="text-white mr-4" :class="link.iconClass">{{
+              link.iconname
+            }}</span>
+          </tooltip>
           <span class="text-sm text-white">{{ link.label }}</span>
         </router-link>
       </div>
@@ -77,6 +79,7 @@
 <script setup>
 import { onMounted, onUnmounted, ref, computed } from 'vue'
 import { useStore } from 'vuex'
+import Tooltip from '../ui/Tooltip.vue'
 
 const store = useStore()
 const open = ref(false)
@@ -85,7 +88,11 @@ const ismobile = ref(false)
 const toggle = () => {
   open.value = !open.value
 }
-
+const openSidebar = () => {
+  if (!open.value) {
+    open.value = true
+  }
+}
 const isAdmin = computed(() => store.getters.User.is_admin)
 
 const links = [
@@ -93,6 +100,7 @@ const links = [
     path: '/',
     label: 'Tasks',
     icon: true,
+    name: 'DashBoard',
     iconClass: 'material-symbols-outlined ',
     iconname: 'add_task'
   },
@@ -100,17 +108,26 @@ const links = [
     path: '/manage-tasks',
     label: 'Manage',
     icon: true,
+    name: 'ManageTasks',
     iconClass: 'material-symbols-outlined ',
     iconname: 'sort'
   },
   {
-    path: '/settings',
-    label: 'Settings',
+    path: '/profile',
+    label: 'Profile',
     icon: true,
-    iconClass: 'material-icons ',
-    iconname: 'settings'
+    name: 'Profile',
+    iconClass: 'material-icons',
+    iconname: 'person'
   },
-  { path: '/logout', label: 'Logout', icon: true, iconClass: 'material-icons ', iconname: 'logout' }
+  {
+    path: '/logout',
+    name: 'Logout',
+    label: 'Logout',
+    icon: true,
+    iconClass: 'material-symbols-outlined ',
+    iconname: 'logout'
+  }
 ]
 
 onMounted(() => {
@@ -132,6 +149,7 @@ const adminLink = {
   path: '/admin',
   label: 'Admin dashboard',
   icon: true,
+  name: 'AdminPanel',
   iconClass: 'material-symbols-outlined',
   iconname: 'dashboard'
 }
