@@ -25,6 +25,7 @@
 
     <!-- Filter Dropdown -->
     <div class="relative" x-data="{ open: false }">
+      <span class="material-symbols-outlined cursor-pointer"> refresh </span>
       <button @click="open = !open" class="ml-2 focus:outline-none">
         <img src="@/assets/images/filter.png" alt="Filter" class="h-6 w-6 cursor-pointer" />
       </button>

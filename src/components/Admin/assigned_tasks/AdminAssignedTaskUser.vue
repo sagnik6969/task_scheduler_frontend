@@ -1,6 +1,6 @@
 <template>
   <div class="w-4/5 md:w-4/5 lg:w-3/5 xl:w-5/5 mx-auto pb-10">
-    <h1 class="text-2xl font-semibold">Admin Assigned Tasks</h1>
+    <h1 class="text-2xl font-semibold mb-4">Admin Assigned Tasks</h1>
     <div
       class="flex justify-between items-center"
       v-if="tasks.length !== 0 && tasks[0] !== 'loading'"
@@ -11,6 +11,7 @@
         class="w-1/2 mt-5"
       ></search-box>
       <div class="flex space-x-1">
+        <span class="material-symbols-outlined cursor-pointer mt-3 mr-3"> refresh </span>
         <select
           v-model="priorityFilter"
           class="border-none hover:text-black sm:flex font-bold text-slate-500 bg-white rounded-md shadow"

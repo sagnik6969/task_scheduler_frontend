@@ -76,7 +76,7 @@ const store = useStore()
 const searchText = ref(route.query.search || '')
 
 const categoryFilter = ref(route.query.completed || 'all')
-
+const isAdmin = computed(() => store.getters.User.is_admin)
 watch(categoryFilter, (newVal) => {
   router.push({
     query: {
@@ -95,25 +95,32 @@ watch(searchText, (newVal) => {
   })
 })
 
-const navLinks = computed(() => [
-  { name: 'All Tasks', sort: '', active: route.query.sort == null || route.query.sort == '' },
-  {
-    name: 'Most Important',
-    sort: 'most_important',
-    active: route.query.sort == 'most_important'
-  },
-  { name: 'Near Deadline', sort: 'near_deadline', active: route.query.sort == 'near_deadline' },
-  {
-    name: 'Least Progress',
-    sort: 'least_progress',
-    active: route.query.sort == 'least_progress'
-  },
-  {
-    name: 'Assigned By admin',
-    sort: 'assigned_by_admin',
-    active: route.query.sort == 'assigned_by_admin'
+const navLinks = computed(() => {
+  let links = [
+    { name: 'All Tasks', sort: '', active: route.query.sort == null || route.query.sort == '' },
+    {
+      name: 'Most Important',
+      sort: 'most_important',
+      active: route.query.sort == 'most_important'
+    },
+    { name: 'Near Deadline', sort: 'near_deadline', active: route.query.sort == 'near_deadline' },
+    {
+      name: 'Least Progress',
+      sort: 'least_progress',
+      active: route.query.sort == 'least_progress'
+    },
+    {
+      name: 'Assigned By admin',
+      sort: 'assigned_by_admin',
+      active: route.query.sort == 'assigned_by_admin'
+    }
+  ]
+  if (isAdmin.value) {
+    links = links.filter((link) => link.sort !== 'assigned_by_admin')
   }
-])
+
+  return links
+})
 
 const sortFn = computed(() => {
   if (route.query.sort == 'near_deadline') return sortByDeadLine
