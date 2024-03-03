@@ -1,7 +1,7 @@
 <template>
   <form @submit.prevent="handleSubmit">
     <div
-      class="top-0 left-0 h-screen w-full flex items-center justify-center bg bg-slate-500 bg-opacity-80 absolute z-10"
+      class="top-0 left-0 h-screen w-full flex items-center justify-center bg bg-gray-900 bg-opacity-80 absolute z-10"
     >
       <div
         :class="{
@@ -71,13 +71,17 @@
               <option value="Very Important">Very Important</option>
             </select>
           </div>
-          <div class="flex space-x-2">
+          <div class="flex space-x-2" v-if="!spinLoading">
             <icon-button
               class="bg-slate-900 text-slate-100 hover:bg-slate-950 hover:text-slate-100"
               :disabled="loading"
+              @click="handleSubmit"
             >
               {{ props.admin ? 'Assign Task' : 'Add Task' }}
             </icon-button>
+          </div>
+          <div class="flex space-x-2 bg-slate-900 pt-2 pl-12 pr-12 pb-2 rounded-md" v-else>
+            <v-icon class="animate-spin" icon="mdi-loading" style="color: white"></v-icon>
           </div>
         </div>
       </div>
@@ -98,6 +102,7 @@ const emit = defineEmits(['close'])
 const props = defineProps(['userId', 'admin'])
 const toast = useToast()
 const store = useStore()
+const spinLoading = ref(false)
 
 const loading = ref(false)
 
@@ -108,6 +113,7 @@ const priority = ref('')
 
 const handleSubmit = async () => {
   loading.value = true
+  spinLoading.value = true
   try {
     const taskData = {
       title: title.value,
@@ -120,9 +126,12 @@ const handleSubmit = async () => {
         userId: props.userId,
         ...taskData
       })
+      spinLoading.value = false
+
       toast.success('Notification is sent to user . Check Assigned Task Section For Status')
     } else {
       await store.dispatch('createUserTask', taskData)
+      spinLoading.value = false
       toast.success('Task added successfully')
     }
 

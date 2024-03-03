@@ -1,9 +1,14 @@
 <template>
   <div class="sm:block">
-    <h1 class="text-2xl font-semibold text-slate-900">Your Statistics</h1>
-    <div class="mt-3 space-x-3">
+    <h1 v-if="!props.notitle" class="text-2xl font-semibold text-slate-900">Your Statistics</h1>
+    <div :class="props.notitle ? 'space-x-3' : 'mt-3 space-x-3'">
       <select
-        class="border-none focus:[box-shadow:none] bg-black rounded-md shadow font-medium text-white"
+        class=""
+        :class="
+          props.notitle
+            ? 'mt-3  text-black border-gray-200 shadow-2xl rounded-md  focus:[box-shadow:none]'
+            : 'bg-black text-white border-none focus:[box-shadow:none] rounded-md shadow font-medium '
+        "
         v-model="statistics"
       >
         <option value="completed_vs_pending_tasks" selected>Completed vs Pending Tasks</option>
@@ -12,7 +17,11 @@
         <!-- <option value="">Task Distribution by Deadline</option> -->
       </select>
       <select
-        class="border-none focus:[box-shadow:none] bg-black rounded-md shadow font-medium text-white"
+        :class="
+          props.notitle
+            ? ' bg-white text-black border-gray-200  shadow-2xl rounded-md  focus:[box-shadow:none]'
+            : 'bg-black text-white border-none focus:[box-shadow:none] rounded-md shadow font-medium '
+        "
         v-model="timeFilter"
       >
         <option value="last_hour">Last Hour</option>
@@ -23,32 +32,34 @@
         <option value="all">All Time</option>
       </select>
     </div>
-
-    <div v-if="statLoading" class="w-full mt-5 h-80 overflow-hidden">
-      <!-- <v-progress-circular :size="50" :width="5" color="purple" indeterminate></v-progress-circular> -->
-      <v-skeleton-loader class="w-full h-40" type="card, card"> </v-skeleton-loader>
-    </div>
     <div
-      v-else-if="series[0] === 0 && series[1] === 0"
+      v-if="series[0] === 0 && series[1] === 0"
       class="flex items-center justify-center bg-slate-100 mt-5 h-60"
     >
       <p class="text-gray-500">No Tasks Added.</p>
     </div>
     <apexchart
-      v-else
-      class="-z-10 relative mt-5 shadow-md rounded-xl border-black border-2 bg-white"
+      v-else-if="!statLoading || graphLoading"
+      class="-z-10 relative mt-5 shadow-md rounded-xl border-2 bg-white"
+      :class="
+        graphLoading ? 'opacity-25 border-black border-6  ' : props.notitle ? '' : 'border-black'
+      "
       width="500"
       type="donut"
       :options="options"
       :series="series"
     ></apexchart>
+    <div v-else class="w-full mt-5 h-80 overflow-hidden">
+      <!-- <v-progress-circular :size="50" :width="5" color="purple" indeterminate></v-progress-circular> -->
+      <v-skeleton-loader class="w-full h-40" type="card, card"> </v-skeleton-loader>
+    </div>
   </div>
 </template>
 <script setup>
 import { computed, ref, watchEffect } from 'vue'
 import { useToast } from 'vue-toast-notification'
 import { useStore } from 'vuex'
-
+const props = defineProps(['notitle'])
 const store = useStore()
 const toast = useToast()
 
@@ -60,6 +71,7 @@ const options = computed(() => ({
 }))
 
 const statLoading = ref(false)
+const graphLoading = ref(false)
 
 const series = computed(() => store.getters.getUserStatistics?.data?.series || [])
 const labels = computed(() => store.getters.getUserStatistics?.data?.labels || [])
@@ -70,6 +82,7 @@ const statistics = ref('completed_vs_pending_tasks')
 watchEffect(async () => {
   try {
     statLoading.value = true
+    graphLoading.value = true
     await store.dispatch('fetchUserStatistics', {
       time_range: timeFilter.value,
       statistics: statistics.value
@@ -79,6 +92,7 @@ watchEffect(async () => {
     console.log(error)
   } finally {
     statLoading.value = false
+    graphLoading.value = false
   }
 })
 </script>

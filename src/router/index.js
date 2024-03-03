@@ -37,8 +37,8 @@ export default createRouter({
           component: AdminDashboard
         },
         {
-          path: '/settings',
-          name: 'Settings',
+          path: '/profile',
+          name: 'Profile',
           component: UserProfile
         },
         { path: '/manage-tasks', name: 'ManageTasks', component: ManageTasks }

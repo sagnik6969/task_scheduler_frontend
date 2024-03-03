@@ -1,13 +1,17 @@
 <template>
   <div class="w-4/5 md:w-4/5 lg:w-3/5 xl:w-5/5 mx-auto pb-10">
-    <h1 class="text-2xl font-semibold">Admin Assigned Tasks</h1>
-    <div class="flex justify-between items-center" v-if="tasks.length !== 0">
+    <h1 class="text-2xl font-semibold mb-4">Admin Assigned Tasks</h1>
+    <div
+      class="flex justify-between items-center"
+      v-if="tasks.length !== 0 && tasks[0] !== 'loading'"
+    >
       <search-box
         v-model="searchQuery"
         placeholder="Search Your Assisned Tasks....."
         class="w-1/2 mt-5"
       ></search-box>
       <div class="flex space-x-1">
+        <span class="material-symbols-outlined cursor-pointer mt-3 mr-3"> refresh </span>
         <select
           v-model="priorityFilter"
           class="border-none hover:text-black sm:flex font-bold text-slate-500 bg-white rounded-md shadow"
@@ -19,7 +23,10 @@
         </select>
       </div>
     </div>
-    <table class="table-auto w-full border-collapse mt-5" v-if="tasks.length !== 0">
+    <table
+      class="table-auto w-full border-collapse mt-5"
+      v-if="tasks.length !== 0 && tasks[0] !== 'loading'"
+    >
       <!-- Table headers -->
       <thead>
         <tr class="bg-gray-200">
@@ -34,8 +41,8 @@
         <task-row v-for="task in filteredTasks" :key="task.id" :task="task"></task-row>
       </tbody>
     </table>
-    <div class="overflow-x-auto" v-if="tasks.length !== 0"></div>
-    <div v-else class="mt-4">
+    <div class="overflow-x-auto" v-if="tasks.length !== 0 && tasks[0] !== 'loading'"></div>
+    <div v-else-if="tasks[0] === 'loading'" class="mt-4">
       <!-- Search bar skeleton -->
       <div class="flex items-center justify-between mb-4">
         <div class="h-8 w-2/4 ml-4 bg-gray-100 rounded"></div>
@@ -60,6 +67,9 @@
         </div>
       </div>
     </div>
+    <div v-else class="text-center py-4">
+      <p class="text-gray-500">No tasks assigned.</p>
+    </div>
   </div>
 </template>
 
@@ -68,7 +78,7 @@ import SearchBox from '@/components/ui/SearchBox.vue'
 import axios from 'axios'
 import { computed, onMounted, ref } from 'vue'
 import TaskRow from './TaskRow.vue'
-const tasks = ref([])
+const tasks = ref(['loading'])
 const searchQuery = ref('')
 const priorityFilter = ref('')
 

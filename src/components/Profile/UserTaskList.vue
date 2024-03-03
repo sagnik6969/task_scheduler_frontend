@@ -1,0 +1,205 @@
+<template>
+  <div class="w-full md:w-4/5 mx-auto m-5 mt-3 p-5 bg-white rounded-lg shadow-2xl relative">
+    <!-- Search bar and Filter button in the same line -->
+    <div class="flex justify-between mb-3 md:mb-4">
+      <!-- Search bar -->
+      <div class="relative w-full mr-2">
+        <input
+          type="text"
+          placeholder="Checkout Your Tasks..."
+          class="border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent rounded-lg px-3 md:px-4 py-2 w-full"
+          v-model="searchQuery"
+        />
+      </div>
+      <!-- Filter button -->
+      <div class="relative">
+        <!-- Filter image -->
+        <img
+          src="../../assets/images/filter.png"
+          alt="Filter"
+          width="30"
+          height="30"
+          @click="toggleFilterOptions"
+          class="cursor-pointer mt-1"
+        />
+        <!-- Filter options -->
+        <div
+          v-if="showFilterOptions"
+          class="absolute top-full right-2 mt-2 bg-white shadow-md rounded-lg py-1"
+        >
+          <div
+            @click="
+              () => {
+                showCompletedTasks = true
+                showFilterOptions = false
+              }
+            "
+            class="px-4 py-2 cursor-pointer hover:bg-gray-100"
+          >
+            Completed Tasks
+          </div>
+          <div
+            @click="
+              () => {
+                showCompletedTasks = false
+                showFilterOptions = false
+              }
+            "
+            class="px-4 py-2 cursor-pointer hover:bg-gray-100"
+          >
+            Incomplete Tasks
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Task List Container with fixed height and overflow -->
+    <div class="task-list-container">
+      <!-- Task List -->
+      <div class="min-w-full">
+        <div v-if="tasks.length !== 0" class="overflow-hidden border border-gray-200 rounded-lg">
+          <table class="min-w-full divide-y divide-gray-200">
+            <!-- Task Items -->
+            <tbody class="bg-white divide-y divide-gray-200">
+              <tr v-for="task in paginatedTasks" :key="task.data.task_id" class="hover:bg-gray-50">
+                <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap">
+                  {{ truncateTitle(task.data.attributes.title) }}
+                </td>
+                <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap">
+                  {{ formatDate(task.data.attributes.created_at) }}
+                </td>
+              </tr>
+              <tr v-if="filteredTasks.length === 0">
+                <td
+                  class="px-3 md:px-6 py-4 whitespace-nowrap text-center text-gray-500"
+                  colspan="2"
+                >
+                  <div class="flex-center no-tasks-message">
+                    <p>No tasks found.</p>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div
+          v-else-if="tasks.length === 0"
+          class="h-screen w-full flex items-center justify-center bg-slate-100"
+        >
+          <v-progress-circular
+            :size="50"
+            :width="5"
+            color="purple"
+            indeterminate
+          ></v-progress-circular>
+        </div>
+      </div>
+    </div>
+    <!-- Pagination -->
+    <div class="flex justify-center mt-4">
+      <button
+        @click="prevPage"
+        :disabled="currentPage === 1"
+        class="px-4 py-2 mr-2 bg-gray-300 rounded-lg text-gray-600 cursor-pointer"
+      >
+        Previous
+      </button>
+      <span class="px-4 py-2 bg-gray-300 rounded-lg text-gray-600">{{ currentPage }}</span>
+      <button
+        @click="nextPage"
+        :disabled="currentPage === totalPages"
+        class="px-4 py-2 ml-2 bg-gray-300 rounded-lg text-gray-600 cursor-pointer"
+      >
+        Next
+      </button>
+    </div>
+  </div>
+</template>
+
+<script>
+import axios from 'axios'
+
+export default {
+  data() {
+    return {
+      tasks: [],
+      searchQuery: '',
+      showCompletedTasks: false, // Toggle between showing all and incomplete tasks
+      showFilterOptions: false,
+      currentPage: 1,
+      pageSize: 4 // Number of tasks per page
+    }
+  },
+  created() {
+    this.fetchTasks()
+  },
+  computed: {
+    filteredTasks() {
+      let filtered = this.tasks
+      if (!this.showCompletedTasks) {
+        filtered = filtered.filter((task) => !task.data.attributes.is_completed)
+      }
+      if (this.searchQuery.trim()) {
+        filtered = filtered.filter((task) =>
+          task.data.attributes.title.toLowerCase().includes(this.searchQuery.toLowerCase())
+        )
+      }
+      return filtered
+    },
+    paginatedTasks() {
+      const startIndex = (this.currentPage - 1) * this.pageSize
+      return this.filteredTasks.slice(startIndex, startIndex + this.pageSize)
+    },
+    totalPages() {
+      return Math.ceil(this.filteredTasks.length / this.pageSize)
+    }
+  },
+  methods: {
+    toggleFilterOptions() {
+      this.showFilterOptions = !this.showFilterOptions
+    },
+    toggleFilter(option) {
+      this.showCompletedTasks = option === 'completed'
+    },
+    formatDate(dateString) {
+      const date = new Date(dateString)
+      const now = new Date()
+      const diffTime = Math.abs(now - date)
+      const diffSeconds = Math.ceil(diffTime / 1000)
+      if (diffSeconds < 60) return `${diffSeconds} sec ago`
+      const diffMinutes = Math.ceil(diffSeconds / 60)
+      if (diffMinutes < 60) return `${diffMinutes} min ago`
+      const diffHours = Math.ceil(diffMinutes / 60)
+      if (diffHours < 24) return `${diffHours} hour ago`
+      const diffDays = Math.ceil(diffHours / 24)
+      if (diffDays < 7) return `${diffDays} day ago`
+      return date.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
+      })
+    },
+    truncateTitle(title) {
+      const maxLength = 20 // Define maximum length for title
+      return title.length > maxLength ? title.substring(0, maxLength) + '...' : title
+    },
+    async fetchTasks() {
+      try {
+        const response = await axios.get('/api/user/tasks')
+        this.tasks = response.data.data
+      } catch (error) {
+        console.error('Error fetching tasks:', error)
+      }
+    },
+    nextPage() {
+      if (this.currentPage < this.totalPages) {
+        this.currentPage++
+      }
+    },
+    prevPage() {
+      if (this.currentPage > 1) {
+        this.currentPage--
+      }
+    }
+  }
+}
+</script>

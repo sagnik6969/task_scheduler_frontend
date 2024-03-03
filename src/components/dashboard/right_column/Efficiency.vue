@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full bg-purple-100 ml-5 mt-10 p-3 border-2 border-black">
+  <div class="w-96 bg-purple-100 ml-5 mt-10 p-3 border-2 border-black">
     <div class="flex justify-start">
       <h1 class="text-2xl font-semibold">Efficiency:</h1>
     </div>
