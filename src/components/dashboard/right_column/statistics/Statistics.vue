@@ -1,7 +1,7 @@
 <template>
-  <div class="hidden sm:block">
+  <div class="sm:block">
     <h1 class="text-2xl font-semibold text-slate-900">Your Statistics</h1>
-    <div class="mt-3 space-x-3">
+    <div class="mt-3 space-x-3" v-if="series[0] !== 0 || series[1] !== 0">
       <select
         class="border-none focus:[box-shadow:none] bg-black rounded-md shadow font-medium text-white"
         v-model="statistics"
@@ -27,6 +27,12 @@
     <div v-if="statLoading" class="w-full mt-5 h-80 overflow-hidden">
       <!-- <v-progress-circular :size="50" :width="5" color="purple" indeterminate></v-progress-circular> -->
       <v-skeleton-loader class="w-full h-40" type="card, card"> </v-skeleton-loader>
+    </div>
+    <div
+      v-else-if="series[0] === 0 && series[1] === 0"
+      class="flex items-center justify-center bg-slate-100 mt-5 h-60"
+    >
+      <p class="text-gray-500">No Tasks Added.</p>
     </div>
     <apexchart
       v-else
@@ -66,6 +72,7 @@ watchEffect(async () => {
         statistics: statistics.value
       }
     })
+    console.log(res.data.series)
     series.value = res.data.series
     labels.value = res.data.labels
     statLoading.value = false
