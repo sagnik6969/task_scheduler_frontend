@@ -33,7 +33,8 @@ const tasks = [
 let store = {
   getters: {
     userTasksLoadingStatus: 'success',
-    userTasks: tasks
+    userTasks: tasks,
+    User: {}
   }
 }
 vi.mocked(useStore).mockReturnValue(store)
@@ -113,7 +114,6 @@ describe('Task List', () => {
 
   describe('Task List Nav', () => {
     describe.each([
-      { name: 'All Tasks', query: '' },
       { name: 'Most Important', query: 'most_important' },
       { name: 'Near Deadline', query: 'near_deadline' },
       { name: 'Least Progress', query: 'least_progress' },

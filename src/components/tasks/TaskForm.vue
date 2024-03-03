@@ -75,7 +75,6 @@
             <icon-button
               class="bg-slate-900 text-slate-100 hover:bg-slate-950 hover:text-slate-100"
               :disabled="loading"
-              @click="handleSubmit"
             >
               {{ props.admin ? 'Assign Task' : 'Add Task' }}
             </icon-button>
