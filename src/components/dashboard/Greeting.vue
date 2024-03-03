@@ -1,5 +1,5 @@
 <template>
-  <div class="gradient border-black border-2 shadow-xl py-8 px-5 rounded-lg">
+  <div class="greeting border-black border-2 shadow-xl py-8 px-5 rounded-lg">
     <div class="justify-between flex items-start text-center text-black bg-back">
       <div class="flex flex-col items-start justify-start w-full h-20">
         <h1 class="text-5xl font-bold mt-5">Hello {{ $store?.state?.user?.name }}!</h1>
@@ -70,4 +70,12 @@ const truncateQuote = (quote, maxLength) => {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.greeting {
+  background-image: url('/public/img/bgbanner.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  backdrop-filter: blur(10px);
+}
+</style>
