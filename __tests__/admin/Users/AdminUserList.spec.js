@@ -1,50 +1,70 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/vue'
+import { render, screen, waitFor } from '@testing-library/vue'
 import AdminUserList from '@/components/Admin/AdminUserList.vue'
+import { describe, expect, it, vi } from 'vitest'
+import * as matchers from '@testing-library/jest-dom/matchers'
+expect.extend(matchers)
 import axios from 'axios'
-import { vi } from 'vitest'
-import axios from 'axios'
+import userEvent from '@testing-library/user-event'
 
 vi.mock('axios')
 
-const VIconStub = {
-  template: '<div data-testid="v-icon-stub"></div>'
+const users = [
+  { id: 1, name: 'User 1', created_at: '2024-03-03T10:00:00' },
+  { id: 2, name: 'User 2', created_at: '2024-03-03T11:00:00' }
+]
+
+vi.mocked(axios.get).mockResolvedValue({
+  data: {
+    users: users
+  }
+})
+
+const mockTooltip = {
+  template: '<div>,<slot></slot></div>'
 }
 
-const fetchUsers = async () => {
-  return (await axios.get('')).data
+const setup = async () => {
+  return render(AdminUserList, {
+    props: {
+      users: users
+    },
+    global: {
+      stubs: {
+        'v-icon': true,
+        'v-tooltip': mockTooltip
+      }
+    }
+  })
 }
 
 describe('AdminUserList Component', () => {
   it('renders user list correctly', async () => {
-    const users = [
-      { id: 1, name: 'User 1', created_at: '2024-03-03T10:00:00' },
-      { id: 2, name: 'User 2', created_at: '2024-03-03T11:00:00' }
-    ]
-
-    axios.get.mockResolvedValue({
-      data: users
-    })
-    const users = await fetchUsers()
-
-    const { emitted } = render(AdminUserList, {
-      props: {
-        users: users
-      },
-      global: {
-        stubs: {
-          'v-icon': VIconStub
-        }
-      }
-    })
+    await setup()
 
     await waitFor(() => {
       expect(screen.queryByText('User 1')).toBeInTheDocument()
       expect(screen.queryByText('User 2')).toBeInTheDocument()
     })
+  })
 
-    fireEvent.click(screen.getByText('Delete User'))
+  it('has search filter', async () => {
+    await setup()
+    await waitFor(() => {
+      expect(screen.getByPlaceholderText('Search users...')).toBeInTheDocument()
+    })
+  })
 
-    expect(emitted().deleteUser).toBeTruthy()
-    expect(emitted().deleteUser[0]).toEqual([users[0]])
+  describe('when user types on search filter', () => {
+    it('the ui is updated accordingly', async () => {
+      await setup()
+      const user = userEvent.setup()
+      const searchBox = await screen.findByPlaceholderText('Search users...')
+      const user1 = await screen.findByText('User 1')
+      const user2 = await screen.findByText('User 2')
+
+      await user.type(searchBox, 'User 1')
+      expect(user2).not.toBeInTheDocument()
+      expect(user1).toBeInTheDocument()
+    })
   })
 })

@@ -14,6 +14,7 @@
             <input
               type="text"
               name="email"
+              id="email"
               v-model.trim="email"
               required
               placeholder="Email"
@@ -29,14 +30,15 @@
             <input
               type="password"
               v-model="password"
+              id="password"
               required
               placeholder="*******"
               @blur="validatePassword"
               class="mt-1 p-2 w-full border rounded-md focus:border-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300 transition-colors duration-300"
             />
-            <p v-if="passwordValidity === 'invalid'" class="text-red-500 text-xs">
+            <!-- <p v-if="passwordValidity === 'invalid'" class="text-red-500 text-xs">
               {{ passwordValidityMessage }}
-            </p>
+            </p> -->
           </div>
 
           <div>
