@@ -39,8 +39,12 @@
   </div>
 </template>
 <script setup>
-import axios from 'axios'
 import { computed, ref, watchEffect } from 'vue'
+import { useToast } from 'vue-toast-notification'
+import { useStore } from 'vuex'
+
+const store = useStore()
+const toast = useToast()
 
 const options = computed(() => ({
   labels: labels.value,
@@ -51,8 +55,8 @@ const options = computed(() => ({
 
 const statLoading = ref(false)
 
-const series = ref([])
-const labels = ref([])
+const series = computed(() => store.getters.getUserStatistics?.data?.series || [])
+const labels = computed(() => store.getters.getUserStatistics?.data?.labels || [])
 
 const timeFilter = ref('all')
 const statistics = ref('completed_vs_pending_tasks')
@@ -60,17 +64,15 @@ const statistics = ref('completed_vs_pending_tasks')
 watchEffect(async () => {
   try {
     statLoading.value = true
-    const res = await axios.get(`/api/user/analysis`, {
-      params: {
-        time_range: timeFilter.value,
-        statistics: statistics.value
-      }
+    await store.dispatch('fetchUserStatistics', {
+      time_range: timeFilter.value,
+      statistics: statistics.value
     })
-    series.value = res.data.series
-    labels.value = res.data.labels
+
     statLoading.value = false
-  } catch {
-    statLoading.value = false
+  } catch (error) {
+    toast.error('Unable to fetch user statistics')
+    console.log(error)
   } finally {
     statLoading.value = false
   }
