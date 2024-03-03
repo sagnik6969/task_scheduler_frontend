@@ -5,7 +5,7 @@
       <div class="max-w-md w-full p-6">
         <h1 class="text-3xl font-semibold mb-6 text-black text-center">Sign in</h1>
         <h1 class="text-sm font-semibold mb-6 text-gray-500 text-center">
-          welcome backe to our TaskSchedular tool
+          Welcome back to our Task Scheduler Tool
         </h1>
 
         <form @submit.prevent="handleSubmit" class="space-y-4">
@@ -16,7 +16,7 @@
               name="email"
               v-model.trim="email"
               required
-              placeholder="email"
+              placeholder="Email"
               @blur="validateEmail"
               class="mt-1 p-2 w-full border rounded-md focus:border-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300 transition-colors duration-300"
             />
@@ -45,7 +45,7 @@
               type="submit"
             >
               <v-icon v-if="loading" class="animate-spin" icon="mdi-loading"></v-icon>
-              <span v-else>Sign in</span>
+              <span v-else>Sign In</span>
             </button>
           </div>
         </form>

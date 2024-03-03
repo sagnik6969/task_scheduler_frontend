@@ -3,21 +3,21 @@
     <LeftImg />
     <div class="w-full bg-gray-100 lg:w-1/2 flex items-center justify-center">
       <div class="max-w-md w-full p-6">
-        <h1 class="text-3xl font-semibold mb-6 text-black text-center">Sign Up</h1>
+        <header class="text-3xl font-semibold mb-6 text-black text-center">Sign Up</header>
         <h1 class="text-sm font-semibold mb-6 text-gray-500 text-center">
-          Join to Our TaskSchedular tool with all time access and free
+          Join to Our Task Scheduler Tool with all time access and free
         </h1>
 
         <form @submit.prevent="handleSubmit" class="space-y-4">
           <div>
-            <label for="username" class="block text-sm font-medium text-gray-700">Name</label>
+            <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
             <input
               v-model.trim="name"
               type="text"
-              id="username"
+              id="name"
               name="name"
               required
-              placeholder="name"
+              placeholder="Name"
               @blur="validateName"
               class="mt-1 p-2 w-full border rounded-md focus:border-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300 transition-colors duration-300"
             />
@@ -30,9 +30,10 @@
             <input
               type="text"
               name="email"
+              id="email"
               v-model.trim="email"
               required
-              placeholder="email"
+              placeholder="Email"
               @blur="validateEmail"
               class="mt-1 p-2 w-full border rounded-md focus:border-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300 transition-colors duration-300"
             />
@@ -44,6 +45,7 @@
             <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
             <input
               type="password"
+              id="password"
               v-model="password"
               required
               placeholder="*******"
@@ -55,11 +57,12 @@
             </p>
           </div>
           <div>
-            <label for="password" class="block text-sm font-medium text-gray-700"
+            <label for="confirm password" class="block text-sm font-medium text-gray-700"
               >Confirm Password</label
             >
             <input
               type="password"
+              id="confirm password"
               v-model="confirmPassword"
               placeholder="*******"
               @blur="validateConfirmPassword"
@@ -180,7 +183,7 @@ const validatePassword = () => {
     passwordValidityMessage.value = 'Password cannot be empty'
   } else if (password.value.length < 6) {
     passwordValidity.value = 'invalid'
-    passwordValidityMessage.value = 'Password must be of length greater than 6'
+    passwordValidityMessage.value = 'Password length must be greater than 6'
   } else {
     passwordValidity.value = 'valid'
   }
@@ -192,7 +195,7 @@ const validateConfirmPassword = () => {
     confirmPasswordValidityMessage.value = 'Confirm Password cannot be empty'
   } else if (confirmPassword.value !== password.value) {
     confirmPasswordValidity.value = 'invalid'
-    confirmPasswordValidityMessage.value = 'Passwords do not match'
+    confirmPasswordValidityMessage.value = 'Input Passwords do not match'
   } else {
     confirmPasswordValidity.value = 'valid'
   }
