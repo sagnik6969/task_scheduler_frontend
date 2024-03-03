@@ -65,8 +65,6 @@ const routerLink = {
   }
 }
 
-const routerPushFn = vi.fn()
-
 const setup = async () => {
   render(TaskList, {
     global: {
@@ -129,7 +127,7 @@ describe('Task List', () => {
         await user.click(routerLink)
         expect(clickedLink).toStrictEqual({
           query: {
-            filter: query
+            sort: query
           }
         })
       })

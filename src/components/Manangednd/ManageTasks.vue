@@ -1,6 +1,8 @@
 <template>
-  <div class="pt-6 px-8 w-full flex xl:flex-row xl:mt-0 flex-col h-full md:ml-10 mt-12">
-    <div class="flex w-1/2 h-full">
+  <div
+    class="pt-6 md:px-8 md:w-full md:flex md:flex-row sm:flex-col flex xl:mt-0 flex-col h-screen ml-10 mt-12"
+  >
+    <div class="flex sm:w-full md:order-1 lg:w-1/2">
       <div class="flex w-full flex-col p-2 gap-2">
         <div
           class="bg-white border-black border-2 p-4 rounded font-semibold text-center text-3xl justify-center"
@@ -49,7 +51,7 @@
         </div>
       </div>
     </div>
-    <div class="w-1/2">
+    <div class="md:w-1/2 sm:w-full sm:order-2">
       <KanbanBoard />
     </div>
   </div>
@@ -61,7 +63,7 @@ import { ref, computed, watch, onMounted, onUpdated } from 'vue'
 import KanbanBoard from './KanbanBoard.vue'
 import TaskSkeleton from '@/components/ui/Shimmer/TasksSkeleton.vue'
 import SingleTaskCard from '@/components/dashboard/TaskList/SingleTaskCard.vue'
-import sortByLatestTasks from '@/components/dashboard/TaskList/filter_functions/sortByLatestTasks.js'
+import sortByLatestTasks from '@/components/dashboard/TaskList/sort_functions/sortByLatestTasks.js'
 import axios from 'axios'
 import { useStore } from 'vuex'
 import { useRouter, useRoute } from 'vue-router'
@@ -127,3 +129,4 @@ const filteredTasks = computed(() => {
   })
 })
 </script>
+@/components/dashboard/TaskList/sort_functions/sortByLatestTasks.js

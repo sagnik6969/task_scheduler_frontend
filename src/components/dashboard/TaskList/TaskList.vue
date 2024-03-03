@@ -14,12 +14,12 @@
             class="mdi mt-4 mdi-sort-ascending focus:[box-shadow:none] cursor-pointer text-slate-900 hover:text-black"
           ></span>
           <select
-            @change="handleCategoryChange"
             class="border-none mt-2 sm:flex font-bold text-slate-500 hidden bg-white rounded-md shadow hover:text-black"
+            v-model="categoryFilter"
           >
-            <option hidden selected value="">Select Category</option>
+            <option selected value="all">All</option>
             <option value="completed_tasks">Completed Task</option>
-            <option value="incompleted_tasks">Incompleted Task</option>
+            <option value="incomplete_tasks">Incomplete Task</option>
           </select>
         </div>
       </div>
@@ -59,27 +59,29 @@ import SearchBox from '@/components/ui/SearchBox.vue'
 import SingleTaskCard from './SingleTaskCard.vue'
 import TaskListNav from './TaskListNav.vue'
 import TaskSkeleton from '@/components/ui/Shimmer/TasksSkeleton.vue'
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import sortByDeadLine from './filter_functions/sortByDeadline.js'
-import sortByPriority from './filter_functions/sortByPriority.js'
-import sortByProgress from './filter_functions/sortByProgress.js'
-import sortByLatestTasks from './filter_functions/sortByLatestTasks.js'
+import sortByDeadLine from './sort_functions/sortByDeadline.js'
+import sortByPriority from './sort_functions/sortByPriority.js'
+import sortByProgress from './sort_functions/sortByProgress.js'
+import sortByLatestTasks from './sort_functions/sortByLatestTasks.js'
 import { useStore } from 'vuex'
-
-// const props = defineProps(['tasks'])
 
 const route = useRoute()
 const router = useRouter()
 const store = useStore()
 const searchText = ref(route.query.search || '')
-const showFilter = ref(route.query.filter || 'latest_tasks')
-const showCategory = ref(route.query.filter || '')
 
-// onMounted(() => {
-//   const taskLoadingStatus = store.getters.userTasksLoadingStatus
-//   if (taskLoadingStatus == null) store.dispatch('fetchUserTasks')
-// })
+const categoryFilter = ref(route.query.completed || 'all')
+
+watch(categoryFilter, (newVal) => {
+  router.push({
+    query: {
+      ...route.query,
+      completed: newVal
+    }
+  })
+})
 
 watch(searchText, (newVal) => {
   router.push({
@@ -91,65 +93,71 @@ watch(searchText, (newVal) => {
 })
 
 const navLinks = computed(() => [
-  { name: 'All Tasks', filter: '', active: route.query.filter == null || route.query.filter == '' },
+  { name: 'All Tasks', sort: '', active: route.query.sort == null || route.query.sort == '' },
   {
     name: 'Most Important',
-    filter: 'most_important',
-    active: route.query.filter == 'most_important'
+    sort: 'most_important',
+    active: route.query.sort == 'most_important'
   },
-  { name: 'Near Deadline', filter: 'near_deadline', active: route.query.filter == 'near_deadline' },
+  { name: 'Near Deadline', sort: 'near_deadline', active: route.query.sort == 'near_deadline' },
   {
     name: 'Least Progress',
-    filter: 'least_progress',
-    active: route.query.filter == 'least_progress'
+    sort: 'least_progress',
+    active: route.query.sort == 'least_progress'
   },
   {
     name: 'Assigned By admin',
-    filter: 'assigned_by_admin',
-    active: route.query.filter == 'assigned_by_admin'
+    sort: 'assigned_by_admin',
+    active: route.query.sort == 'assigned_by_admin'
   }
 ])
-const handleCategoryChange = () => {
-  showCategory.value = event.target.value
-  if (route.query.filter == '') {
-    showCategory.value = category === 'All Tasks' ? '' : category.toLowerCase().replace(' ', '_')
-    router.push({ query: { ...route.query, filter: showCategory.value } })
-  }
-  router.push({ query: { ...route.query, filter: showCategory.value } })
-}
-
-const handleDrop = () => {
-  const newFilter = showFilter.value === 'latest_tasks' ? 'oldest_tasks' : 'latest_tasks'
-  showFilter.value = newFilter
-  router.push({ query: { ...route.query, filter: newFilter } })
-}
 
 const sortFn = computed(() => {
-  if (route.query.filter == 'near_deadline') return sortByDeadLine
-  else if (route.query.filter == 'most_important') return sortByPriority
-  else if (route.query.filter == 'least_progress') return sortByProgress
-  else if (route.query.filter == 'latest_tasks') return sortByLatestTasks
+  if (route.query.sort == 'near_deadline') return sortByDeadLine
+  else if (route.query.sort == 'most_important') return sortByPriority
+  else if (route.query.sort == 'least_progress') return sortByProgress
+  else if (route.query.sort == 'latest_tasks') return sortByLatestTasks
   else return undefined
 })
 
+const isCompletedInBoolean = {
+  incomplete_tasks: 0,
+  completed_tasks: 1
+}
+
 const filteredTasks = computed(() => {
   const searchQuery = searchText.value.toLowerCase()
-  let tasksToShow = []
 
-  if (showCategory.value === 'completed_tasks') {
-    tasksToShow = store.getters.userTasks.filter((task) => task.data.attributes.is_completed)
-  } else if (showCategory.value === 'incompleted_tasks') {
-    tasksToShow = store.getters.userTasks.filter((task) => !task.data.attributes.is_completed)
-  } else if (route.query.filter == 'assigned_by_admin') {
-    tasksToShow = store.getters.userTasks.filter((task) => task.data.attributes.admin_id)
-  } else {
-    tasksToShow = store.getters.userTasks
-  }
+  if (route.query.sort == 'assigned_by_admin')
+    return store.getters.userTasks.filter((task) => {
+      const title = task.data.attributes.title.toLowerCase()
+      const description = task.data.attributes.description?.toLowerCase() || ''
+      return (
+        (title.includes(searchQuery) || description.includes(searchQuery)) &&
+        task.data.attributes.admin_id &&
+        (categoryFilter.value == 'all' ||
+          task.data.attributes.is_completed == isCompletedInBoolean[categoryFilter.value])
+      )
+    })
 
-  return tasksToShow.toSorted(sortFn.value).filter((task) => {
+  return store.getters.userTasks.toSorted(sortFn.value).filter((task) => {
     const title = task.data.attributes.title.toLowerCase()
     const description = task.data.attributes.description?.toLowerCase() || ''
-    return searchQuery === '' || title.includes(searchQuery) || description.includes(searchQuery)
+    return (
+      (title.includes(searchQuery) || description.includes(searchQuery)) &&
+      (categoryFilter.value == 'all' ||
+        task.data.attributes.is_completed == isCompletedInBoolean[categoryFilter.value])
+    )
   })
 })
+
+const handleDrop = () => {
+  const options = ['all', 'completed_tasks', 'incomplete_tasks']
+  const index = options.findIndex((x) => x === categoryFilter.value)
+  console.log(categoryFilter.value)
+  console.log(index)
+
+  const nextIndex = (index + 1) % 3
+  categoryFilter.value = options[nextIndex]
+}
 </script>
