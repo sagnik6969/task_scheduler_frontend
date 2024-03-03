@@ -43,6 +43,7 @@
             <button
               class="bg-black w-full border-2 border-black transition-all duration-300 hover:bg-white text-white hover:text-black font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
               type="submit"
+              data-testid="sign-in-button"
             >
               <v-icon v-if="loading" class="animate-spin" icon="mdi-loading"></v-icon>
               <span v-else>Sign In</span>

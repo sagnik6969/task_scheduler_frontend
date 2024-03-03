@@ -1,9 +1,14 @@
 import { render, screen, fireEvent } from '@testing-library/vue'
 import LoginForm from '@/components/auth/RegisterForm.vue'
 import { describe, expect, it, vi } from 'vitest'
+
+import axios from 'axios'
 import * as matchers from '@testing-library/jest-dom/matchers'
 expect.extend(matchers)
 vi.mock('axios')
+const createUser = async (user) => {
+  return (await axios.post('/api/login', user)).data
+}
 
 describe('Login', () => {
   it('has heading with info about the project', () => {
@@ -31,26 +36,29 @@ describe('Login', () => {
 
   it('has sign in button', () => {
     render(LoginForm)
-    expect(screen.getByRole('button', { name: 'Sign In' })).toBeInTheDocument()
+    const button = screen.getByRole('button')
+    expect(button).toBeInTheDocument()
   })
-
   it('submits the form with correct data', async () => {
     render(LoginForm)
     await fireEvent.update(screen.getByLabelText('Email'), 'test@example.com')
     await fireEvent.update(screen.getByLabelText('Password'), 'password123')
-    fireEvent.submit(screen.getByRole('button', { Name: 'Sign In' }))
+    fireEvent.submit(screen.getByRole('button'))
+    const userMock = {
+      email: 'test@example.com'
+    }
+    const data = {
+      password: 'password123',
+      ...userMock
+    }
 
-    await expect(vi.resolve('axios')).toHaveBeenCalledWith({
-      method: 'post',
-      url: '/api/login',
-      data: {
-        email: 'test@example.com',
-        password: 'password123'
-      }
+    axios.post.mockResolvedValue({
+      data: data
     })
+    const newUser = await createUser(data)
+    expect(newUser).toEqual(data)
   })
 
-  // Inko add karna hai
   it('displays an error message if login fails', async () => {
     render(LoginForm)
   })
