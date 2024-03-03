@@ -1,5 +1,5 @@
 <template>
-  <div class="hidden sm:block">
+  <div class="sm:block">
     <h1 class="text-2xl font-semibold text-slate-900">Your Statistics</h1>
     <div class="mt-3 space-x-3">
       <select
@@ -28,6 +28,12 @@
       <!-- <v-progress-circular :size="50" :width="5" color="purple" indeterminate></v-progress-circular> -->
       <v-skeleton-loader class="w-full h-40" type="card, card"> </v-skeleton-loader>
     </div>
+    <div
+      v-else-if="series[0] === 0 && series[1] === 0"
+      class="flex items-center justify-center bg-slate-100 mt-5 h-60"
+    >
+      <p class="text-gray-500">No Tasks Added.</p>
+    </div>
     <apexchart
       v-else
       class="-z-10 relative mt-5 shadow-md rounded-xl border-black border-2 bg-white"
@@ -39,8 +45,12 @@
   </div>
 </template>
 <script setup>
-import axios from 'axios'
 import { computed, ref, watchEffect } from 'vue'
+import { useToast } from 'vue-toast-notification'
+import { useStore } from 'vuex'
+
+const store = useStore()
+const toast = useToast()
 
 const options = computed(() => ({
   labels: labels.value,
@@ -51,8 +61,8 @@ const options = computed(() => ({
 
 const statLoading = ref(false)
 
-const series = ref([])
-const labels = ref([])
+const series = computed(() => store.getters.getUserStatistics?.data?.series || [])
+const labels = computed(() => store.getters.getUserStatistics?.data?.labels || [])
 
 const timeFilter = ref('all')
 const statistics = ref('completed_vs_pending_tasks')
@@ -60,17 +70,13 @@ const statistics = ref('completed_vs_pending_tasks')
 watchEffect(async () => {
   try {
     statLoading.value = true
-    const res = await axios.get(`/api/user/analysis`, {
-      params: {
-        time_range: timeFilter.value,
-        statistics: statistics.value
-      }
+    await store.dispatch('fetchUserStatistics', {
+      time_range: timeFilter.value,
+      statistics: statistics.value
     })
-    series.value = res.data.series
-    labels.value = res.data.labels
-    statLoading.value = false
-  } catch {
-    statLoading.value = false
+  } catch (error) {
+    toast.error('Unable to fetch user statistics')
+    console.log(error)
   } finally {
     statLoading.value = false
   }

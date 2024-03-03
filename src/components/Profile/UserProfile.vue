@@ -1,13 +1,13 @@
 <template>
   <div class="">
     <user-notification-bar
-      class="fixed top-0 right-0 left-0 z-0 py-3 pr-14 w-full bg-white xl:static xl:mr-0 xl:mt-0 xl:pr-0"
+      class="extracss top-0 right-0 left-0 py-3 w-full bg-white xl:static xl:mr-0 xl:mt-0 xl:pr-0"
     ></user-notification-bar>
     <div class="sm:flex w-full p-5 md:p-20 gap-5 h-full">
       <div class="shadow-md border-2 border-black bg-green-200 rounded-lg">
         <div class="flex justify-center items-center mt-5">
           <img
-            class="object-cover rounded-full h-48 w-48 min-h-12 min-w-12"
+            class="object-cover rounded-full h-24 w-24 min-h-12 min-w-12"
             src="https://avatars.githubusercontent.com/u/47273253?v=4"
             alt="profile pic"
           />
@@ -82,3 +82,11 @@ const formatDate = (dateString) => {
   }
 }
 </script>
+
+<style scoped>
+.extracss {
+  position: sticky;
+  z-index: 1;
+  padding-right: 2rem;
+}
+</style>

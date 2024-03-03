@@ -63,7 +63,7 @@ import { ref, computed, watch, onMounted, onUpdated } from 'vue'
 import KanbanBoard from './KanbanBoard.vue'
 import TaskSkeleton from '@/components/ui/Shimmer/TasksSkeleton.vue'
 import SingleTaskCard from '@/components/dashboard/TaskList/SingleTaskCard.vue'
-import sortByLatestTasks from '@/components/dashboard/TaskList/filter_functions/sortByLatestTasks.js'
+import sortByLatestTasks from '@/components/dashboard/TaskList/sort_functions/sortByLatestTasks.js'
 import axios from 'axios'
 import { useStore } from 'vuex'
 import { useRouter, useRoute } from 'vue-router'
@@ -129,3 +129,4 @@ const filteredTasks = computed(() => {
   })
 })
 </script>
+@/components/dashboard/TaskList/sort_functions/sortByLatestTasks.js

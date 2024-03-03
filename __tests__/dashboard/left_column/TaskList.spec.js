@@ -127,7 +127,7 @@ describe('Task List', () => {
         await user.click(routerLink)
         expect(clickedLink).toStrictEqual({
           query: {
-            filter: query
+            sort: query
           }
         })
       })

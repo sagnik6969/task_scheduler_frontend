@@ -1,7 +1,7 @@
 <template>
-  <div class="w-4/5 md:w-4/5 lg:w-3/5 xl:w-5/5 mx-auto">
+  <div class="w-4/5 md:w-4/5 lg:w-3/5 xl:w-5/5 mx-auto pb-10">
     <h1 class="text-2xl font-semibold">Admin Assigned Tasks</h1>
-    <div class="flex justify-between items-center">
+    <div class="flex justify-between items-center" v-if="tasks.length !== 0">
       <search-box
         v-model="searchQuery"
         placeholder="Search Your Assisned Tasks....."
@@ -19,7 +19,7 @@
         </select>
       </div>
     </div>
-    <table class="table-auto w-full border-collapse mt-5">
+    <table class="table-auto w-full border-collapse mt-5" v-if="tasks.length !== 0">
       <!-- Table headers -->
       <thead>
         <tr class="bg-gray-200">
@@ -34,9 +34,31 @@
         <task-row v-for="task in filteredTasks" :key="task.id" :task="task"></task-row>
       </tbody>
     </table>
-    <div class="overflow-x-auto" v-if="true"></div>
-    <div v-else class="text-center my-20 text-slate-900">
-      <v-progress-circular :size="50" :width="5" color="purple" indeterminate></v-progress-circular>
+    <div class="overflow-x-auto" v-if="tasks.length !== 0"></div>
+    <div v-else class="mt-4">
+      <!-- Search bar skeleton -->
+      <div class="flex items-center justify-between mb-4">
+        <div class="h-8 w-2/4 ml-4 bg-gray-100 rounded"></div>
+        <div class="h-8 w-40 bg-gray-100 rounded"></div>
+      </div>
+      <!-- User list skeleton -->
+      <div
+        v-for="index in 3"
+        :key="index"
+        class="border border-black rounded-lg p-4 mb-4 flex flex-col md:flex-row items-center justify-between font-bold text-gray-800 animate-pulse"
+      >
+        <div class="flex items-center space-x-4 mb-4 md:mb-0 w-full md:w-3/5">
+          <div class="h-6 w-1/2 bg-gray-300 rounded"></div>
+          <div class="h-4 w-1/2 bg-gray-300 rounded"></div>
+        </div>
+        <div class="flex items-center justify-between w-full md:w-1/4">
+          <div class="h-6 w-6 bg-gray-300 rounded"></div>
+          <div class="h-6 w-6 bg-gray-300 rounded"></div>
+          <div class="h-6 w-6 bg-gray-300 rounded"></div>
+          <div class="h-6 w-6 bg-gray-300 rounded"></div>
+          <div class="h-6 w-6 bg-gray-300 rounded"></div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
