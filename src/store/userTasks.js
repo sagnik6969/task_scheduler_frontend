@@ -5,7 +5,8 @@ const state = () => {
     userTasks: [],
     userTasksStatus: null,
     userCompletedTaskCount: 0,
-    userIncompleteTaskCount: 0
+    userIncompleteTaskCount: 0,
+    userStatistics: {}
   }
 }
 
@@ -21,15 +22,15 @@ const getters = {
   },
   getUserIncompleteTaskCount(state) {
     return state.userIncompleteTaskCount
+  },
+  getUserStatistics(state) {
+    return state.userStatistics
   }
 }
 
 const mutations = {
   setUserTasks(state, userTasks) {
     state.userTasks = userTasks
-  },
-  setTaskDeleted(state) {
-    state.userTasksStatus = 'taskDeleted'
   },
   addUserTask(state, task) {
     state.userTasks.unshift(task)
@@ -38,12 +39,20 @@ const mutations = {
     const idx = state.userTasks.findIndex((t) => {
       return t.data.task_id == task.data.task_id
     })
-    // console.log(t.data.task_id)
-    console.log(state.userTasks[idx])
-    console.log(task)
-
     state.userTasks[idx] = task
   },
+
+  deleteTask(state, taskId) {
+    const idx = state.userTasks.findIndex((t) => {
+      return t.data.task_id == taskId
+    })
+    // console.log(t.data.task_id)
+    // console.log(state.userTasks[idx])
+    // console.log(task)
+
+    state.userTasks.splice(idx, 1)
+  },
+
   setUserTasksStatus(state, status) {
     state.userTasksStatus = status
   },
@@ -52,6 +61,10 @@ const mutations = {
   },
   setUserIncompleteTaskCount(state, count) {
     state.userIncompleteTaskCount = count
+  },
+
+  setUserStatistics(state, statistics) {
+    state.userStatistics = statistics
   }
 }
 
@@ -90,7 +103,9 @@ const actions = {
     try {
       const response = await axios.post('api/user/tasks', payload)
       context.commit('addUserTask', response.data)
-      context.dispatch('fetchUserTaskCount')
+      await context.dispatch('fetchUserTaskCount')
+      if (context.getters.getUserStatistics.params)
+        await context.dispatch('fetchUserStatistics', context.getters.getUserStatistics.params)
     } catch (err) {
       console.log(err)
       throw 'unable to add task'
@@ -101,8 +116,9 @@ const actions = {
     try {
       const response = await axios.put(`/api/user/tasks/${payload.task_id}`, payload)
       context.commit('updateTask', response.data)
-      // console.log(response.data)
-      context.dispatch('fetchUserTaskCount')
+      if (context.getters.getUserStatistics.params)
+        await context.dispatch('fetchUserStatistics', context.getters.getUserStatistics.params)
+      await context.dispatch('fetchUserTaskCount')
     } catch (error) {
       console.log(error)
       throw 'unable to update task'
@@ -123,27 +139,28 @@ const actions = {
   async deleteTask(context, taskId) {
     try {
       await axios.delete('api/user/tasks/' + taskId)
-      context.dispatch('fetchUserTasks')
-      context.commit('setTaskDeleted', true)
+      context.commit('deleteTask', taskId)
+      if (context.getters.getUserStatistics.params)
+        await context.dispatch('fetchUserStatistics', context.getters.getUserStatistics.params)
+      await context.dispatch('fetchUserTaskCount')
     } catch (err) {
       console.log(err)
       throw 'unable to delete task'
     }
   },
-  async updateTask(context, payload) {
+
+  async fetchUserStatistics(context, params) {
     try {
-      await axios.put('api/user/tasks/' + payload.task_id, {
-        title: payload.title,
-        description: payload.description,
-        deadline: payload.deadline,
-        is_completed: payload.is_completed,
-        progress: payload.progress,
-        priority: payload.priority
+      const res = await axios.get(`/api/user/analysis`, {
+        params: params
       })
-      context.dispatch('fetchUserTasks')
-    } catch (err) {
-      console.log(err)
-      throw 'unable to update task'
+      context.commit('setUserStatistics', {
+        params: params,
+        data: res.data
+      })
+    } catch (error) {
+      console.log('error')
+      throw 'unable to fetch statistics'
     }
   }
 }
