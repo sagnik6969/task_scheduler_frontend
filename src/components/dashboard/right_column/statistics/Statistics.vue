@@ -1,7 +1,7 @@
 <template>
   <div class="sm:block">
     <h1 class="text-2xl font-semibold text-slate-900">Your Statistics</h1>
-    <div class="mt-3 space-x-3" v-if="series[0] !== 0 || series[1] !== 0">
+    <div class="mt-3 space-x-3">
       <select
         class="border-none focus:[box-shadow:none] bg-black rounded-md shadow font-medium text-white"
         v-model="statistics"
