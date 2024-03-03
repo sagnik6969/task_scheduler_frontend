@@ -17,9 +17,9 @@
             class="border-none mt-2 sm:flex font-bold text-slate-500 hidden bg-white rounded-md shadow hover:text-black"
             v-model="categoryFilter"
           >
-            <option selected value="all">All</option>
-            <option value="completed_tasks">Completed Task</option>
-            <option value="incomplete_tasks">Incomplete Task</option>
+            <option selected value="all">All Tasks</option>
+            <option value="completed_tasks">Completed Tasks</option>
+            <option value="incomplete_tasks">Incomplete Tasks</option>
           </select>
         </div>
       </div>
@@ -42,6 +42,9 @@
       class="mt-4 py-10 px-14 flex items-center justify-center text-center bg-slate-100 text-slate-800 text-xl font-medium rounded-lg shadow"
     >
       <p>looks like you haven't added any task yet!</p>
+    </div>
+    <div v-else-if="filteredTasks.length === 0" class="text-center py-4">
+      <p class="text-gray-500">No tasks found.</p>
     </div>
     <div v-else class="mt-0">
       <single-task-card
