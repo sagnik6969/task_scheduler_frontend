@@ -1,7 +1,7 @@
 <template>
   <form @submit.prevent="handleSubmit">
     <div
-      class="top-0 left-0 h-screen w-full flex items-center justify-center bg bg-gray-900 bg-opacity-80 absolute z-10"
+      class="fixed top-0 left-0 h-screen w-full flex items-center justify-center bg bg-gray-900 bg-opacity-80 z-10"
     >
       <div
         :class="{

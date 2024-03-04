@@ -101,7 +101,7 @@ describe('Task List', () => {
     it('displays appropriate message', async () => {
       store.getters.userTasks = []
       await setup()
-      expect(screen.getByText(`looks like you haven't added any task yet!`)).toBeInTheDocument()
+      expect(screen.getByText(`No Tasks Added`)).toBeInTheDocument()
     })
   })
 

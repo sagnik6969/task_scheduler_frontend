@@ -100,7 +100,7 @@ describe('Task form', () => {
   })
 
   describe('when user submits the task form', () => {
-    it.only('calls appropriate dispatch function on store', async () => {
+    it('calls appropriate dispatch function on store', async () => {
       await setup()
       const user = userEvent.setup()
       const title = screen.getByPlaceholderText('Title')

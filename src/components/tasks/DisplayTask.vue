@@ -1,6 +1,6 @@
 <template>
   <div
-    class="top-0 left-0 h-screen w-full flex items-center justify-center bg bg-slate-900 bg-opacity-80 absolute z-10"
+    class="fixed top-0 left-0 h-screen w-full flex items-center justify-center bg bg-slate-900 bg-opacity-80 z-10"
   >
     <div class="py-5 px-10 flex flex-col max-w-2xl w-10/12 shadow-2xl rounded-lg bg-white relative">
       <button
