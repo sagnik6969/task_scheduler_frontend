@@ -36,14 +36,14 @@
         ></v-icon>
       </Tooltip>
     </div>
-    <div v-if="isViewingProfile" class="user-profile-container">
+    <!-- <div v-if="isViewingProfile" class="user-profile-container">
       <user-profile
         :userDetails="selectedUser"
         @delete-user="deleteUser"
         @make-admin="makeAdmin"
         @close-user-profile="closeUserProfile"
       />
-    </div>
+    </div> -->
   </div>
 </template>
 
