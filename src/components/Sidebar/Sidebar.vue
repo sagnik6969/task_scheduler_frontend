@@ -16,7 +16,12 @@
       </div>
 
       <div class="flex justify-end mb-4">
-        <button class="focus:outline-none" @click="toggle" @mouseover="openSidebar">
+        <button
+          class="focus:outline-none"
+          @click="toggle"
+          @mouseenter="openSidebar"
+          @mouseleave="openSidebar"
+        >
           <span v-if="open" class="material-symbols-outlined text-white"> switch_left </span>
           <span v-if="!open" class="material-symbols-outlined text-white"> switch_right </span>
         </button>
@@ -33,6 +38,7 @@
           :to="link.path"
           class="button flex items-center text-center"
           :key="link.path"
+          @click="open = false"
         >
           <tooltip :text="link.name" location="right">
             <span v-if="link.icon" class="text-white mr-4" :class="link.iconClass">{{
@@ -89,9 +95,7 @@ const toggle = () => {
   open.value = !open.value
 }
 const openSidebar = () => {
-  if (!open.value) {
-    open.value = true
-  }
+  open.value = !open.value
 }
 const isAdmin = computed(() => store.getters.User.is_admin)
 
@@ -108,7 +112,7 @@ const links = [
     path: '/manage-tasks',
     label: 'Manage',
     icon: true,
-    name: 'ManageTasks',
+    name: 'Manage Tasks',
     iconClass: 'material-symbols-outlined ',
     iconname: 'sort'
   },
@@ -149,7 +153,7 @@ const adminLink = {
   path: '/admin',
   label: 'Admin dashboard',
   icon: true,
-  name: 'AdminPanel',
+  name: 'Admin Panel',
   iconClass: 'material-symbols-outlined',
   iconname: 'dashboard'
 }

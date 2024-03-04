@@ -25,23 +25,24 @@
       </select>
     </div>
 
-    <div v-if="statLoading" class="w-full my-10 md:my-24 flex items-center justify-center">
+    <!-- <div v-if="statLoading" class="w-full my-10 md:my-24 flex items-center justify-center">
       <v-progress-circular
         :size="isMobile ? 30 : 50"
         :width="isMobile ? 3 : 5"
         color="purple"
         indeterminate
       ></v-progress-circular>
-    </div>
+    </div> -->
     <div
-      class="py-10 flex justify-center text-slate-800 text-xl font-medium px-14 text-center bg-slate-100 mt-5 rounded-lg"
-      v-else-if="user.completed_tasks == 0 && user.incomplete_tasks == 0"
+      class="py-10 flex justify-center items-center text-slate-800 text-xl font-medium px-14 text-center h-60 bg-slate-100 mt-5 rounded-lg"
+      v-if="user.completed_tasks == 0 && user.incomplete_tasks == 0"
     >
       <p>Looks like the user haven't added any tasks yet !</p>
     </div>
     <apexchart
       v-else
       class="-z-10 relative mt-5 shadow-md rounded-xl border-black border-2 bg-white"
+      :class="{ 'opacity-70': statsLoading }"
       :width="currentDivWidth"
       type="donut"
       :options="options"
@@ -57,7 +58,7 @@ import { computed, defineProps, ref, watchEffect } from 'vue'
 const props = defineProps(['user'])
 
 const isMobile = computed(() => window.innerWidth <= 768)
-
+const statsLoading = ref(false)
 const options = computed(() => ({
   labels: labels.value,
   theme: {
@@ -78,6 +79,7 @@ const statistics = ref('completed_vs_pending_tasks')
 watchEffect(async () => {
   try {
     statLoading.value = true
+    statsLoading.value = true
     const res = await axios.get(`/api/user/analysis?admin=true&user_id=${props.user.id}`, {
       params: {
         time_range: timeFilter.value,
@@ -87,6 +89,7 @@ watchEffect(async () => {
     series.value = res.data.series
     labels.value = res.data.labels
     statLoading.value = false
+    statsLoading.value = false
   } catch {
     statLoading.value = false
   } finally {

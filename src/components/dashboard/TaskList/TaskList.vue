@@ -39,12 +39,28 @@
     </div>
     <div
       v-else-if="$store.getters.userTasks.length == 0"
-      class="mt-4 py-10 px-14 flex items-center justify-center text-center bg-slate-100 text-slate-800 text-xl font-medium rounded-lg shadow"
+      class="py-3 px-14 flex flex-col items-center justify-center text-center text-slate-800 text-xl font-medium rounded-lg"
     >
-      <p>looks like you haven't added any task yet!</p>
+      <img src="@/assets/images/not_found_3.jpg" alt="" width="300px" height="300px" />
+      <p class="text-gray-500 mt-3">No Tasks Added</p>
+      <p class="text-gray-500">Give Yourself A Challenge. We Will Give You Desire To Compete It</p>
+      <button
+        class="w-64 m-3 rounded-full px-6 py-2 border-2 border-slate-900 font-serif bg-black text-slate-100 flex-1 hover:bg-green-300 hover:text-black duration-300 flex items-center justify-center space-x-1"
+        @click="isTaskFormVisible = true"
+      >
+        Add Task
+        <v-icon icon="mdi-plus"></v-icon>
+      </button>
     </div>
-    <div v-else-if="filteredTasks.length === 0" class="text-center py-4">
+    <!-- <div v-else-if="filteredTasks.length === 0" class="text-center py-4">
       <p class="text-gray-500">No tasks found.</p>
+    </div> -->
+    <div
+      v-else-if="filteredTasks.length === 0"
+      class="text-center flex flex-col justify-center items-center pb-10"
+    >
+      <img src="@/assets/images/not_found_3.jpg" alt="" width="300px" height="300px" />
+      <p class="text-gray-500">No Tasks found.</p>
     </div>
     <div v-else class="mt-0">
       <single-task-card
@@ -54,6 +70,9 @@
         class="mt-3 first:mt-0"
       ></single-task-card>
     </div>
+    <Teleport to="body">
+      <task-form v-if="isTaskFormVisible" @close="isTaskFormVisible = false"></task-form>
+    </Teleport>
   </div>
 </template>
 
@@ -69,11 +88,12 @@ import sortByPriority from './sort_functions/sortByPriority.js'
 import sortByProgress from './sort_functions/sortByProgress.js'
 import sortByLatestTasks from './sort_functions/sortByLatestTasks.js'
 import { useStore } from 'vuex'
-
+import TaskForm from '@/components/tasks/TaskForm.vue'
 const route = useRoute()
 const router = useRouter()
 const store = useStore()
 const searchText = ref(route.query.search || '')
+const isTaskFormVisible = ref(false)
 
 const categoryFilter = ref(route.query.completed || 'all')
 const isAdmin = computed(() => store.getters.User.is_admin)
@@ -171,3 +191,15 @@ const handleDrop = () => {
   categoryFilter.value = options[nextIndex]
 }
 </script>
+
+<style scoped>
+.user-task-assign-container {
+  position: fixed;
+  top: 0%;
+  left: 50%;
+  width: 100%;
+  /* height: 100%; */
+  transform: translate(-50%, -50%);
+  z-index: 9999;
+}
+</style>

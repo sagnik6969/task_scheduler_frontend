@@ -1,7 +1,10 @@
 <template>
   <div class="sm:block">
     <h1 v-if="!props.notitle" class="text-2xl font-semibold text-slate-900">Your Statistics</h1>
-    <div :class="props.notitle ? 'space-x-3' : 'mt-3 space-x-3'">
+    <div
+      :class="props.notitle ? 'space-x-3' : 'mt-3 space-x-3'"
+      v-if="series[0] !== 0 || series[1] !== 0"
+    >
       <select
         class=""
         :class="
@@ -32,10 +35,17 @@
         <option value="all">All Time</option>
       </select>
     </div>
-    <div
+    <!-- <div
       v-if="series[0] === 0 && series[1] === 0"
       class="flex items-center justify-center bg-slate-100 mt-5 h-60"
     >
+      <p class="text-gray-500">No Tasks Added.</p>
+    </div> -->
+    <div
+      v-if="series[0] === 0 && series[1] === 0"
+      class="text-center flex flex-col justify-center items-center"
+    >
+      <img src="@/assets/images/not_found_3.jpg" alt="" width="300px" height="300px" />
       <p class="text-gray-500">No Tasks Added.</p>
     </div>
     <apexchart

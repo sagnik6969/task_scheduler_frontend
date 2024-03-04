@@ -1,6 +1,5 @@
 <template>
   <div class="w-4/5 md:w-4/5 lg:w-3/5 xl:w-5/5 mx-auto pb-10">
-    <h1 class="text-2xl font-semibold mb-4">Admin Assigned Tasks</h1>
     <div
       class="flex justify-between items-center"
       v-if="tasks.length !== 0 && tasks[0] !== 'loading'"
@@ -8,15 +7,18 @@
       <search-box
         v-model="searchQuery"
         placeholder="Search Your Assisned Tasks....."
-        class="w-1/2 mt-5"
+        class="w-1/2 mt-2"
       ></search-box>
       <div class="flex space-x-1">
-        <span class="material-symbols-outlined cursor-pointer mt-3 mr-3"> refresh </span>
+        <span class="material-symbols-outlined cursor-pointer mt-3 mr-3" @click="fetchData">
+          refresh
+        </span>
         <select
           v-model="priorityFilter"
           class="border-none hover:text-black sm:flex font-bold text-slate-500 bg-white rounded-md shadow"
         >
-          <option selected value="">All</option>
+          <option selected value="">All Tasks</option>
+          x``
           <option value="Normal">Normal</option>
           <option value="Important">Important</option>
           <option value="Very Important">Very Important</option>
@@ -41,12 +43,28 @@
         <task-row v-for="task in filteredTasks" :key="task.id" :task="task"></task-row>
       </tbody>
     </table>
-    <div class="overflow-x-auto" v-if="tasks.length !== 0 && tasks[0] !== 'loading'"></div>
+    <!-- <div class="overflow-x-auto" v-if="tasks.length !== 0 && tasks[0] !== 'loading'">
+      
+    </div> -->
+    <div v-if="tasks.length !== 0 && tasks[0] !== 'loading'" class="flex justify-center mt-4">
+      <button @click="prevPage" :disabled="currentPage === 1" class="mr-4">Previous</button>
+      <button @click="nextPage" :disabled="currentPage === totalPages" class="ml-4">Next</button>
+    </div>
+    <div
+      v-else-if="tasks[0] !== 'loading'"
+      class="text-center flex flex-col justify-center items-center"
+    >
+      <img src="@/assets/images/not_found_3.jpg" alt="" width="300px" height="300px" />
+      <p class="text-gray-500">Nothing assigned.</p>
+    </div>
     <div v-else-if="tasks[0] === 'loading'" class="mt-4">
       <!-- Search bar skeleton -->
       <div class="flex items-center justify-between mb-4">
         <div class="h-8 w-2/4 ml-4 bg-gray-100 rounded"></div>
-        <div class="h-8 w-40 bg-gray-100 rounded"></div>
+        <div class="flex">
+          <div class="h-8 w-10 bg-gray-100 rounded mr-3"></div>
+          <div class="h-8 w-40 bg-gray-100 rounded"></div>
+        </div>
       </div>
       <!-- User list skeleton -->
       <div
@@ -67,7 +85,7 @@
         </div>
       </div>
     </div>
-    <div v-else class="text-center py-4">
+    <div v-else-if="tasks.length === 0" class="text-center py-4">
       <p class="text-gray-500">No tasks assigned.</p>
     </div>
   </div>
@@ -76,29 +94,42 @@
 <script setup>
 import SearchBox from '@/components/ui/SearchBox.vue'
 import axios from 'axios'
-import { computed, onMounted, ref } from 'vue'
+import { computed, ref } from 'vue'
 import TaskRow from './TaskRow.vue'
 const tasks = ref(['loading'])
 const searchQuery = ref('')
 const priorityFilter = ref('')
+const currentPage = ref(1)
+const pageSize = 3
+const fetchData = async () => {
+  try {
+    tasks.value = ['loading']
+    const response = await axios.get('/api/admin/assign/tasks')
+    tasks.value = response.data.data
+  } catch (error) {
+    console.log(error)
+  }
+}
 
-onMounted(async () => {
-  await axios
-    .get('/api/admin/assign/tasks')
-    .then((response) => {
-      tasks.value = response.data.data
-      // console.log(tasks.value)
-    })
-    .catch((error) => {
-      console.log(error)
-    })
-  // .finally(() => {
-  //   this.loading = false
-  // })
-})
+const totalPages = computed(() => Math.ceil(tasks.value.length / pageSize))
+const startIndex = computed(() => (currentPage.value - 1) * pageSize)
+const endIndex = computed(() => startIndex.value + pageSize)
+const paginatedTasks = computed(() => tasks.value.slice(startIndex.value, endIndex.value))
+function prevPage() {
+  if (currentPage.value > 1) {
+    currentPage.value--
+  }
+}
+
+function nextPage() {
+  if (currentPage.value < totalPages.value) {
+    currentPage.value++
+  }
+}
+fetchData()
 
 const filteredTasks = computed(() => {
-  return tasks.value
+  let filtered = tasks.value
     .filter((task) => {
       const title = task.title.toLowerCase()
       const description = task.description?.toLowerCase() || ''
@@ -109,90 +140,14 @@ const filteredTasks = computed(() => {
       )
     })
     .filter((task) => {
-      return priorityFilter.value == '' || task.priority == priorityFilter.value
+      return priorityFilter.value === '' || task.priority === priorityFilter.value
     })
+
+  const startIndex = (currentPage.value - 1) * pageSize
+  let filterResult = filtered.slice(startIndex, startIndex + pageSize)
+  return filterResult
 })
 </script>
-
-<!-- <script>
-// import axios from 'axios'
-
-export default {
-  data() {
-    return {
-      loading: true,
-      tasks: [],
-      currentPage: 1,
-      pageSize: 10,
-      sortColumn: 'title',
-      sortOrder: 'asc'
-    }
-  },
-  created() {
-    // this.fetchData()
-  },
-  methods: {
-    // async fetchData() {
-    //   await axios
-    //     .get('/api/admin/assign/tasks') // Assuming you have an endpoint to fetch task data
-    //     .then((response) => {
-    //       this.tasks = response.data
-    //       console.log(this.tasks)
-    //     })
-    //     .catch((error) => {
-    //       console.log(error)
-    //     })
-    //     .finally(() => {
-    //       this.loading = false
-    //     })
-    // },
-
-    closeTaskList() {
-      // Implement close task list logic
-    },
-    searchTasks() {
-      // Implement search tasks logic
-    },
-    sortBy(column) {
-      if (this.sortColumn === column) {
-        this.sortOrder = this.sortOrder === 'asc' ? 'desc' : 'asc'
-      } else {
-        this.sortColumn = column
-        this.sortOrder = 'asc'
-      }
-      // Implement sort logic
-    },
-    formatDate(dateString) {
-      const date = new Date(dateString)
-      return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`
-      // Implement date formatting logic
-    },
-    confirmDeleteTask(task) {
-      // Implement delete task confirmation logic
-    },
-    showHoverMessage(task) {
-      // Implement logic to show hover message
-    },
-    hideHoverMessage() {
-      // Implement logic to hide hover message
-    },
-    changePage(page) {
-      this.currentPage = page
-      // Implement logic to change page
-    }
-  },
-  computed: {
-    paginatedTasks() {
-      const startIndex = (this.currentPage - 1) * this.pageSize
-      return this.tasks.slice(startIndex, startIndex + this.pageSize)
-    },
-    totalPages() {
-      return Math.ceil(this.tasks.length / this.pageSize)
-    },
-    filteredTasks() {}
-  }
-}
-</script> -->
 
 <style scoped>
 .table {

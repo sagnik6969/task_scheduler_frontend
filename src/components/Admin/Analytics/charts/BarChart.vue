@@ -11,13 +11,17 @@
       </div>
     </div>
 
-    <apexchart
-      v-else
-      type="bar"
-      :options="chartOptions"
-      :series="chartSeries"
-      class="responsive-chart"
-    ></apexchart>
+    <div class="relative" v-else>
+      <apexchart
+        type="bar"
+        :options="chartOptions"
+        :series="chartSeries"
+        class="responsive-chart"
+      ></apexchart>
+      <div class="absolute top-0 right-10 flex items-center justify-center text-slate-600">
+        <span class="material-symbols-outlined cursor-pointer" @click="loading"> refresh</span>
+      </div>
+    </div>
   </div>
 </template>
 

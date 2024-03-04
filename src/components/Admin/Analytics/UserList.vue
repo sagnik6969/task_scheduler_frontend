@@ -1,5 +1,5 @@
 <template>
-  <div class="space-y-3 extras overflow-x-scroll [&::-webkit-scrollbar]:hidden">
+  <div class="space-y-3 extras overflow-x-scroll [&::-webkit-scrollbar]:hidden mb-10">
     <h1 class="text-2xl font-semibold text-slate-900">User List</h1>
     <search-box v-model="filterText" class="mb-3 w-3/4" placeholder="Search users...."></search-box>
     <div style="margin-bottom: 1.6rem"></div>
@@ -10,7 +10,10 @@
       @userSelected="() => $emit('userSelected', user)"
     >
     </single-user-card>
-    <div class="flex justify-center w-full px-4" v-if="filteredUsers.length !== 0">
+    <div
+      class="flex justify-center w-full px-4"
+      v-if="filteredUsers.length !== 0 && totalPages !== 1"
+    >
       <button
         class="px-4 py-2 bg-black text-white rounded-md hover:bg-gray-600 focus:outline-none mr-2"
         :disabled="currentPage === 1"
@@ -41,8 +44,18 @@
         <img src="@/assets/images/db-arrow-fwd.png" alt="Next" width="16" height="20" />
       </button>
     </div>
-    <div v-else class="text-center py-4">
-      <p class="text-gray-500">No users found.</p>
+    <div
+      v-else-if="totalPages !== 1"
+      class="text-center flex flex-col justify-center items-center w-4/6 pb-10"
+    >
+      <img
+        src="@/assets/images/not_found_3.jpg"
+        class="bg-black"
+        alt=""
+        width="250px"
+        height="300px"
+      />
+      <p class="text-gray-500 text-center">No users found.</p>
     </div>
   </div>
 </template>

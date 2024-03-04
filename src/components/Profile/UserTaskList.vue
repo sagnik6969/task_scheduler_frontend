@@ -1,19 +1,15 @@
 <template>
-  <div class="w-full md:w-4/5 mx-auto m-5 mt-3 p-5 bg-white rounded-lg shadow-2xl relative">
-    <!-- Search bar and Filter button in the same line -->
+  <div class="w-full md:w-4/5 mx-auto m-5 mt-3 p-5 bg-white rounded-lg shadow-md relative">
     <div class="flex justify-between mb-3 md:mb-4">
-      <!-- Search bar -->
       <div class="relative w-full mr-2">
         <input
           type="text"
-          placeholder="Checkout Your Tasks..."
+          placeholder="Check ut Your Tasks Here..."
           class="border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent rounded-lg px-3 md:px-4 py-2 w-full"
           v-model="searchQuery"
         />
       </div>
-      <!-- Filter button -->
       <div class="relative">
-        <!-- Filter image -->
         <img
           src="../../assets/images/filter.png"
           alt="Filter"
@@ -22,10 +18,9 @@
           @click="toggleFilterOptions"
           class="cursor-pointer mt-1"
         />
-        <!-- Filter options -->
         <div
           v-if="showFilterOptions"
-          class="absolute top-full right-2 mt-2 bg-white shadow-md rounded-lg py-1"
+          class="absolute top-full right-2 mt-2 bg-transparent shadow-md rounded-lg py-1"
         >
           <div
             @click="
@@ -52,13 +47,10 @@
         </div>
       </div>
     </div>
-    <!-- Task List Container with fixed height and overflow -->
     <div class="task-list-container">
-      <!-- Task List -->
       <div class="min-w-full">
         <div v-if="tasks.length !== 0" class="overflow-hidden border border-gray-200 rounded-lg">
           <table class="min-w-full divide-y divide-gray-200">
-            <!-- Task Items -->
             <tbody class="bg-white divide-y divide-gray-200">
               <tr v-for="task in paginatedTasks" :key="task.data.task_id" class="hover:bg-gray-50">
                 <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap">
@@ -73,7 +65,8 @@
                   class="px-3 md:px-6 py-4 whitespace-nowrap text-center text-gray-500"
                   colspan="2"
                 >
-                  <div class="flex-center no-tasks-message">
+                  <div class="flex flex-col items-center justify-evenly no-tasks-message h-64">
+                    <img src="../../assets/images/not_found_3.jpg" alt="" />
                     <p>No tasks found.</p>
                   </div>
                 </td>
@@ -83,7 +76,7 @@
         </div>
         <div
           v-else-if="tasks.length === 0"
-          class="h-screen w-full flex items-center justify-center bg-slate-100"
+          class="h-64 w-full flex items-center justify-center bg-slate-100"
         >
           <v-progress-circular
             :size="50"
@@ -95,21 +88,38 @@
       </div>
     </div>
     <!-- Pagination -->
-    <div class="flex justify-center mt-4">
+    <div
+      class="flex justify-center w-full px-4 mt-4"
+      v-if="tasks.length !== 0 && filteredTasks.length !== 0 && totalPages !== 1"
+    >
       <button
-        @click="prevPage"
+        class="px-3 bg-gray-100 text-white rounded-md hover:bg-gray-500 focus:outline-none mr-2"
         :disabled="currentPage === 1"
-        class="px-4 py-2 mr-2 bg-gray-300 rounded-lg text-gray-600 cursor-pointer"
+        :class="{ 'bg-gray-100': currentPage === 1 }"
+        @click="prevPage"
       >
-        Previous
+        <img src="@/assets/images/db-arrow-rev.png" alt="Previous" width="16" height="20" />
       </button>
-      <span class="px-4 py-2 bg-gray-300 rounded-lg text-gray-600">{{ currentPage }}</span>
+      <div class="flex">
+        <button
+          v-for="pageNumber in totalPages"
+          :key="pageNumber"
+          :class="[
+            'px-3 py-2 mx-1  text-black rounded-md hover:bg-gray-100 focus:outline-none ',
+            { 'border-b-2 border-white ': pageNumber === currentPage }
+          ]"
+          @click="gotoPage(pageNumber)"
+        >
+          {{ pageNumber }}
+        </button>
+      </div>
       <button
-        @click="nextPage"
+        class="px-3 bg-gray-100 text-white rounded-md hover:bg-gray-500 focus:outline-none ml-2"
         :disabled="currentPage === totalPages"
-        class="px-4 py-2 ml-2 bg-gray-300 rounded-lg text-gray-600 cursor-pointer"
+        :class="{ 'bg-gray-100': currentPage === totalPages }"
+        @click="nextPage"
       >
-        Next
+        <img src="@/assets/images/db-arrow-fwd.png" alt="Next" width="16" height="20" />
       </button>
     </div>
   </div>
@@ -123,10 +133,10 @@ export default {
     return {
       tasks: [],
       searchQuery: '',
-      showCompletedTasks: false, // Toggle between showing all and incomplete tasks
+      showCompletedTasks: false,
       showFilterOptions: false,
       currentPage: 1,
-      pageSize: 4 // Number of tasks per page
+      pageSize: 4
     }
   },
   created() {
@@ -199,6 +209,9 @@ export default {
       if (this.currentPage > 1) {
         this.currentPage--
       }
+    },
+    gotoPage(pageNumber) {
+      this.currentPage = pageNumber
     }
   }
 }

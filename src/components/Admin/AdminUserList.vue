@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="w-4/5 md:w-4/5 lg:w-3/5 xl:w-5/5 mx-auto">
+    <div class="w-4/5 md:w-4/5 lg:w-3/5 xl:w-5/5 mx-auto pb-5">
       <div v-if="taskListVisible" class="overlay"></div>
 
       <div v-if="!loading">
@@ -9,6 +9,7 @@
           @sort-by-name="sortByName"
           @sort-by-date="sortByDate"
           @search-users="updateUsers"
+          @refresh-users="fetchFirstData"
         />
         <!-- <div
           v-if="isDeleting"
@@ -116,7 +117,10 @@
         <!-- Search bar skeleton -->
         <div class="flex items-center justify-between mb-4">
           <div class="h-8 w-2/4 ml-4 bg-gray-100 rounded"></div>
-          <div class="h-8 w-10 bg-gray-100 rounded"></div>
+          <div class="flex">
+            <div class="h-8 w-10 bg-gray-100 rounded"></div>
+            <div class="ml-3 h-8 w-10 bg-gray-100 rounded"></div>
+          </div>
         </div>
         <!-- User list skeleton -->
         <div
@@ -138,7 +142,11 @@
         </div>
       </div>
 
-      <div v-else-if="displayedUsers.length === 0" class="text-center py-4">
+      <div
+        v-else-if="displayedUsers.length === 0"
+        class="text-center flex flex-col justify-center items-center"
+      >
+        <img src="@/assets/images/not_found_3.jpg" alt="" width="300px" height="300px" />
         <p class="text-gray-500">No users found.</p>
       </div>
     </div>
@@ -301,6 +309,7 @@ export default {
     },
     async fetchFirstData() {
       try {
+        this.loading = true
         const response = await axios.get('/api/admin/tasks')
         this.displayedUsers = response.data.users
         // console.log(this.displayedUsers)
