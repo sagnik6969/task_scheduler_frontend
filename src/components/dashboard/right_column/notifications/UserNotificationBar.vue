@@ -2,7 +2,7 @@
   <div
     class="flex z-20 justify-end items-center space-x-4 pb-4 text-slate-700 text-xl font-medium relative"
   >
-    <span class="material-symbols-outlined cursor-pointer"> refresh </span>
+    <!-- <span class="material-symbols-outlined cursor-pointer"> refresh </span> -->
     <tooltip text="view notifications">
       <div
         @click="isNotificationsVisible = !isNotificationsVisible"

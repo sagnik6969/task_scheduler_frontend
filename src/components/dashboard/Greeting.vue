@@ -7,15 +7,15 @@
           <div
             :class="{
               'bg-green-500': $store?.state?.user?.is_admin,
-              'bg-red-500': !$store?.state?.user?.is_admin
+              'bg-black opacity-70': !$store?.state?.user?.is_admin
             }"
             class="w-4 h-4 rounded-full mr-2"
           ></div>
           <p
-            class="text-xl"
+            class="text-2xl font-semibold"
             :class="{
               'text-green-500': $store?.state?.user?.is_admin,
-              'text-red-500': !$store?.state?.user?.is_admin
+              'text-black opacity-70': !$store?.state?.user?.is_admin
             }"
           >
             Role: {{ $store?.state?.user?.is_admin ? 'Admin' : 'User' }}

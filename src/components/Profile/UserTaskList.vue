@@ -1,10 +1,10 @@
 <template>
-  <div class="w-full md:w-4/5 mx-auto m-5 mt-3 p-5 bg-white rounded-lg shadow-md relative">
+  <div class="w-full md:w-4/5 mx-auto m-15 mt-3 p-5 bg-white rounded-lg shadow-md relative">
     <div class="flex justify-between mb-3 md:mb-4">
       <div class="relative w-full mr-2">
         <input
           type="text"
-          placeholder="Check ut Your Tasks Here..."
+          placeholder="Check out Your Tasks Here..."
           class="border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent rounded-lg px-3 md:px-4 py-2 w-full"
           v-model="searchQuery"
         />
@@ -47,7 +47,7 @@
         </div>
       </div>
     </div>
-    <div class="task-list-container">
+    <div class="task-list-container cursor-pointer">
       <div class="min-w-full">
         <div v-if="tasks.length !== 0" class="overflow-hidden border border-gray-200 rounded-lg">
           <table class="min-w-full divide-y divide-gray-200">

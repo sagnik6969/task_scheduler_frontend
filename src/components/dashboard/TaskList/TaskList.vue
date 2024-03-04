@@ -41,15 +41,17 @@
       v-else-if="$store.getters.userTasks.length == 0"
       class="py-3 px-14 flex flex-col items-center justify-center text-center text-slate-800 text-xl font-medium rounded-lg"
     >
-      <img src="@/assets/images/not_found_3.jpg" alt="" width="300px" height="300px" />
-      <p class="text-gray-500 mt-3">No Tasks Added</p>
-      <p class="text-gray-500">Give Yourself A Challenge. We Will Give You Desire To Compete It</p>
+      <img src="@/assets/images/No_data.jpg" alt="" width="250px" height="250px" />
+      <p class="text-gray-500 mt-3 font-semibold text-xl">No Tasks Added...</p>
+      <p class="text-gray-500 font-semibold text-xl">
+        Give Yourself A Challenge. We Will Motivate You To Complete It
+      </p>
       <button
         class="w-64 m-3 rounded-full px-6 py-2 border-2 border-slate-900 font-serif bg-black text-slate-100 flex-1 hover:bg-green-300 hover:text-black duration-300 flex items-center justify-center space-x-1"
         @click="isTaskFormVisible = true"
       >
         Add Task
-        <v-icon icon="mdi-plus"></v-icon>
+        <v-icon icon="mdi-plus" class="ml-3"></v-icon>
       </button>
     </div>
     <!-- <div v-else-if="filteredTasks.length === 0" class="text-center py-4">
