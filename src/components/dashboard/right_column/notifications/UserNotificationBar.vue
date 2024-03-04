@@ -3,23 +3,23 @@
     class="flex z-20 justify-end items-center space-x-4 pb-4 text-slate-700 text-xl font-medium relative"
   >
     <span class="material-symbols-outlined cursor-pointer"> refresh </span>
-    <tooltip text="view notifications">
-      <div
-        @click="isNotificationsVisible = !isNotificationsVisible"
-        class="p-1 rounded-full duration-300 hover:bg-slate-200 cursor-pointer"
-      >
-        <v-badge :content="notifications.length">
+    <div
+      @click="isNotificationsVisible = !isNotificationsVisible"
+      class="p-1 rounded-full duration-300 hover:bg-slate-200 cursor-pointer relative"
+    >
+      <v-badge :content="notifications.length">
+        <tooltip text="view notifications">
           <v-icon icon="mdi-bell-outline"></v-icon>
-        </v-badge>
-        <teleport to="body">
-          <notification-container
-            :notifications="notifications"
-            v-if="isNotificationsVisible"
-            class="fixed top-0 right-0 z-10"
-          ></notification-container>
-        </teleport>
-      </div>
-    </tooltip>
+        </tooltip>
+      </v-badge>
+      <!-- <teleport to="body"> -->
+      <notification-container
+        :notifications="notifications"
+        v-if="isNotificationsVisible"
+        class="absolute top-4 right-10 z-10"
+      ></notification-container>
+      <!-- </teleport> -->
+    </div>
 
     <div class="flex space-x-2 items-center">
       <div>
