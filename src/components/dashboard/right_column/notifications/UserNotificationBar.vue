@@ -88,13 +88,12 @@ const isNotificationsVisible = ref(false)
 const menu = ref(false)
 const toast = useToast()
 const router = useRouter()
-
 const showmenu = (path) => {
   const currentPath = router.currentRoute.value.path
   if (currentPath === path) {
     menu.value = !menu.value
   } else {
-    menu.value = true
+    menu.value = !menu.value
     router.push(path)
   }
 }
