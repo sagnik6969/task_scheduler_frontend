@@ -62,6 +62,7 @@
           <ul class="py-2 text-sm text-gray-700 dark:text-gray-200">
             <li v-for="item in userMenuItems" :key="item.to">
               <router-link
+                @click="showmenu(item.to)"
                 :to="item.to"
                 class="flex gap-1 px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
               >
@@ -81,13 +82,21 @@ import Tooltip from '@/components/ui/Tooltip.vue'
 import { onMounted, ref } from 'vue'
 import axios from 'axios'
 import { useToast } from 'vue-toast-notification'
+import { useRouter } from 'vue-router'
 
 const isNotificationsVisible = ref(false)
 const menu = ref(false)
 const toast = useToast()
+const router = useRouter()
 
-const showmenu = () => {
-  menu.value = !menu.value
+const showmenu = (path) => {
+  const currentPath = router.currentRoute.value.path
+  if (currentPath === path) {
+    menu.value = !menu.value
+  } else {
+    menu.value = true
+    router.push(path)
+  }
 }
 
 const notifications = ref([])
@@ -101,7 +110,6 @@ onMounted(async () => {
   }
 })
 
-// Define user menu items
 const userMenuItems = [
   { to: '/', label: 'Dashboard', name: 'dashboard', iconClass: 'material-symbols-outlined' },
   { to: '/profile', label: 'Profile', name: 'person', iconClass: 'material-symbols-outlined' },

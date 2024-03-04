@@ -19,7 +19,8 @@
         <div
           class="bg-green-200 w-fit py-2 px-4 space-x-2 rounded-full"
           :class="{
-            'bg-orange-400': remainingTime == 'expired' && !task.data.attributes.is_completed
+            'bg-orange-400': remainingTime == 'expired' && !task.data.attributes.is_completed,
+            'bg-green-600': remainingTime == 'completed'
           }"
         >
           <v-icon icon="mdi-clock-time-four"></v-icon>
@@ -64,6 +65,9 @@ const title = computed(() => {
 })
 
 const remainingTime = computed(() => {
+  if (task.value.data.attributes.is_completed) {
+    return 'Completed'
+  }
   const mySQLDate = task.value.data.attributes.deadline
   const deadline = new Date(Date.parse(mySQLDate.replace(/-/g, '/')))
   const today = new Date()
