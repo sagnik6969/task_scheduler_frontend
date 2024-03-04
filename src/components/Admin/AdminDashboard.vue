@@ -38,6 +38,13 @@ export default {
   //     return store.getters.userName
   //   }
   // },
+  beforeCreate() {
+    if (!this.$store.getters.User.is_admin) {
+      this.$router.push({
+        name: 'NotFound'
+      })
+    }
+  },
   created() {
     // this.currentUser = store.getters.userName
     this.fetchData()
