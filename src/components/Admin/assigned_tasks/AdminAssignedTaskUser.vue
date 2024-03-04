@@ -54,8 +54,8 @@
       v-else-if="tasks[0] !== 'loading'"
       class="text-center flex flex-col justify-center items-center"
     >
-      <img src="@/assets/images/not_found_3.jpg" alt="" width="300px" height="300px" />
-      <p class="text-gray-500">Nothing assigned.</p>
+      <img src="@/assets/images/not_exist.jpg" alt="" width="250px" height="250px" />
+      <p class="text-gray-500 mt-2 mb-2 text-xl font-semibold">No Tasks Assigned...</p>
     </div>
     <div v-else-if="tasks[0] === 'loading'" class="mt-4">
       <!-- Search bar skeleton -->

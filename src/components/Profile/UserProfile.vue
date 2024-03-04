@@ -82,7 +82,7 @@
         <div class="flex mt-4 space-x-4">
           <Statistics class="xl:w-[500px]" :notitle="true" />
           <!-- <Efficiency /> -->
-          <UserTaskList />
+          <UserTaskList v-if="$store.getters.userTasks.length !== 0" />
         </div>
       </div>
     </div>

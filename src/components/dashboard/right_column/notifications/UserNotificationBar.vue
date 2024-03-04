@@ -2,7 +2,7 @@
   <div
     class="flex z-20 justify-end items-center space-x-4 pb-4 text-slate-700 text-xl font-medium relative"
   >
-    <span class="material-symbols-outlined cursor-pointer"> refresh </span>
+    <!-- <span class="material-symbols-outlined cursor-pointer"> refresh </span> -->
     <div
       @click="isNotificationsVisible = !isNotificationsVisible"
       class="p-1 rounded-full duration-300 hover:bg-slate-200 cursor-pointer relative"
@@ -88,13 +88,12 @@ const isNotificationsVisible = ref(false)
 const menu = ref(false)
 const toast = useToast()
 const router = useRouter()
-
 const showmenu = (path) => {
   const currentPath = router.currentRoute.value.path
   if (currentPath === path) {
     menu.value = !menu.value
   } else {
-    menu.value = true
+    menu.value = !menu.value
     router.push(path)
   }
 }

@@ -42,11 +42,15 @@
           :key="link.path"
           @click="open = false"
         >
-          <tooltip :text="link.name" location="right">
+          <span v-if="open" class="text-white mr-4" :class="link.iconClass">{{
+            link.iconname
+          }}</span>
+          <tooltip v-if="!open" :text="link.name" location="right">
             <span v-if="link.icon" class="text-white mr-4" :class="link.iconClass">{{
               link.iconname
             }}</span>
           </tooltip>
+
           <span class="text-sm text-white">{{ link.label }}</span>
         </router-link>
       </div>

@@ -43,10 +43,11 @@
     </div> -->
     <div
       v-if="series[0] === 0 && series[1] === 0"
+      :style="props.notitle ? 'width: 62vw; height: 60vh' : ''"
       class="text-center flex flex-col justify-center items-center"
     >
-      <img src="@/assets/images/not_found_3.jpg" alt="" width="300px" height="300px" />
-      <p class="text-gray-500">No Tasks Added.</p>
+      <img src="@/assets/images/No_data.jpg" alt="" width="300px" height="300px" />
+      <p class="text-gray-500 font-semibold text-xl">No Tasks Added.</p>
     </div>
     <apexchart
       v-else-if="!statLoading || graphLoading"
