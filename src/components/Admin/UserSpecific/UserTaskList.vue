@@ -26,7 +26,7 @@
     <!-- Filter Menu -->
     <div
       v-show="showFilterMenu"
-      class="absolute top-10 right-0 mt-2 mr-3 bg-white shadow-md rounded-lg py-1"
+      class="absolute top-10 right-0 mt-2 mr-3 bg-white shadow-md rounded-lg py-1 z-10"
     >
       <button
         @click="filterTasks('all')"
