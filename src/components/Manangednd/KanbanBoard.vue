@@ -64,7 +64,8 @@ const onDrop = async (event) => {
   const taskData = JSON.parse(event.dataTransfer.getData('text/plain'))
   if (!completedTasks.value.some((task) => task.data.task_id === taskData.data.task_id)) {
     completedTasks.value.push(taskData)
-    await store.dispatch('updateTask', {
+    console.log('reached 67')
+    await store.dispatch('updateUserTask', {
       task_id: taskData.data.task_id,
       title: taskData.data.attributes.title,
       description: taskData.data.attributes.description,
@@ -74,6 +75,7 @@ const onDrop = async (event) => {
       priority: taskData.data.attributes.priority
     })
   }
+  console.log('reached 77')
   showCompleteMessage.value = true
   setTimeout(() => {
     showCompleteMessage.value = false

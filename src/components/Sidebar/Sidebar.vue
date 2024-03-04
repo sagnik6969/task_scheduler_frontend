@@ -7,12 +7,14 @@
     >
       <!-- fixed top-0 start-0 z-50 -->
       <div class="py-4 flex items-center justify-center">
-        <img
-          src="https://avatars.githubusercontent.com/u/47273253?v=4"
-          alt="profile pic"
-          class="rounded-full object-cover border-2 border-white"
-          :class="open ? 'w-20 h-20' : 'w-12 h-12'"
-        />
+        <router-link to="/profile" class="button flex items-center">
+          <img
+            src="https://avatars.githubusercontent.com/u/47273253?v=4"
+            alt="profile pic"
+            class="rounded-full object-cover border-2 border-white"
+            :class="open ? 'w-20 h-20' : 'w-12 h-12'"
+          />
+        </router-link>
       </div>
 
       <div class="flex justify-end mb-4">
