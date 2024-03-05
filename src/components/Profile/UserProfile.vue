@@ -80,9 +80,9 @@
       <div class="flex flex-col w-full sm:w-1/2 md:w-1/2 lg:w-1/3 xl:w-2/3">
         <TaskCounter :notitle="true" />
         <div class="flex mt-4 space-x-4">
-          <Statistics class="xl:w-[500px]" :notitle="true" />
+          <Statistics class="xl:w-[500px]" :notitle="true" @loading="loaded = !loaded" />
           <!-- <Efficiency /> -->
-          <UserTaskList v-if="$store.getters.userTasks.length !== 0" />
+          <UserTaskList v-if="loaded" />
         </div>
       </div>
     </div>
@@ -100,7 +100,7 @@ import Statistics from '@/components/dashboard/right_column/statistics/Statistic
 import Efficiency from '@/components/dashboard/right_column/Efficiency.vue'
 import UserTaskList from './UserTaskList.vue'
 import { useStore } from 'vuex'
-
+const loaded = ref(true)
 const isPulsing = ref(false)
 const showEfficiency = ref(false)
 const colors = [

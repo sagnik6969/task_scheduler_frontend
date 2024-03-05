@@ -146,7 +146,7 @@
         v-else-if="displayedUsers.length === 0"
         class="text-center flex flex-col justify-center items-center"
       >
-        <img src="@/assets/images/not_exist.jpg" alt="" width="250px" height="250px" />
+        <img src="@/assets/images/not_exist.jpg" alt="" width="200px" height="200px" />
         <p class="text-gray-500 mt-2 mb-2 text-xl font-bold">No user found...</p>
       </div>
     </div>

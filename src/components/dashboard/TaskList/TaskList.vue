@@ -2,7 +2,7 @@
   <div class="bg-white">
     <div class="sticky top-0 bg-white z-10">
       <h1 class="text-3xl font-bold text-slate-900">Tasks</h1>
-      <div class="py-1 bg-white flex justify-between">
+      <div class="py -1 bg-white flex justify-between">
         <search-box
           v-model="searchText"
           placeholder="Search tasks....."
@@ -61,8 +61,8 @@
       v-else-if="filteredTasks.length === 0"
       class="text-center flex flex-col justify-center items-center pb-10"
     >
-      <img src="@/assets/images/not_found_3.jpg" alt="" width="300px" height="300px" />
-      <p class="text-gray-500">No Tasks found.</p>
+      <img src="@/assets/images/No_data.jpg" alt="" width="220px" height="220px" />
+      <p class="text-gray-500 font-semibold text-xl">No Tasks Found...</p>
     </div>
     <div v-else class="mt-0">
       <single-task-card

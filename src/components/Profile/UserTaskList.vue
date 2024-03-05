@@ -1,5 +1,8 @@
 <template>
-  <div class="w-full md:w-4/5 mx-auto m-15 mt-3 p-5 bg-white rounded-lg shadow-md relative">
+  <div
+    class="w-full md:w-4/5 mx-auto m-15 mt-3 p-5 bg-white rounded-lg shadow-md relative"
+    v-if="taskEmpty != null && !taskEmpty"
+  >
     <div class="flex justify-between mb-3 md:mb-4">
       <div class="relative w-full mr-2">
         <input
@@ -20,12 +23,12 @@
         />
         <div
           v-if="showFilterOptions"
-          class="absolute top-full right-2 mt-2 bg-transparent shadow-md rounded-lg py-1"
+          class="absolute top-full right-2 mt-2 bg-white w-48 text-center font-semibold shadow-md rounded-lg py-1"
         >
           <div
             @click="
               () => {
-                showCompletedTasks = true
+                showCompletedTasks = 2
                 showFilterOptions = false
               }
             "
@@ -36,7 +39,7 @@
           <div
             @click="
               () => {
-                showCompletedTasks = false
+                showCompletedTasks = 1
                 showFilterOptions = false
               }
             "
@@ -65,9 +68,14 @@
                   class="px-3 md:px-6 py-4 whitespace-nowrap text-center text-gray-500"
                   colspan="2"
                 >
-                  <div class="flex flex-col items-center justify-evenly no-tasks-message h-64">
-                    <img src="../../assets/images/not_found_3.jpg" alt="" />
-                    <p>No tasks found.</p>
+                  <div class="flex flex-col items-center justify-start no-tasks-message h-64">
+                    <img
+                      src="../../assets/images/No_data.jpg"
+                      alt=""
+                      width="200px"
+                      height="200px"
+                    />
+                    <p class="text-gray-500 text-xl font-semibold">No tasks found...</p>
                   </div>
                 </td>
               </tr>
@@ -132,8 +140,9 @@ export default {
   data() {
     return {
       tasks: [],
+      taskEmpty: null,
       searchQuery: '',
-      showCompletedTasks: false,
+      showCompletedTasks: 0,
       showFilterOptions: false,
       currentPage: 1,
       pageSize: 4
@@ -145,8 +154,10 @@ export default {
   computed: {
     filteredTasks() {
       let filtered = this.tasks
-      if (!this.showCompletedTasks) {
+      if (this.showCompletedTasks == 1) {
         filtered = filtered.filter((task) => !task.data.attributes.is_completed)
+      } else if (this.showCompletedTasks == 2) {
+        filtered = filtered.filter((task) => task.data.attributes.is_completed)
       }
       if (this.searchQuery.trim()) {
         filtered = filtered.filter((task) =>
@@ -196,6 +207,11 @@ export default {
       try {
         const response = await axios.get('/api/user/tasks')
         this.tasks = response.data.data
+        if (this.tasks.length == 0) {
+          this.taskEmpty = true
+        } else {
+          this.taskEmpty = false
+        }
       } catch (error) {
         console.error('Error fetching tasks:', error)
       }

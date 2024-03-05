@@ -15,33 +15,29 @@
     <!-- Heading -->
     <div class="flex justify-between items-center mb-3 md:mb-6">
       <h3 class="text-lg md:text-2xl font-bold text-gray-800">Tasks List</h3>
-      <!-- Filter button -->
-      <button
-        class="bg-black hover:opacity-50 text-white px-3 md:px-4 py-2 rounded-lg text-sm md:text-base"
-        @click="toggleFilterMenu"
-      >
-        Filter
-      </button>
     </div>
     <!-- Filter Menu -->
     <div
       v-show="showFilterMenu"
-      class="absolute top-10 right-0 mt-2 mr-3 bg-white shadow-md rounded-lg py-1 z-10"
+      class="absolute top-32 right-12 mt-2 mr-3 bg-white shadow-md rounded-lg py-1 z-10"
     >
       <button
         @click="filterTasks('all')"
-        class="block w-full text-left px-4 py-2 hover:bg-gray-100"
+        class="block w-full px-4 py-2 hover:bg-gray-100 text-center"
       >
         All Tasks
       </button>
-      <button @click="filterTasks(true)" class="block w-full text-left px-4 py-2 hover:bg-gray-100">
+      <button
+        @click="filterTasks(true)"
+        class="block w-full px-4 py-2 hover:bg-gray-100 text-center"
+      >
         Completed Tasks
       </button>
       <button
         @click="filterTasks(false)"
-        class="block w-full text-left px-4 py-2 hover:bg-gray-100"
+        class="block w-full px-4 py-2 hover:bg-gray-100 text-center"
       >
-        Incomplete Tasks
+        Incompleted Tasks
       </button>
     </div>
     <!-- Search bar -->
@@ -52,6 +48,13 @@
         class="border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent rounded-lg px-3 md:px-4 py-2 w-full"
         @input="searchTasks"
       />
+      <!-- Filter button -->
+      <button
+        class="absolute bottom-0.6 right-0 hover:opacity-50 text-white px-3 md:px-4 py-2 rounded-lg text-sm md:text-base"
+        @click="toggleFilterMenu"
+      >
+        <img src="../../../assets/images/filter.png" alt="" width="30px" height="40px" />
+      </button>
     </div>
     <!-- Task List Container with fixed height and overflow -->
     <div class="task-list-container h-80 md:h-auto overflow-x-auto md:overflow-y-auto">
@@ -269,11 +272,12 @@
     <!-- Pagination controls -->
     <div class="flex justify-center mt-4" v-if="totalPages > 1">
       <button
+        :class="{ 'opacity-50 cursor-not-allowed': currentPage === 1 }"
+        class="px-3 py-2 mr-3 bg-black text-white rounded-md hover:opacity-50 focus:outline-none"
         @click="changePage(currentPage - 1)"
         :disabled="currentPage === 1"
-        class="px-3 py-2 rounded-md hover:opacity-50 focus:outline-none"
       >
-        Previous
+        <img src="@/assets/images/db-arrow-rev.png" alt="Previous" width="16" height="20px" />
       </button>
       <button
         v-for="page in totalPages"
@@ -285,11 +289,12 @@
         {{ page }}
       </button>
       <button
+        :class="{ 'opacity-50 cursor-not-allowed': currentPage === totalPages }"
+        class="px-3 py-2 ml-3 bg-black text-white rounded-md hover:opacity-50 focus:outline-none"
         @click="changePage(currentPage + 1)"
         :disabled="currentPage === totalPages"
-        class="px-3 py-2 rounded-md hover:opacity-50 focus:outline-none"
       >
-        Next
+        <img src="@/assets/images/db-arrow-fwd.png" alt="Previous" width="16" height="20px" />
       </button>
     </div>
   </div>

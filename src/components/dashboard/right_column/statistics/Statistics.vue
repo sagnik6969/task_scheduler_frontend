@@ -3,7 +3,8 @@
     <h1 v-if="!props.notitle" class="text-2xl font-semibold text-slate-900">Your Statistics</h1>
     <div
       :class="props.notitle ? 'space-x-3' : 'mt-3 space-x-3'"
-      v-if="series[0] !== 0 || series[1] !== 0"
+      v-if="(series[0] !== 0 || series[1] !== 0) && !statLoading"
+      class="relative"
     >
       <select
         class=""
@@ -34,6 +35,17 @@
         <option value="past_year">Past Year</option>
         <option value="all">All Time</option>
       </select>
+      <span
+        v-if="props.notitle"
+        class="absolute top-5 right-6 items-center text-gray-400 hover:text-black pl-10 animate-pulse material-symbols-outlined cursor-pointer"
+        @click="
+          () => {
+            taskLoaded = false
+          }
+        "
+      >
+        refresh</span
+      >
     </div>
     <!-- <div
       v-if="series[0] === 0 && series[1] === 0"
@@ -44,10 +56,30 @@
     <div
       v-if="series[0] === 0 && series[1] === 0"
       :style="props.notitle ? 'width: 62vw; height: 60vh' : ''"
-      class="text-center flex flex-col justify-center items-center"
+      class="text-center flex flex-col justify-center relative items-center"
     >
       <img src="@/assets/images/No_data.jpg" alt="" width="300px" height="300px" />
-      <p class="text-gray-500 font-semibold text-xl">No Tasks Added.</p>
+      <p class="text-gray-500 font-semibold text-xl">No Tasks Added...</p>
+      <span
+        v-if="props.notitle"
+        class="absolute top-10 right-2 items-center text-gray-400 hover:text-black pl-10 animate-pulse material-symbols-outlined cursor-pointer"
+        @click="handleRefresh"
+      >
+        refresh
+      </span>
+    </div>
+    <div
+      v-else-if="props.notitle && statLoading"
+      class="bg-gray-100 flex items-center justify-center text-2xl text-gray-500 font-semibold loading-animation"
+      :style="props.notitle ? 'width: 62vw; height: 60vh' : ''"
+    >
+      {{ $store.getters.User.name }}'s Profile Loading...
+    </div>
+    <div
+      v-else-if="statLoading"
+      class="mt-5 bg-gray-100 flex items-center justify-center text-2xl h-80 text-gray-500 font-semibold loading-animation"
+    >
+      Loading ...
     </div>
     <apexchart
       v-else-if="!statLoading || graphLoading"
@@ -71,9 +103,10 @@ import { computed, ref, watchEffect } from 'vue'
 import { useToast } from 'vue-toast-notification'
 import { useStore } from 'vuex'
 const props = defineProps(['notitle'])
+const emit = defineEmits(['loading'])
 const store = useStore()
 const toast = useToast()
-
+const taskLoaded = ref(false)
 const options = computed(() => ({
   labels: labels.value,
   theme: {
@@ -92,7 +125,35 @@ const statistics = ref('completed_vs_pending_tasks')
 
 watchEffect(async () => {
   try {
-    statLoading.value = true
+    if (!taskLoaded.value) {
+      statLoading.value = true
+      emit('loading')
+    }
+    graphLoading.value = true
+    await store.dispatch('fetchUserStatistics', {
+      time_range: timeFilter.value,
+      statistics: statistics.value
+    })
+    console.log(statistics)
+  } catch (error) {
+    toast.error('Unable to fetch user statistics')
+    console.log(error)
+  } finally {
+    if (!taskLoaded.value) {
+      statLoading.value = false
+      taskLoaded.value = true
+      emit('loading')
+    }
+    graphLoading.value = false
+  }
+})
+
+const handleRefresh = async () => {
+  try {
+    if (!taskLoaded.value) {
+      statLoading.value = true
+      emit('loading')
+    }
     graphLoading.value = true
     await store.dispatch('fetchUserStatistics', {
       time_range: timeFilter.value,
@@ -100,10 +161,29 @@ watchEffect(async () => {
     })
   } catch (error) {
     toast.error('Unable to fetch user statistics')
-    console.log(error)
+    console.error(error)
   } finally {
-    statLoading.value = false
+    if (!taskLoaded.value) {
+      statLoading.value = false
+      taskLoaded.value = true
+      emit('loading')
+    }
     graphLoading.value = false
   }
-})
+}
 </script>
+
+<style scoped>
+.loading-animation {
+  animation: loadingOpacity 0.5s infinite alternate;
+}
+
+@keyframes loadingOpacity {
+  0% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+</style>
