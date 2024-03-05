@@ -45,11 +45,16 @@
   </div>
 </template>
 <script setup>
-import { defineProps } from 'vue'
+import { defineProps, watchEffect } from 'vue'
+const props = defineProps(['notitle', 'loadData'])
 import { useStore } from 'vuex'
-const props = defineProps(['notitle'])
 import { onMounted } from 'vue'
 const store = useStore()
+
+watchEffect(() => {
+  console.log('Tasks have changed:', props.loadData)
+  store.dispatch('fetchDashboardData')
+})
 if (props.notitle) {
   onMounted(async () => {
     if (store.getters.userTasksLoadingStatus == null) store.dispatch('fetchDashboardData')

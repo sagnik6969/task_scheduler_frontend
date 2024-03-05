@@ -78,7 +78,7 @@
       </div>
 
       <div class="flex flex-col w-full sm:w-1/2 md:w-1/2 lg:w-1/3 xl:w-2/3">
-        <TaskCounter :notitle="true" />
+        <TaskCounter :notitle="true" :loadData="loaded" />
         <div class="flex mt-4 space-x-4">
           <Statistics class="xl:w-[500px]" :notitle="true" @loading="loaded = !loaded" />
           <!-- <Efficiency /> -->
@@ -100,11 +100,11 @@ import Statistics from '@/components/dashboard/right_column/statistics/Statistic
 import Efficiency from '@/components/dashboard/right_column/Efficiency.vue'
 import UserTaskList from './UserTaskList.vue'
 import { useStore } from 'vuex'
-import { onMounted } from 'vue'
+// import { onMounted } from 'vue'
 const store = useStore()
-onMounted(async () => {
-  if (store.getters.userTasksLoadingStatus == null) store.dispatch('fetchDashboardData')
-})
+// onMounted(async () => {
+//   if (store.getters.userTasksLoadingStatus == null) store.dispatch('fetchDashboardData')
+// })
 const loaded = ref(true)
 const isPulsing = ref(false)
 const showEfficiency = ref(false)
