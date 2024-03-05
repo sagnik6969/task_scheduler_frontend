@@ -10,7 +10,7 @@
         <option value="completed_vs_pending_tasks" selected>Completed vs Pending Tasks</option>
         <option value="task_distribution_by_progress">Task Distribution by Progress</option>
         <option value="task_distribution_by_priority">Task Distribution by Priority</option>
-        <option value="">Task Distribution by Deadline</option>
+        <!-- <option value="">Task Distribution by Deadline</option> -->
       </select>
       <select
         class="w-full md:w-auto border-none focus:[box-shadow:none] bg-black rounded-md shadow font-medium text-white"
