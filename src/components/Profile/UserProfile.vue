@@ -100,6 +100,11 @@ import Statistics from '@/components/dashboard/right_column/statistics/Statistic
 import Efficiency from '@/components/dashboard/right_column/Efficiency.vue'
 import UserTaskList from './UserTaskList.vue'
 import { useStore } from 'vuex'
+import { onMounted } from 'vue'
+const store = useStore()
+onMounted(async () => {
+  if (store.getters.userTasksLoadingStatus == null) store.dispatch('fetchDashboardData')
+})
 const loaded = ref(true)
 const isPulsing = ref(false)
 const showEfficiency = ref(false)
@@ -125,7 +130,6 @@ const toggleColor = () => {
   currentColorIndex.value = randomIndex
 }
 
-const store = useStore()
 const name = store.getters.userName
 const userDetails = store.getters.User
 const tasks = store.getters.userTasks

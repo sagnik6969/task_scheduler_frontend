@@ -28,13 +28,13 @@
         All Tasks
       </button>
       <button
-        @click="filterTasks(true)"
+        @click="filterTasks('true')"
         class="block w-full px-4 py-2 hover:bg-gray-100 text-center"
       >
         Completed Tasks
       </button>
       <button
-        @click="filterTasks(false)"
+        @click="filterTasks('false')"
         class="block w-full px-4 py-2 hover:bg-gray-100 text-center"
       >
         Incompleted Tasks
@@ -61,9 +61,12 @@
       <!-- Task List -->
       <div class="min-w-full">
         <!-- Task Table -->
-        <table class="min-w-full divide-y divide-gray-200">
+        <table
+          class="min-w-full divide-y divide-gray-200"
+          :class="{ 'animate-pulse': deletingTask }"
+        >
           <!-- Column Headers -->
-          <thead class="bg-gray-50">
+          <thead class="bg-gray-50" v-if="filteredTasks.length !== 0">
             <tr>
               <th
                 scope="col"
@@ -192,7 +195,9 @@
           <!-- Task Items -->
           <tbody class="bg-white divide-y divide-gray-200">
             <tr v-for="task in paginatedTasks" :key="task.id" class="hover:bg-gray-50">
-              <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap">{{ task.title }}</td>
+              <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap overflow-hidden">
+                <div class="truncate" style="max-width: 10rem">{{ task.title }}</div>
+              </td>
               <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap">
                 {{ formatDate(task.deadline) }}
               </td>
@@ -260,8 +265,12 @@
             </tr>
             <tr v-if="filteredTasks.length === 0">
               <td class="px-3 md:px-6 py-4 whitespace-nowrap text-center text-gray-500" colspan="5">
-                <div class="flex-center no-tasks-message">
+                <!-- <div class="flex-center no-tasks-message">
                   <p>No tasks found.</p>
+                </div> -->
+                <div class="text-center flex flex-col justify-center items-center">
+                  <img src="@/assets/images/No_data.jpg" alt="" width="250px" height="250px" />
+                  <p class="text-gray-500 mt-2 mb-2 text-xl font-bold">No tasks found...</p>
                 </div>
               </td>
             </tr>
@@ -317,7 +326,8 @@ export default {
       pageSize: 3,
       sortColumn: '',
       sortOrder: 'asc',
-      showFilterMenu: false
+      showFilterMenu: false,
+      deletingTask: false
     }
   },
   computed: {
@@ -351,10 +361,12 @@ export default {
     },
     async deleteTask(task) {
       try {
+        this.deletingTask = true
         const response = await axios.delete('/api/admin/tasks/' + task.id)
         toast.info(response.data.message)
         const userResponse = await axios.get('/api/admin/users/' + this.user)
         this.tasks = userResponse.data.user.tasks
+        this.deletingTask = false
       } catch (error) {
         toast.error(error.response.data.error)
       }
@@ -400,7 +412,10 @@ export default {
       if (status === 'all') {
         this.filteredTasks = this.tasks
       } else {
-        this.filteredTasks = this.tasks.filter((task) => task.is_completed === status)
+        let task = []
+        const completedStatus = status === 'true'
+        task = this.tasks.filter((task) => task.is_completed === completedStatus)
+        console.log(task)
       }
       this.showFilterMenu = false
     }
@@ -409,5 +424,12 @@ export default {
 </script>
 
 <style scoped>
-/* Styles specific to this component */
+@keyframes pulse {
+  50% {
+    opacity: 0.3;
+  }
+}
+.animate-pulse {
+  animation: pulse 1s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
 </style>

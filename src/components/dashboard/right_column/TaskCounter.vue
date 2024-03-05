@@ -46,5 +46,13 @@
 </template>
 <script setup>
 import { defineProps } from 'vue'
+import { useStore } from 'vuex'
 const props = defineProps(['notitle'])
+import { onMounted } from 'vue'
+const store = useStore()
+if (props.notitle) {
+  onMounted(async () => {
+    if (store.getters.userTasksLoadingStatus == null) store.dispatch('fetchDashboardData')
+  })
+}
 </script>
