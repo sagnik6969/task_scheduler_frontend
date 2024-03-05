@@ -19,7 +19,30 @@
         class="responsive-chart"
       ></apexchart>
       <div class="absolute top-0 right-10 flex items-center justify-center text-slate-600">
-        <span class="material-symbols-outlined cursor-pointer" @click="loading"> refresh</span>
+        <span
+          class="material-symbols-outlined cursor-pointer"
+          @click="
+            async () => {
+              try {
+                loading = true
+                const res = await axios.get(`/api/admin/analysis/all_user_task_progress_analysis`)
+                console.log(res)
+                chartSeries[0].data = res.data.series
+                chartLabels = res.data.labels
+                loading = false
+
+                if (!initialLoadingComplete) {
+                  initialLoadingComplete = true
+                  $emit('initialLoadingCompleted')
+                }
+              } catch (error) {
+                toast.error('Unable to fetch data')
+              }
+            }
+          "
+        >
+          refresh</span
+        >
       </div>
     </div>
   </div>

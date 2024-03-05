@@ -46,12 +46,36 @@
     <!-- <div class="overflow-x-auto" v-if="tasks.length !== 0 && tasks[0] !== 'loading'">
       
     </div> -->
-    <div v-if="tasks.length !== 0 && tasks[0] !== 'loading'" class="flex justify-center mt-4">
-      <button @click="prevPage" :disabled="currentPage === 1" class="mr-4">Previous</button>
-      <button @click="nextPage" :disabled="currentPage === totalPages" class="ml-4">Next</button>
+    <div
+      v-if="
+        totalPages !== 1 &&
+        filteredTasks.length !== 0 &&
+        tasks.length !== 0 &&
+        tasks[0] !== 'loading'
+      "
+      class="flex justify-center mt-4"
+    >
+      <button @click="prevPage" :disabled="currentPage === 1" class="mr-4">
+        <img
+          src="@/assets/images/db-arrow-rev.png"
+          alt=""
+          width="30px"
+          height="30px"
+          class="bg-black p-2 rounded-sm hover:bg-slate-500 transition-opacity cursor-pointer"
+        />
+      </button>
+      <button @click="nextPage" :disabled="currentPage === totalPages" class="ml-4">
+        <img
+          src="@/assets/images/db-arrow-fwd.png"
+          alt=""
+          width="30px"
+          height="30px"
+          class="bg-black p-2 rounded-sm hover:bg-slate-500 transition-opacity cursor-pointer"
+        />
+      </button>
     </div>
     <div
-      v-else-if="tasks[0] !== 'loading'"
+      v-else-if="tasks[0] !== 'loading' && tasks.length === 0"
       class="text-center flex flex-col justify-center items-center"
     >
       <img src="@/assets/images/not_exist.jpg" alt="" width="250px" height="250px" />

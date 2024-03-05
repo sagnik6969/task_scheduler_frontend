@@ -2,7 +2,7 @@
 <template>
   <div id="user-stats" class="px-4 md:px-0">
     <h1 class="text-2xl font-semibold text-slate-900">{{ user.name }}'s Statistics</h1>
-    <div class="mt-3 space-y-3 md:space-y-0 md:flex md:space-x-3">
+    <div class="mt-3 space-y-3 md:space-y-0 md:flex md:space-x-3" v-if="series.length !== 0">
       <select
         class="w-full md:w-auto border-none focus:[box-shadow:none] bg-black rounded-md shadow font-medium text-white"
         v-model="statistics"
@@ -39,9 +39,15 @@
     >
       <p>Looks like the user haven't added any tasks yet !</p>
     </div>
+    <div
+      v-else-if="series.length == 0"
+      class="mt-5 bg-gray-100 flex items-center justify-center text-2xl h-64 mb-10 text-gray-500 font-semibold loading-animation"
+    >
+      Loading ...
+    </div>
     <apexchart
       v-else
-      class="-z-10 relative mt-5 shadow-md rounded-xl border-black border-2 bg-white"
+      class="-z-10 relative mt-5 shadow-md rounded-xl border-black border-2 bg-white w-max mb-10"
       :class="{ 'opacity-70': statsLoading }"
       :width="currentDivWidth"
       type="donut"
