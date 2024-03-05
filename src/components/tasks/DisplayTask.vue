@@ -51,7 +51,7 @@
         </div>
         <div
           v-if="showHelpText"
-          class="absolute bg-black opacity-80 p-2 shadow-md rounded text-sm mt-2 right-9 top-20"
+          class="absolute bg-black opacity-80 p-2 shadow-md rounded text-sm mt-2 right-9 top-20 z-10"
         >
           <p class="text-white">Task Priority</p>
           <!-- <p class="text-white">
@@ -146,9 +146,9 @@
 </template>
 
 <script setup>
-import IconSelect from '../ui/IconSelect.vue'
+// import IconSelect from '../ui/IconSelect.vue'
 import VueDatePicker from '@vuepic/vue-datepicker'
-import axios from 'axios'
+// import axios from 'axios'
 import { ref } from 'vue'
 import { computed, reactive, watch } from 'vue'
 import { useToast } from 'vue-toast-notification'

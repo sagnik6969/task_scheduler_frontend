@@ -1,7 +1,7 @@
 <template>
   <form @submit.prevent="handleSubmit">
     <div
-      class="fixed top-0 left-0 h-screen w-full flex items-center justify-center bg bg-gray-900 bg-opacity-80 z-10"
+      class="fixed top-0 left-0 h-screen w-full flex items-center justify-center bg bg-gray-900 bg-opacity-80 z-20"
     >
       <div
         :class="{
@@ -13,7 +13,6 @@
           :active="loading"
           indeterminate
           absolute
-          bottom
           color="#C6A969"
         ></v-progress-linear>
 
@@ -60,7 +59,6 @@
             <select
               data-testid="task-form-select"
               v-model="priority"
-              icon="mdi-priority-high"
               :required="true"
               :disabled="loading"
               class="bg-slate-100 hover:bg-slate-200 duration-300 rounded-md border-2"
@@ -71,7 +69,7 @@
               <option value="Very Important">Very Important</option>
             </select>
           </div>
-          <div class="flex space-x-2" v-if="!spinLoading">
+          <div class="flex space-x-2" v-if="!loading">
             <icon-button
               class="bg-slate-900 text-slate-100 hover:bg-slate-950 hover:text-slate-100"
               :disabled="loading"
@@ -112,7 +110,7 @@ const priority = ref('')
 
 const handleSubmit = async () => {
   loading.value = true
-  spinLoading.value = true
+  // spinLoading.value = true
   try {
     const taskData = {
       title: title.value,
@@ -125,7 +123,7 @@ const handleSubmit = async () => {
         userId: props.userId,
         ...taskData
       })
-      spinLoading.value = false
+      // spinLoading.value = false
 
       toast.success('Notification is sent to user . Check Assigned Task Section For Status')
     } else {
