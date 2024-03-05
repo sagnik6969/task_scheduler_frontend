@@ -107,7 +107,7 @@ const handleSubmit = async () => {
       router.replace(redirectUrl)
     } catch (err) {
       toast.error(err || 'Something went wrong')
-      console.log('Login Failed')
+      // console.log('Login Failed')
     } finally {
       loading.value = false
     }

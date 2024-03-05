@@ -415,7 +415,7 @@ export default {
         let task = []
         const completedStatus = status === 'true'
         task = this.tasks.filter((task) => task.is_completed === completedStatus)
-        console.log(task)
+        // console.log(task)
       }
       this.showFilterMenu = false
     }

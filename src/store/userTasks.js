@@ -127,7 +127,7 @@ const actions = {
 
   async createUserTaskByAdmin(context, payload) {
     try {
-      console.log(payload)
+      // console.log(payload)
       const { userId, ...taskData } = payload
       await axios.post('api/admin/assign-task/' + userId, taskData)
       // context.commit('addUserTask', response.data)

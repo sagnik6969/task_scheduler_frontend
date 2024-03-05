@@ -133,7 +133,7 @@ const toggleColor = () => {
 const name = store.getters.userName
 const userDetails = store.getters.User
 const tasks = store.getters.userTasks
-console.log(tasks)
+// console.log(tasks)
 
 const formatDate = (dateString) => {
   const date = new Date(dateString)
