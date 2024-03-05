@@ -52,7 +52,7 @@ import { onMounted } from 'vue'
 const store = useStore()
 
 watchEffect(() => {
-  console.log('Tasks have changed:', props.loadData)
+  // console.log('Tasks have changed:', props.loadData)
   store.dispatch('fetchDashboardData')
 })
 if (props.notitle) {
