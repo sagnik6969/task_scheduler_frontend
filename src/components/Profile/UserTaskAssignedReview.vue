@@ -90,7 +90,7 @@ export default {
         .get('/api/tasks/assign/' + this.$route.params.taskId + '/' + this.$route.params.token) // Assuming you have an endpoint to fetch task data
         .then((response) => {
           this.taskData = response.data
-          console.log(response.data)
+          // console.log(response.data)
           if (response.data.error) {
             this.$router.push(response.data.link)
             toast.info(response.data.error)
@@ -112,28 +112,28 @@ export default {
       await axios
         .patch(`/api/tasks/assign/${this.$route.params.taskId}`, { status: 'Decline' })
         .then((response) => {
-          console.log('Task status updated successfully:', response.data)
+          // console.log('Task status updated successfully:', response.data)
           toast.info('bhai admin ko pta chl gya h')
         })
         .catch((error) => {
           console.error('Error updating task status:', error)
           toast.info('erro h bete!!!')
         })
-      console.log('Task Declined')
+      // console.log('Task Declined')
       this.$router.push('/')
     },
     async acceptTask() {
       await axios
         .patch(`/api/tasks/assign/${this.$route.params.taskId}`, { status: 'Accepted' })
         .then((response) => {
-          console.log('Task status updated successfully:', response.data)
+          // console.log('Task status updated successfully:', response.data)
           toast.info('bhai admin ko pta chl gya h')
         })
         .catch((error) => {
           console.error('Error updating task status:', error)
           toast.info('erro h bete!!! console dekh ')
         })
-      console.log('Task accepted')
+      // console.log('Task accepted')
       this.$router.push('/')
     }
   }

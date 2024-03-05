@@ -410,15 +410,14 @@ export default {
       this.showFilterMenu = !this.showFilterMenu
     },
     filterTasks(status) {
-      // if (status === 'all') {
-      //   this.filteredTasks = this.tasks
-      // } else {
-      //   let task = []
-      //   const completedStatus = status === 'true'
-      //   task = this.tasks.filter((task) => task.is_completed === completedStatus)
-      //   console.log(task)
-      // }
-      this.filterStatus = status
+      if (status === 'all') {
+        this.filteredTasks = this.tasks
+      } else {
+        let task = []
+        const completedStatus = status === 'true'
+        task = this.tasks.filter((task) => task.is_completed === completedStatus)
+        // console.log(task)
+      }
       this.showFilterMenu = false
     }
   }

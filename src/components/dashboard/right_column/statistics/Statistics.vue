@@ -134,7 +134,7 @@ watchEffect(async () => {
       time_range: timeFilter.value,
       statistics: statistics.value
     })
-    console.log(statistics)
+    // console.log(statistics)
   } catch (error) {
     toast.error('Unable to fetch user statistics')
     console.log(error)
