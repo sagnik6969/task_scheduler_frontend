@@ -379,6 +379,7 @@ export default {
       this.currentPage = page
     },
     closeTaskList() {
+      // done
       this.$emit('task-closed')
     },
     sortBy(column) {
