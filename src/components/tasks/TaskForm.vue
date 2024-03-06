@@ -43,7 +43,7 @@
         >
           <div class="flex flex-col sm:flex-row sm:space-x-2 space-y-3 sm:space-y-0">
             <VueDatePicker
-              model-type="yyyy-MM-dd hh:mm:ss"
+              model-type="yyyy-MM-dd HH:mm:ss"
               placeholder="Set Due Date"
               class="date-picker rounded-md bg-slate-100 flex items-center border-2 border-slate-500"
               v-model="date"
