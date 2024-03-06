@@ -41,6 +41,19 @@
         >
           <TaskSkeleton />
         </div>
+        <div
+          v-else-if="filteredTasks.length === 0"
+          class="text-center flex flex-col justify-center items-center"
+        >
+          <img
+            src="@/assets/images/not_exist.jpg"
+            alt=""
+            class="mt-3"
+            width="250px"
+            height="250px"
+          />
+          <p class="text-gray-500 mt-2 mb-2 text-2xl font-bold">No tasks found...</p>
+        </div>
         <div v-else>
           <single-task-card
             v-for="task in filteredTasks"
