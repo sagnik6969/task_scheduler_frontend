@@ -1,7 +1,8 @@
 <template>
-  <div class="">
+  <div class="relative">
     <user-notification-bar
-      class="extracss top-0 right-0 left-0 py-3 w-full bg-white xl:static xl:mr-0 xl:mt-0 xl:pr-0"
+      class="extracss top-0 right-0 left-0 py-3 w-full xl:static xl:mr-0 xl:mt-0 xl:pr-0"
+      :class="showEfficiency ? 'bg-transparent' : 'bg-white'"
     ></user-notification-bar>
     <div class="sm:flex w-full p-5 md:pl-20 md:pr-6 gap-5 h-3/3">
       <div
@@ -87,7 +88,9 @@
       </div>
     </div>
     <div v-if="showEfficiency" class="user-task-assign-container">
-      <Efficiency />
+      <div class="inner_div">
+        <Efficiency @close-efficiency-box="showEfficiency = false" />
+      </div>
     </div>
   </div>
 </template>
@@ -170,11 +173,20 @@ const formatDate = (dateString) => {
 }
 .user-task-assign-container {
   position: fixed;
+  bottom: 0;
+  left: 0;
+  background: black;
+  opacity: 0.8;
+  width: 100%;
+  height: 100%;
+}
+.inner_div {
+  position: fixed;
   top: 50%;
   left: 50%;
   /* width: 100%; */
   /* height: 100%; */
   transform: translate(-50%, -50%);
-  z-index: 9999;
+  /* z-index: 9999; */
 }
 </style>
