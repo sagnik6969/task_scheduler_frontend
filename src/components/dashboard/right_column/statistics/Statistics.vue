@@ -3,7 +3,7 @@
     <h1 v-if="!props.notitle" class="text-2xl font-semibold text-slate-900">Your Statistics</h1>
     <div
       :class="props.notitle ? 'space-x-3' : 'mt-3 space-x-3'"
-      v-if="(series[0] !== 0 || series[1] !== 0) && !statLoading"
+      v-if="series.every((item) => item === 0) !== 0 && !statLoading"
       class="relative"
     >
       <select
@@ -38,11 +38,7 @@
       <span
         v-if="props.notitle"
         class="absolute top-5 right-6 items-center text-gray-400 hover:text-black pl-10 animate-pulse material-symbols-outlined cursor-pointer"
-        @click="
-          () => {
-            taskLoaded = false
-          }
-        "
+        @click="handleRefresh"
       >
         refresh</span
       >
@@ -54,7 +50,7 @@
       <p class="text-gray-500">No Tasks Added.</p>
     </div> -->
     <div
-      v-if="series[0] === 0 && series[1] === 0"
+      v-if="series.every((item) => item === 0)"
       :style="props.notitle ? 'width: 62vw; height: 60vh' : ''"
       class="text-center flex flex-col justify-center relative items-center"
     >
