@@ -50,7 +50,7 @@
       <p class="text-gray-500">No Tasks Added.</p>
     </div> -->
     <div
-      v-if="series.every((item) => item === 0)"
+      v-if="series.every((item) => item === 0) && !statLoading"
       :style="props.notitle ? 'width: 62vw; height: 60vh' : ''"
       class="text-center flex flex-col justify-center relative items-center"
     >
