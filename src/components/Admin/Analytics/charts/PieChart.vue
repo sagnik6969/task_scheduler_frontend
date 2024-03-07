@@ -45,6 +45,7 @@
     >
       Loading ...
     </div>
+    <!-- later will change it to the pie -->
     <apexchart
       v-else
       class="-z-10 relative mt-5 shadow-md rounded-xl border-black border-2 bg-white w-max mb-10"

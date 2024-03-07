@@ -48,7 +48,7 @@
       v-else-if="totalPages !== 1"
       class="text-center flex flex-col justify-center items-center w-4/6 pb-10"
     >
-      <img src="@/assets/images/not_exist.jpg" alt="" width="180px" height="180px" />
+      <img src="@/assets/images/not_exist.jpg" class="justif" alt="" width="180px" height="180px" />
       <p class="text-gray-500 mt-2 mb-2 text-xl font-bold">No user found...</p>
     </div>
   </div>
