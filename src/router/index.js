@@ -11,7 +11,7 @@ import UserProfile from '@/components/Profile/UserProfile.vue'
 import UserTaskAssignedReview from '../components/Profile/UserTaskAssignedReview.vue'
 import NotFound from '../components/ui/NotFound.vue'
 import Home from '../Home.vue'
-import AdminUserList from '@/components/Admin/AdminUserList.vue'
+import AdminUserList from '@/components/Admin/users/AdminUserList.vue'
 import Analytics from '@/components/Admin/Analytics/Analytics.vue'
 import AdminAssignedTaskUser from '@/components/Admin/assigned_tasks/AdminAssignedTaskUser.vue'
 

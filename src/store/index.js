@@ -1,7 +1,7 @@
 import { createStore } from 'vuex'
 import axios from 'axios'
 import userTasks from './userTasks'
-import userList from './admin/userList'
+import userList from './admin/users/userList'
 
 const store = createStore({
   modules: {
