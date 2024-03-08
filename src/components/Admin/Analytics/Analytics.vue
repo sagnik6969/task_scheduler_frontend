@@ -17,7 +17,7 @@
           :users="users"
         ></user-list>
       </div>
-      <div class="md:w-1/2">
+      <div v-if="selectedUser" class="md:w-1/2">
         <pie-chart :user="selectedUser"></pie-chart>
       </div>
     </div>
@@ -30,7 +30,7 @@ import PieChart from './charts/PieChart.vue'
 import BarChart from './charts/BarChart.vue'
 import UserList from './UserList.vue'
 const props = defineProps(['users'])
-const selectedUser = ref(props.users[0])
+const selectedUser = ref(props.users.length ? props.users[0] : null)
 
 const canDisplayBottomPart = ref(false)
 </script>

@@ -69,8 +69,10 @@ const remainingTime = computed(() => {
     return 'Completed'
   }
   const mySQLDate = task.value.data.attributes.deadline
-  const deadline = new Date(Date.parse(mySQLDate.replace(/-/g, '/')))
+  const deadline = new Date(Date.parse(mySQLDate))
   const today = new Date()
+
+  // console.log(deadline)
 
   const differenceInMinutes = (deadline.getTime() - today.getTime()) / (1000 * 60)
 

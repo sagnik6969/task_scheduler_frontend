@@ -7,22 +7,20 @@
     >
       <!-- fixed top-0 start-0 z-50 -->
       <div class="py-4 flex items-center justify-center">
-        <router-link to="/profile" class="button flex items-center">
-          <img
-            src="https://avatars.githubusercontent.com/u/47273253?v=4"
-            alt="profile pic"
-            class="rounded-full object-cover border-2 border-white"
-            :class="open ? 'w-20 h-20' : 'w-12 h-12'"
-          />
-        </router-link>
+        <img
+          src="https://avatars.githubusercontent.com/u/47273253?v=4"
+          alt="profile pic"
+          class="rounded-full object-cover border-2 border-white"
+          :class="open ? 'w-20 h-20' : 'w-12 h-12'"
+        />
       </div>
 
       <div class="flex justify-end mb-4">
         <button
           class="focus:outline-none"
           @click="toggle"
-          @mouseenter="openSidebar"
-          @mouseleave="openSidebar"
+          @mouseenter="toggle"
+          @mouseleave="toggle"
         >
           <span v-if="open" class="material-symbols-outlined text-white"> switch_left </span>
           <span v-if="!open" class="material-symbols-outlined text-white"> switch_right </span>
@@ -42,15 +40,11 @@
           :key="link.path"
           @click="open = false"
         >
-          <span v-if="open" class="text-white mr-4" :class="link.iconClass">{{
-            link.iconname
-          }}</span>
-          <tooltip v-if="!open" :text="link.name" location="right">
+          <tooltip :text="link.name" :open="open" location="right">
             <span v-if="link.icon" class="text-white mr-4" :class="link.iconClass">{{
               link.iconname
             }}</span>
           </tooltip>
-
           <span class="text-sm text-white">{{ link.label }}</span>
         </router-link>
       </div>
@@ -100,9 +94,7 @@ const ismobile = ref(false)
 const toggle = () => {
   open.value = !open.value
 }
-const openSidebar = () => {
-  open.value = !open.value
-}
+
 const isAdmin = computed(() => store.getters.User.is_admin)
 
 const links = [

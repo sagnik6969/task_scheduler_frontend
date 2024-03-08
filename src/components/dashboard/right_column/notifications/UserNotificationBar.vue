@@ -56,7 +56,9 @@
           class="absolute right-0 mt-2 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600"
         >
           <div class="px-4 py-3 text-sm text-gray-900 dark:text-white">
-            <div class="font-medium">Pro User</div>
+            <div class="font-medium">
+              ({{ $store.getters.User.is_admin ? 'Pro User' : 'User' }})
+            </div>
             <div class="truncate">{{ $store.getters.User.email }}</div>
           </div>
           <ul class="py-2 text-sm text-gray-700 dark:text-gray-200">

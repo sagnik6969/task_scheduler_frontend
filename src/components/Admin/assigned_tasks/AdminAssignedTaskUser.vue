@@ -109,8 +109,11 @@
         </div>
       </div>
     </div>
-    <div v-else-if="tasks.length === 0" class="text-center py-4">
-      <p class="text-gray-500">No tasks assigned.</p>
+    <div v-else-if="tasks.length === 0 || filteredTasks.length === 0" class="text-center py-1">
+      <div class="text-center flex flex-col justify-center items-center">
+        <img src="@/assets/images/not_exist.jpg" alt="" width="150px" height="120px" />
+        <p class="text-gray-500 text-xl font-bold">No tasks assigned...</p>
+      </div>
     </div>
   </div>
 </template>
