@@ -2,15 +2,16 @@
   <div
     class="admin-section-selector flex mx-auto md:space-x-30 sm:space-x-20 lg:space-x-20 xl:space-x-40 justify-center mb-6"
   >
-    <div
+    <router-link
       v-for="option in options"
-      :key="option.value"
-      @click="handleChange(option.value)"
-      :class="{ selected: selectedOption === option.value }"
+      :key="option.routeName"
       class="cursor-pointer md:w-auto w-200 py-2 px-4 text-lg border-b-2 border-transparent hover:font-bold mb-2 md:mb-0 md:mr-4"
+      :to="{
+        name: option.routeName
+      }"
     >
       {{ option.label }}
-    </div>
+    </router-link>
   </div>
 </template>
 
@@ -23,9 +24,9 @@ export default {
     return {
       selectedOption: 'users', // Initially selected option
       options: [
-        { value: 'users', label: 'Users' },
-        { value: 'analytics', label: 'Analytics' },
-        { value: 'assigned_tasks', label: 'Assigned Tasks' }
+        { routeName: 'AdminUserList', label: 'Users' },
+        { routeName: 'AdminAnalytics', label: 'Analytics' },
+        { routeName: 'AdminAssignedTasks', label: 'Assigned Tasks' }
       ]
     }
   },
@@ -47,7 +48,8 @@ export default {
   transition: border-bottom-color 0.3s;
 }
 
-.admin-section-selector > div.selected {
+.admin-section-selector > div.selected,
+.router-link-active {
   border-bottom-color: black;
   border-bottom-width: 3px;
   font-size: large;

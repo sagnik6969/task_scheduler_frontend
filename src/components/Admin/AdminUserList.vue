@@ -1,45 +1,52 @@
 <template>
   <div>
     <div class="w-4/5 md:w-4/5 lg:w-3/5 xl:w-5/5 mx-auto pb-5">
-      <div v-if="taskListVisible" class="overlay"></div>
-
-      <div v-if="!loading">
-        <SearchFilter
+      <!-- <div v-if="taskListVisible" class="overlay"></div> -->
+      <user-list-skeleton
+        v-if="$store.getters.userListStatus == null || $store.getters.userListStatus == 'loading'"
+      ></user-list-skeleton>
+      <div
+        v-else-if="$store.getters.userList.length == 0"
+        class="text-center flex flex-col justify-center items-center"
+      >
+        <img src="@/assets/images/not_exist.jpg" alt="" width="200px" height="200px" />
+        <p class="text-gray-500 mt-2 mb-2 text-xl font-bold">No user found...</p>
+      </div>
+      <div v-else>
+        <div class="flex justify-between mb-3">
+          <search-box placeholder="Search users...." class="w-1/2"></search-box>
+          <button class="font-bold text-lg rounded-full p-1 hover:bg-slate-100 duration-200 mr-2">
+            <v-icon icon="mdi-refresh"></v-icon>
+          </button>
+        </div>
+        <!-- <SearchFilter
           :usersData="users"
           @sort-by-name="sortByName"
           @sort-by-date="sortByDate"
           @search-users="updateUsers"
           @refresh-users="fetchFirstData"
-        />
-        <!-- <div
-          v-if="isDeleting"
-          class="absolute inset-0 bg-black opacity-50 flex items-center justify-center animate-pulse"
-        >
-          <div class="text-white">Deleting user...</div>
-        </div> -->
+        /> -->
         <div
-          v-for="user in paginatedUsers"
+          v-for="user in $store.getters.userList"
           :key="user.id"
           :class="{ 'bg-gray-200  animate-pulse': isDeleting || makingAdmin }"
-          class="border border-black rounded-lg p-4 mb-4 flex flex-col md:flex-row items-center justify-between font-bold text-gray-800 transition duration-300 ease-in-out hover:border-purple-500 hover:bg-gray-100"
+          class="border-2 border-black rounded-lg p-4 mb-4 flex flex-col md:flex-row items-center justify-between font-bold text-gray-800 transition duration-300 ease-in-out hover:border-purple-500 hover:bg-gray-100"
         >
           <div
             class="flex items-center space-x-4 mb-4 md:mb-0 w-full md:w-3/5 relative cursor-pointer"
             @click="viewProfile(user)"
-            @mouseover="hoveredUser = user.id"
-            @mouseout="hoveredUser = null"
           >
             <p class="text-lg w-1/2 text-center md:text-left">{{ user.name }}</p>
             <p class="text-sm text-gray-500 w-1/2 text-center md:text-left">
               {{ formatTime(user.created_at) }}
             </p>
-            <div
+            <!-- <div
               v-if="hoveredUser === user.id"
               class="absolute top-full left-0 bg-black opacity-80 border rounded-xl animate-pulsee border-white p-2 text-sm text-white z-10"
             >
               <p>Email: {{ user.email }}</p>
               <p>Last Updated: {{ formatDate(user.updated_at) }}</p>
-            </div>
+            </div> -->
           </div>
           <div class="flex items-center justify-between w-full md:w-1/4 text-lg">
             <tooltip text="View Profile">
@@ -79,9 +86,9 @@
             </tooltip>
           </div>
         </div>
-        <div class="flex justify-center" v-if="totalPages !== 1">
+        <!-- <div class="flex justify-center" v-if="totalPages !== 1">
           <button
-            v-if="displayedUsers.length !== 0"
+            v-if=".length !== 0"
             :class="{ 'opacity-50 cursor-not-allowed': currentPage === 1 }"
             class="px-4 py-2 bg-black text-white rounded-md hover:opacity-50 focus:outline-none"
             @click="prevPage"
@@ -91,7 +98,7 @@
           </button>
           <span class="mr-5"></span>
           <button
-            v-if="displayedUsers.length !== 0"
+            v-if="$store.getters.userList.length !== 0"
             :class="{
               'opacity-50 cursor-not-allowed':
                 currentPage === totalPages || displayedUsers.length === 0
@@ -102,55 +109,11 @@
           >
             <img src="@/assets/images/db-arrow-fwd.png" alt="Next" width="16" height="20" />
           </button>
-          <!-- <span class="mb-10"></span> -->
-        </div>
-      </div>
-      <!-- <div v-if="loading" class="text-center my-20 text-slate-900">
-        <v-progress-circular
-          :size="50"
-          :width="5"
-          color="purple"
-          indeterminate
-        ></v-progress-circular>
-      </div> -->
-      <div v-if="loading">
-        <!-- Search bar skeleton -->
-        <div class="flex items-center justify-between mb-4">
-          <div class="h-8 w-2/4 ml-4 bg-gray-100 rounded"></div>
-          <div class="flex">
-            <div class="h-8 w-10 bg-gray-100 rounded"></div>
-            <div class="ml-3 h-8 w-10 bg-gray-100 rounded"></div>
-          </div>
-        </div>
-        <!-- User list skeleton -->
-        <div
-          v-for="index in 3"
-          :key="index"
-          class="border border-black rounded-lg p-4 mb-4 flex flex-col md:flex-row items-center justify-between font-bold text-gray-800 animate-pulse"
-        >
-          <div class="flex items-center space-x-4 mb-4 md:mb-0 w-full md:w-3/5">
-            <div class="h-6 w-1/2 bg-gray-300 rounded"></div>
-            <div class="h-4 w-1/2 bg-gray-300 rounded"></div>
-          </div>
-          <div class="flex items-center justify-between w-full md:w-1/4">
-            <div class="h-6 w-6 bg-gray-300 rounded"></div>
-            <div class="h-6 w-6 bg-gray-300 rounded"></div>
-            <div class="h-6 w-6 bg-gray-300 rounded"></div>
-            <div class="h-6 w-6 bg-gray-300 rounded"></div>
-            <div class="h-6 w-6 bg-gray-300 rounded"></div>
-          </div>
-        </div>
-      </div>
-
-      <div
-        v-else-if="displayedUsers.length === 0"
-        class="text-center flex flex-col justify-center items-center"
-      >
-        <img src="@/assets/images/not_exist.jpg" alt="" width="200px" height="200px" />
-        <p class="text-gray-500 mt-2 mb-2 text-xl font-bold">No user found...</p>
+         <span class="mb-10"></span>
+        </div> -->
       </div>
     </div>
-    <transition name="fade">
+    <!-- <transition name="fade">
       <div v-if="isViewingProfile" class="user-profile-container">
         <user-profile
           :userDetails="selectedUser"
@@ -176,10 +139,62 @@
         :admin="currentRouteName"
         @close="isTaskFromVisisble = null"
       ></task-form>
-    </div>
+    </div> -->
   </div>
 </template>
 
+<script setup>
+import SearchFilter from './SearchFilter.vue'
+import UserProfile from './UserSpecific/UserProfile.vue'
+import UserTaskList from './UserSpecific/UserTaskList.vue'
+import TaskForm from '../../components/tasks/TaskForm.vue'
+import UserListSkeleton from '../ui/Shimmer/admin/UserListSkeleton.vue'
+import SearchBox from '../ui/SearchBox.vue'
+import { useToast } from 'vue-toast-notification'
+import Tooltip from '../ui/Tooltip.vue'
+import { useStore } from 'vuex'
+import { ref } from 'vue'
+
+const toast = useToast()
+const store = useStore()
+
+const loading = ref(false)
+const isDeleting = ref(false)
+const makingAdmin = ref(false)
+
+const loadUsers = async () => {
+  try {
+    loading.value = true
+    await store.dispatch('fetchUserList')
+  } catch (error) {
+    toast.error(error)
+  } finally {
+    loading.value = false
+  }
+}
+
+if (store.getters.userListStatus == null) {
+  loadUsers()
+}
+
+function formatTime(time) {
+  const currentTime = new Date()
+  const timestamp = new Date(time)
+  const diff = (currentTime - timestamp) / 1000 // Get the difference in seconds
+
+  if (diff < 60) {
+    return `${Math.floor(diff)} seconds ago`
+  } else if (diff < 3600) {
+    return `${Math.floor(diff / 60)} minutes ago`
+  } else if (diff < 86400) {
+    return `${Math.floor(diff / 3600)} hours ago`
+  } else {
+    return `${Math.floor(diff / 86400)} days ago`
+  }
+}
+</script>
+
+<!-- 
 <script>
 import axios from 'axios'
 import SearchFilter from './SearchFilter.vue'
@@ -376,7 +391,7 @@ export default {
     }
   }
 }
-</script>
+</script> -->
 
 <style scoped>
 .user-profile-container {

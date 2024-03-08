@@ -11,11 +11,12 @@
 <script setup>
 import Sidebar from './components/Sidebar/Sidebar.vue'
 import { onMounted, ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { useStore } from 'vuex'
 
 const store = useStore()
 const router = useRouter()
+const route = useRoute()
 
 const isLoading = ref(true)
 
@@ -24,7 +25,12 @@ onMounted(async () => {
     await store.dispatch('tryLogIn')
     isLoading.value = false
   } catch {
-    router.push('/login')
+    router.push({
+      path: '/login',
+      query: {
+        redirect: route.fullPath
+      }
+    })
   }
 })
 </script>
