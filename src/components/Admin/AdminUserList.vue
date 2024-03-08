@@ -89,7 +89,12 @@
           >
             <img src="@/assets/images/db-arrow-rev.png" alt="Previous" width="16" height="20" />
           </button>
-          <span class="mr-5"></span>
+          <span
+            v-if="displayedUsers.length !== 0"
+            class="mr-5 ml-5 bg-gray-800 px-4 py-2 text-white rounded-md"
+          >
+            {{ currentPage }}</span
+          >
           <button
             v-if="displayedUsers.length !== 0"
             :class="{
@@ -370,10 +375,10 @@ export default {
     },
     closeUserProfile() {
       this.isViewingProfile = false
-    },
-    toggleUserDetail(userId) {
-      this.expandedUserId = this.expandedUserId === userId ? null : userId
     }
+    // toggleUserDetail(userId) {
+    //   this.expandedUserId = this.expandedUserId === userId ? null : userId
+    // }
   }
 }
 </script>

@@ -1,5 +1,5 @@
 <template>
-  <v-tooltip text="Tooltip" location="bottom" v-model="show">
+  <v-tooltip text="Tooltip" :disabled="open" location="bottom" v-model="show">
     <template v-slot:activator="{ props }">
       <div @click="show = !show" v-bind="props" class="w-fit">
         <slot></slot>
@@ -9,6 +9,8 @@
 </template>
 <script setup>
 import { ref } from 'vue'
-
+const props = defineProps({
+  open
+})
 const show = ref(false)
 </script>

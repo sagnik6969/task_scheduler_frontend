@@ -249,18 +249,22 @@
               </td>
               <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap">
                 <button
-                  v-if="!task.is_completed"
+                  :class="{
+                    'bg-black  cursor-not-allowed opacity-50 text-xs md:text-sm hover:bg-blaxk':
+                      task.is_completed,
+                    'bg-black  rounded-lg text-xs md:text-sm hover:bg-red-600': !task.is_completed
+                  }"
+                  class="text-white px-3 md:px-4 py-2 rounded-lg"
                   @click="confirmDeleteTask(task)"
-                  class="bg-black text-white px-3 md:px-4 py-2 rounded-lg hover:bg-red-600 text-xs md:text-sm"
                 >
                   Delete
                 </button>
-                <span
+                <!-- <span
                   v-else
-                  class="relative inline-block bg-black text-white px-3 md:px-4 py-2 rounded-lg cursor-not-allowed opacity-50 text-xs md:text-sm"
+                  class=""
                 >
                   Delete
-                </span>
+                </span> -->
               </td>
             </tr>
             <tr v-if="filteredTasks.length === 0">
