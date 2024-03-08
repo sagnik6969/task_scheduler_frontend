@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import AdminUserList from './AdminUserList.vue'
+import AdminUserList from './users/AdminUserList.vue'
 import AdminAssignedTaskUser from './assigned_tasks/AdminAssignedTaskUser.vue'
 import Analytics from './Analytics/Analytics.vue'
 

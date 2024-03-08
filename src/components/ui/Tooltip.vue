@@ -9,8 +9,6 @@
 </template>
 <script setup>
 import { ref } from 'vue'
-const props = defineProps({
-  open
-})
+defineProps(['open'])
 const show = ref(false)
 </script>

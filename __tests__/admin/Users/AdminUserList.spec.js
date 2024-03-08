@@ -1,5 +1,5 @@
 import { render, screen, waitFor } from '@testing-library/vue'
-import AdminUserList from '@/components/Admin/AdminUserList.vue'
+import AdminUserList from '@/components/Admin/users/AdminUserList.vue'
 import { describe, expect, it, vi } from 'vitest'
 import * as matchers from '@testing-library/jest-dom/matchers'
 expect.extend(matchers)

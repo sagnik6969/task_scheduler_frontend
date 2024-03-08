@@ -143,7 +143,8 @@ const handleSubmit = async () => {
       await store.dispatch('register', {
         name: name.value,
         email: email.value,
-        password: password.value
+        password: password.value,
+        password_confirmation: confirmPassword.value
       })
 
       toast.success('Verification email sent. Check your mailbox for more details')

@@ -1,4 +1,4 @@
-import UserTaskList from '@/components/Admin/UserSpecific/UserTaskList.vue'
+import UserTaskList from '@/components/Admin/users/UserTaskList.vue'
 import { render, screen } from '@testing-library/vue'
 import { describe, expect, it, vi } from 'vitest'
 import * as matchers from '@testing-library/jest-dom/matchers'

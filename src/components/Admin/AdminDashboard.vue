@@ -12,7 +12,8 @@
       </div>
     </div>
     <AdminSectionSelector v-model="selectedOption" @change="handleSectionChange" />
-    <AdminContent :selectedOption="selectedOption" :users="users" @user-deleted="updatedData" />
+    <!-- <AdminContent :selectedOption="selectedOption" :users="users" @user-deleted="updatedData" /> -->
+    <router-view></router-view>
   </div>
 </template>
 
