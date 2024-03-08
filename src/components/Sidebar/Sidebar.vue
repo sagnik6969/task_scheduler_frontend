@@ -19,8 +19,8 @@
         <button
           class="focus:outline-none"
           @click="toggle"
-          @mouseenter="openSidebar"
-          @mouseleave="openSidebar"
+          @mouseenter="toggle"
+          @mouseleave="toggle"
         >
           <span v-if="open" class="material-symbols-outlined text-white"> switch_left </span>
           <span v-if="!open" class="material-symbols-outlined text-white"> switch_right </span>
@@ -40,7 +40,7 @@
           :key="link.path"
           @click="open = false"
         >
-          <tooltip :text="link.name" location="right">
+          <tooltip :text="link.name" :open="open" location="right">
             <span v-if="link.icon" class="text-white mr-4" :class="link.iconClass">{{
               link.iconname
             }}</span>
@@ -94,9 +94,7 @@ const ismobile = ref(false)
 const toggle = () => {
   open.value = !open.value
 }
-const openSidebar = () => {
-  open.value = !open.value
-}
+
 const isAdmin = computed(() => store.getters.User.is_admin)
 
 const links = [
