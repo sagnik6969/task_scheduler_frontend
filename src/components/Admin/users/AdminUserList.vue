@@ -14,8 +14,15 @@
       </div>
       <div v-else>
         <div class="flex justify-between mb-3">
-          <search-box placeholder="Search users...." class="w-1/2"></search-box>
-          <button class="font-bold text-lg rounded-full p-1 hover:bg-slate-100 duration-200 mr-2">
+          <search-box
+            v-model.trim="searchQuery"
+            placeholder="Search users...."
+            class="w-1/2"
+          ></search-box>
+          <button
+            class="font-bold text-lg rounded-full p-1 hover:bg-slate-100 duration-200 mr-2"
+            @click="$store.dispatch('fetchUserList')"
+          >
             <v-icon icon="mdi-refresh"></v-icon>
           </button>
         </div>
@@ -27,7 +34,7 @@
           @refresh-users="fetchFirstData"
         /> -->
         <div
-          v-for="user in $store.getters.userList"
+          v-for="user in filteredUsers"
           :key="user.id"
           :class="{ 'bg-gray-200  animate-pulse': isDeleting || makingAdmin }"
           class="border-2 border-black rounded-lg p-4 mb-4 flex flex-col md:flex-row items-center justify-between font-bold text-gray-800 transition duration-300 ease-in-out hover:border-purple-500 hover:bg-gray-100"
@@ -158,14 +165,22 @@ import SearchBox from '../../ui/SearchBox.vue'
 import { useToast } from 'vue-toast-notification'
 import Tooltip from '../../ui/Tooltip.vue'
 import { useStore } from 'vuex'
-import { ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 
 const toast = useToast()
 const store = useStore()
 
 const loading = ref(false)
+const searchQuery = ref('')
+
 const isDeleting = ref(false)
 const makingAdmin = ref(false)
+
+const filteredUsers = computed(() => {
+  return store.getters.userList.filter((user) => {
+    return user.name.toLowerCase().includes(searchQuery.value.toLowerCase())
+  })
+})
 
 const loadUsers = async () => {
   try {
