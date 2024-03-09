@@ -25,12 +25,22 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import PieChart from './charts/PieChart.vue'
 import BarChart from './charts/BarChart.vue'
 import UserList from './UserList.vue'
-const props = defineProps(['users'])
-const selectedUser = ref(props.users.length ? props.users[0] : null)
+import { useStore } from 'vuex'
+
+const store = useStore()
+
+if (store.getters['adminUserList/userListStatus'] == null) {
+  store.dispatch('adminUserList/fetchUserList')
+}
+
+// const props = defineProps(['users'])
+const users = computed(() => store.getters['adminUserList/userList'])
+
+const selectedUser = ref(null)
 
 const canDisplayBottomPart = ref(false)
 </script>

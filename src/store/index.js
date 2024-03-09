@@ -1,10 +1,12 @@
 import { createStore } from 'vuex'
 import axios from 'axios'
 import userTasks from './userTasks'
+import userList from './admin/users/userList'
 
 const store = createStore({
   modules: {
-    userTasks
+    userTasks,
+    adminUserList: userList
   },
   state() {
     return {
@@ -72,6 +74,8 @@ const store = createStore({
       const name = payload.name
       const email = payload.email
       const password = payload.password
+      const password_confirmation = payload.password_confirmation
+      // console.log(password, password_confirmation)
 
       axios.defaults.withCredentials = true
       axios.defaults.withXSRFToken = true
@@ -80,7 +84,7 @@ const store = createStore({
           name: name,
           email: email,
           password: password,
-          password_confirmation: password
+          password_confirmation: password_confirmation
         })
 
         context.commit('setUser', res.data.user)

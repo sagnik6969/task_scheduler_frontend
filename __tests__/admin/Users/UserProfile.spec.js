@@ -1,5 +1,5 @@
 import { render, screen, waitFor } from '@testing-library/vue'
-import UserProfile from '@/components/Admin/UserSpecific/UserProfile.vue'
+import UserProfile from '@/components/Admin/users/UserProfile.vue'
 import { describe, expect, it, vi } from 'vitest'
 import * as matchers from '@testing-library/jest-dom/matchers'
 expect.extend(matchers)

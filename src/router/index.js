@@ -11,6 +11,11 @@ import UserProfile from '@/components/Profile/UserProfile.vue'
 import UserTaskAssignedReview from '../components/Profile/UserTaskAssignedReview.vue'
 import NotFound from '../components/ui/NotFound.vue'
 import Home from '../Home.vue'
+import AdminUserList from '@/components/Admin/users/AdminUserList.vue'
+import Analytics from '@/components/Admin/Analytics/Analytics.vue'
+import AdminAssignedTaskUser from '@/components/Admin/assigned_tasks/AdminAssignedTaskUser.vue'
+import UserProfileAdmin from '@/components/Admin/users/UserProfile.vue'
+
 export default createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -34,7 +39,32 @@ export default createRouter({
         {
           path: '/admin',
           name: 'Admin',
-          component: AdminDashboard
+          component: AdminDashboard,
+          redirect: '/admin/users',
+          children: [
+            {
+              path: 'users',
+              name: 'AdminUserList',
+              component: AdminUserList,
+              children: [
+                {
+                  path: 'profile/:id',
+                  component: UserProfileAdmin,
+                  name: 'AdminUserProfile'
+                }
+              ]
+            },
+            {
+              path: 'analysis',
+              name: 'AdminAnalytics',
+              component: Analytics
+            },
+            {
+              path: 'assigned_tasks',
+              name: 'AdminAssignedTasks',
+              component: AdminAssignedTaskUser
+            }
+          ]
         },
         {
           path: '/profile',
