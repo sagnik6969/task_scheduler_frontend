@@ -8,14 +8,7 @@
       class="flex flex-col md:flex-row space-y-10 md:space-y-0 md:space-x-10"
     >
       <div class="md:w-1/2">
-        <user-list
-          @userSelected="
-            (user) => {
-              selectedUser = user
-            }
-          "
-          :users="users"
-        ></user-list>
+        <user-list></user-list>
       </div>
       <div v-if="selectedUser" class="md:w-1/2">
         <pie-chart :user="selectedUser"></pie-chart>
@@ -37,10 +30,8 @@ if (store.getters['adminUserList/userListStatus'] == null) {
   store.dispatch('adminUserList/fetchUserList')
 }
 
-// const props = defineProps(['users'])
 const users = computed(() => store.getters['adminUserList/userList'])
-
-const selectedUser = ref(null)
+const selectedUser = computed(() => store.getters['adminUserList/selectedUser'])
 
 const canDisplayBottomPart = ref(false)
 </script>

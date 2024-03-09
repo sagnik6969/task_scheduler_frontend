@@ -4,7 +4,8 @@ import axios from 'axios'
 const state = () => {
   return {
     userList: {},
-    userListStatus: null
+    userListStatus: null,
+    selectedUser: null
   }
 }
 
@@ -20,6 +21,9 @@ const getters = {
   },
   userListStatus(state) {
     return state.userListStatus
+  },
+  selectedUser(state) {
+    return state.selectedUser
   }
 }
 
@@ -29,6 +33,9 @@ const mutations = {
   },
   setUserListStatus(state, status) {
     state.userListStatus = status
+  },
+  setSelectedUser(state, user) {
+    state.selectedUser = user
   }
 }
 
@@ -43,6 +50,9 @@ const actions = {
       context.commit('setUserListStatus', 'failed')
       throw 'Unable to fetch user'
     }
+  },
+  selectUser(context, user) {
+    context.commit('setSelectedUser', user)
   }
 }
 

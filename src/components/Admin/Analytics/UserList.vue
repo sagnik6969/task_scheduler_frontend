@@ -5,9 +5,9 @@
     <div style="margin-bottom: 1.6rem"></div>
     <single-user-card
       v-for="user in paginatedUsers"
+      @click="selectUser(user)"
       :key="user.id"
       :user="user"
-      @userSelected="() => $emit('userSelected', user)"
     >
     </single-user-card>
     <div
@@ -58,17 +58,14 @@
 import SingleUserCard from './SingleUserCard.vue'
 import SearchBox from '@/components/ui/SearchBox.vue'
 import { computed, ref, defineProps } from 'vue'
-
-const props = defineProps({
-  users: Array
-})
-
+import { useStore } from 'vuex'
+const store = useStore()
 const filterText = ref('')
 const currentPage = ref(1)
 const usersPerPage = 4
 
 const filteredUsers = computed(() => {
-  return props.users.filter((user) => {
+  return store.getters['adminUserList/userList'].filter((user) => {
     return user.name.toLowerCase().includes(filterText.value.toLowerCase())
   })
 })
@@ -95,6 +92,9 @@ const nextPage = () => {
 
 const gotoPage = (pageNumber) => {
   currentPage.value = pageNumber
+}
+const selectUser = (user) => {
+  store.dispatch('adminUserList/selectUser', user)
 }
 </script>
 
