@@ -1,7 +1,7 @@
 <template>
   <div class="w-4/5 md:w-4/5 lg:w-3/5 xl:w-5/5 mx-auto space-y-10">
     <div>
-      <bar-chart @initialLoadingCompleted="canDisplayBottomPart = true"></bar-chart>
+      <bar-chart></bar-chart>
     </div>
     <div
       v-show="canDisplayBottomPart"
@@ -31,7 +31,9 @@ if (store.getters['adminUserList/userListStatus'] == null) {
 }
 
 const users = computed(() => store.getters['adminUserList/userList'])
-const selectedUser = computed(() => store.getters['adminUserList/selectedUser'])
+const selectedUser = computed(() => store.getters['analysis/selectedUser'])
 
-const canDisplayBottomPart = ref(false)
+const canDisplayBottomPart = computed(
+  () => store.getters['analysis/getbarchartStatistics'].initialLoadingComplete || false
+)
 </script>

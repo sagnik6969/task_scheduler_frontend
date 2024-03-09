@@ -4,8 +4,7 @@ import axios from 'axios'
 const state = () => {
   return {
     userList: {},
-    userListStatus: null,
-    selectedUser: null
+    userListStatus: null
   }
 }
 
@@ -21,9 +20,6 @@ const getters = {
   },
   userListStatus(state) {
     return state.userListStatus
-  },
-  selectedUser(state) {
-    return state.selectedUser
   }
 }
 
@@ -50,9 +46,6 @@ const actions = {
       context.commit('setUserListStatus', 'failed')
       throw 'Unable to fetch user'
     }
-  },
-  selectUser(context, user) {
-    context.commit('setSelectedUser', user)
   }
 }
 

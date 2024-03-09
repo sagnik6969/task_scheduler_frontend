@@ -94,7 +94,7 @@ const gotoPage = (pageNumber) => {
   currentPage.value = pageNumber
 }
 const selectUser = (user) => {
-  store.dispatch('adminUserList/selectUser', user)
+  store.dispatch('analysis/selectUser', user)
 }
 </script>
 
