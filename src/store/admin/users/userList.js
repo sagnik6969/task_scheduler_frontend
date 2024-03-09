@@ -3,14 +3,20 @@ import axios from 'axios'
 
 const state = () => {
   return {
-    userList: [],
+    userList: {},
     userListStatus: null
   }
 }
 
 const getters = {
   userList(state) {
-    return state.userList
+    return Object.values(state.userList) //|| []
+  },
+  user: (state) => (id) => {
+    return state.userList[id]
+  },
+  userListLength(state) {
+    return Object.keys(state.userList).length
   },
   userListStatus(state) {
     return state.userListStatus
@@ -41,6 +47,7 @@ const actions = {
 }
 
 export default {
+  namespaced: true,
   state,
   getters,
   mutations,

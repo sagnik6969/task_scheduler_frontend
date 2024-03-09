@@ -14,6 +14,7 @@ import Home from '../Home.vue'
 import AdminUserList from '@/components/Admin/users/AdminUserList.vue'
 import Analytics from '@/components/Admin/Analytics/Analytics.vue'
 import AdminAssignedTaskUser from '@/components/Admin/assigned_tasks/AdminAssignedTaskUser.vue'
+import UserProfileAdmin from '@/components/Admin/users/UserProfile.vue'
 
 export default createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -44,7 +45,14 @@ export default createRouter({
             {
               path: 'users',
               name: 'AdminUserList',
-              component: AdminUserList
+              component: AdminUserList,
+              children: [
+                {
+                  path: 'profile/:id',
+                  component: UserProfileAdmin,
+                  name: 'AdminUserProfile'
+                }
+              ]
             },
             {
               path: 'analysis',

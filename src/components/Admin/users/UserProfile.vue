@@ -2,20 +2,23 @@
   <div
     class="flex justify-center items-center h-full fixed top-0 left-0 w-full bg-gray-900 bg-opacity-80 z-50"
   >
-    <div class="relative">
+    <div class="relative max-w-2xl w-5/6">
       <div
         class="bg-white p-10 rounded-lg shadow-md relative w-3/3"
         :class="{ 'bg-gray-100  animate-pulse': loadingAction === true }"
       >
         <v-progress-linear
-          :active="loadingAction"
+          :active="
+            $store.getters['adminUserList/userListStatus'] == null ||
+            $store.getters['adminUserList/userListStatus'] == 'loading'
+          "
           indeterminate
           absolute
           bottom
           color="#C6A969"
         ></v-progress-linear>
         <button
-          @click="closeUserProfile"
+          @click="$router.push({ name: 'AdminUserList' })"
           class="absolute top-5 right-5 text-gray-600 hover:text-gray-800"
         >
           <svg
@@ -45,42 +48,32 @@
             </p>
           </div>
           <div class="flex items-center">
-            <div class="pie-chart w-24 h-24 relative" v-if="userDetails.tasks.length > 0">
-              <div
-                class="absolute inset-0 bg-red-300 rounded-full transform rotate-180"
-                :style="{ width: incompletePercentage + '%' }"
-              ></div>
-              <div
-                class="absolute inset-0 bg-green-300 rounded-full transform rotate-180"
-                :style="{ width: completePercentage + '%' }"
-              ></div>
-            </div>
-            <div class="text-center ml-4" v-if="userDetails.tasks.length > 0">
+            <div class="text-center ml-4" v-if="true">
               <div class="text-gray-800 text-lg font-bold mb-1">Task Status:</div>
               <div class="flex items-center">
                 <div class="bg-red-500 w-4 h-4 mr-1"></div>
-                <p class="text-red-600 font-bold mr-4">{{ crossedDeadlineCount }}</p>
+                <p class="text-red-600 font-bold mr-4">{{ userDetails.incomplete_tasks }}</p>
                 <div class="bg-green-500 w-4 h-4 mr-1"></div>
-                <p class="text-green-600 font-bold">{{ completeTaskCount }}</p>
+                <p class="text-green-600 font-bold">{{ userDetails.completed_tasks }}</p>
               </div>
             </div>
           </div>
         </div>
 
         <!-- Stars Rating -->
-        <div class="flex items-center mb-6" v-if="userDetails.tasks.length > 0">
+        <div class="flex items-center mb-6" v-if="true">
           <div class="text-gray-800 text-lg font-bold mr-4">Rating:</div>
           <div class="flex items-center">
             <template v-for="star in 5">
-              <v-icon v-if="star <= filledStars" :key="'star-filled-' + star"> mdi-star </v-icon>
+              <v-icon v-if="star <= 3" :key="'star-filled-' + star"> mdi-star </v-icon>
               <v-icon v-else :key="'star-outline-' + star"> mdi-star-outline </v-icon>
             </template>
           </div>
         </div>
 
-        <div class="text-center" v-if="userDetails.tasks.length == 0">
+        <!-- <div class="text-center" v-if="userDetails.tasks.length == 0">
           <p class="text-gray-800 text-lg font-bold mb-10">No tasks added</p>
-        </div>
+        </div> -->
         <!-- Options -->
         <div class="flex justify-between">
           <button
@@ -131,16 +124,20 @@
 
 <script>
 export default {
-  props: {
-    userDetails: Object
-  },
+  // props: {
+  //   userDetails: Object
+  // },
   data() {
     return {
       stars: 0,
       loadingAction: false
+      // userDetails: this.$store.getters['adminUserList/userList'][this.$route.params.id]
     }
   },
   computed: {
+    userDetails() {
+      return this.$store.getters['adminUserList/user'](this.$route.params.id) || {}
+    },
     incompleteTaskCount() {
       return this.userDetails.tasks.filter((task) => !task.is_completed).length
     },
