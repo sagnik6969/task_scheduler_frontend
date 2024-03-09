@@ -3,10 +3,13 @@
     <div class="w-4/5 md:w-4/5 lg:w-3/5 xl:w-5/5 mx-auto pb-5">
       <!-- <div v-if="taskListVisible" class="overlay"></div> -->
       <user-list-skeleton
-        v-if="$store.getters.userListStatus == null || $store.getters.userListStatus == 'loading'"
+        v-if="
+          $store.getters['adminUserList/userListStatus'] == null ||
+          $store.getters['adminUserList/userListStatus'] == 'loading'
+        "
       ></user-list-skeleton>
       <div
-        v-else-if="$store.getters.userList.length == 0"
+        v-else-if="$store.getters['adminUserList/userListLength'] == 0"
         class="text-center flex flex-col justify-center items-center"
       >
         <img src="@/assets/images/not_exist.jpg" alt="" width="200px" height="200px" />
@@ -21,7 +24,7 @@
           ></search-box>
           <button
             class="font-bold text-lg rounded-full p-1 hover:bg-slate-100 duration-200 mr-2"
-            @click="$store.dispatch('fetchUserList')"
+            @click="$store.dispatch('adminUserList/fetchUserList')"
           >
             <v-icon icon="mdi-refresh"></v-icon>
           </button>
@@ -41,7 +44,14 @@
         >
           <div
             class="flex items-center space-x-4 mb-4 md:mb-0 w-full md:w-3/5 relative cursor-pointer"
-            @click="viewProfile(user)"
+            @click="
+              $router.push({
+                name: 'AdminUserProfile',
+                params: {
+                  id: user.id
+                }
+              })
+            "
           >
             <p class="text-lg w-1/2 text-center md:text-left">{{ user.name }}</p>
             <p class="text-sm text-gray-500 w-1/2 text-center md:text-left">
@@ -60,7 +70,14 @@
               <v-icon
                 icon="mdi-table-account"
                 class="transform transition duration-300 hover:scale-110"
-                @click="viewProfile(user)"
+                @click="
+                  $router.push({
+                    name: 'AdminUserProfile',
+                    params: {
+                      id: user.id
+                    }
+                  })
+                "
               ></v-icon>
             </tooltip>
             <tooltip text="Assign Task">
@@ -152,6 +169,7 @@
         @close="isTaskFromVisisble = null"
       ></task-form>
     </div> -->
+    <router-view></router-view>
   </div>
 </template>
 
@@ -177,7 +195,7 @@ const isDeleting = ref(false)
 const makingAdmin = ref(false)
 
 const filteredUsers = computed(() => {
-  return store.getters.userList.filter((user) => {
+  return store.getters['adminUserList/userList'].filter((user) => {
     return user.name.toLowerCase().includes(searchQuery.value.toLowerCase())
   })
 })
@@ -185,7 +203,7 @@ const filteredUsers = computed(() => {
 const loadUsers = async () => {
   try {
     loading.value = true
-    await store.dispatch('fetchUserList')
+    await store.dispatch('adminUserList/fetchUserList')
   } catch (error) {
     toast.error(error)
   } finally {
@@ -193,7 +211,7 @@ const loadUsers = async () => {
   }
 }
 
-if (store.getters.userListStatus == null) {
+if (store.getters['adminUserList/userListStatus'] == null) {
   loadUsers()
 }
 

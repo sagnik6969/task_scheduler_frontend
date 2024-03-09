@@ -6,7 +6,7 @@ import userList from './admin/users/userList'
 const store = createStore({
   modules: {
     userTasks,
-    userList
+    adminUserList: userList
   },
   state() {
     return {

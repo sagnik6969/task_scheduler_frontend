@@ -33,12 +33,12 @@ import { useStore } from 'vuex'
 
 const store = useStore()
 
-if (store.getters.userListStatus == null) {
-  store.dispatch('fetchUserList')
+if (store.getters['adminUserList/userListStatus'] == null) {
+  store.dispatch('adminUserList/fetchUserList')
 }
 
 // const props = defineProps(['users'])
-const users = computed(() => store.getters.userList)
+const users = computed(() => store.getters['adminUserList/userList'])
 
 const selectedUser = ref(null)
 
