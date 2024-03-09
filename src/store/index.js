@@ -2,11 +2,13 @@ import { createStore } from 'vuex'
 import axios from 'axios'
 import userTasks from './userTasks'
 import userList from './admin/users/userList'
+import analysis from './admin/analysis/analysis'
 
 const store = createStore({
   modules: {
     userTasks,
-    adminUserList: userList
+    adminUserList: userList,
+    analysis: analysis
   },
   state() {
     return {

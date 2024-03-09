@@ -2,13 +2,7 @@
   <div>
     <div v-if="loading" class="w-full h-96 flex items-center justify-center z-50">
       <!-- Skeleton Loader -->
-      <div class="skeleton-chart flex flex-col sm:flex-row items-center justify-center">
-        <div class="skeleton-bar bg-gray-300 h-4 w-16 mb-2 sm:mb-0 sm:mr-2"></div>
-        <div class="skeleton-bar bg-gray-300 h-8 w-16 mb-2 sm:mb-0 sm:mr-2"></div>
-        <div class="skeleton-bar bg-gray-300 h-12 w-16 mb-2 sm:mb-0 sm:mr-2"></div>
-        <div class="skeleton-bar bg-gray-300 h-16 w-16 mb-2 sm:mb-0 sm:mr-2"></div>
-        <div class="skeleton-bar bg-gray-300 h-20 w-16 mb-2 sm:mb-0 sm:mr-2"></div>
-      </div>
+      <bar-skeleton />
     </div>
 
     <div class="relative" v-else>
@@ -19,30 +13,7 @@
         class="responsive-chart"
       ></apexchart>
       <div class="absolute top-0 right-10 flex items-center justify-center text-slate-600">
-        <span
-          class="material-symbols-outlined cursor-pointer"
-          @click="
-            async () => {
-              try {
-                loading = true
-                const res = await axios.get(`/api/admin/analysis/all_user_task_progress_analysis`)
-                console.log(res)
-                chartSeries[0].data = res.data.series
-                chartLabels = res.data.labels
-                loading = false
-
-                if (!initialLoadingComplete) {
-                  initialLoadingComplete = true
-                  $emit('initialLoadingCompleted')
-                }
-              } catch (error) {
-                toast.error('Unable to fetch data')
-              }
-            }
-          "
-        >
-          refresh</span
-        >
+        <span class="material-symbols-outlined cursor-pointer" @click="refreshData"> refresh </span>
       </div>
     </div>
   </div>
@@ -52,21 +23,26 @@
 import axios from 'axios'
 import { computed, ref, watchEffect } from 'vue'
 import { useToast } from 'vue-toast-notification'
-const emit = defineEmits(['initialLoadingCompleted'])
-
+import { useStore } from 'vuex'
+import BarSkeleton from '@/components/ui/Shimmer/BarSkeleton.vue'
 const toast = useToast()
+const store = useStore()
 
-const chartSeries = ref([
+const chartSeries = computed(() => [
   {
     name: 'series-1',
-    data: []
+    data: store.getters['analysis/getbarchartStatistics'].data?.series || []
   }
 ])
 
-const chartLabels = ref([])
-const loading = ref(false)
+const chartLabels = computed(
+  () => store.getters['analysis/getbarchartStatistics'].data?.labels || []
+)
+const loading = computed(() => store.getters['analysis/getbarchartStatistics'].loading || false)
 
-const initialLoadingComplete = ref(false)
+const initialLoadingComplete = computed(
+  () => store.getters['analysis/getbarchartStatistics'].initialLoadingComplete || false
+)
 
 const chartOptions = computed(() => ({
   chart: {
@@ -137,53 +113,24 @@ const chartOptions = computed(() => ({
 }))
 
 watchEffect(async () => {
-  try {
-    loading.value = true
-    const res = await axios.get(`/api/admin/analysis/all_user_task_progress_analysis`)
-    //   console.log(res.data.series)
-    chartSeries.value[0].data = res.data.series
-    // console.log(series.value)
-
-    chartLabels.value = res.data.labels
-    loading.value = false
-    if (initialLoadingComplete.value == false) {
-      initialLoadingComplete.value = true
-      emit('initialLoadingCompleted')
+  if (!initialLoadingComplete.value) {
+    try {
+      await store.dispatch('analysis/fetchbarchartStatistics')
+    } catch (error) {
+      toast.error('Unable to fetch data')
     }
+  }
+})
+const refreshData = async () => {
+  try {
+    await store.dispatch('analysis/fetchbarchartStatistics')
   } catch (error) {
     toast.error('Unable to fetch data')
   }
-})
+}
 </script>
 
 <style scoped>
-.skeleton-chart {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-evenly;
-  width: 100%;
-}
-
-.skeleton-bar {
-  animation: loadingAnimation 1s infinite alternate;
-}
-
-@keyframes loadingAnimation {
-  from {
-    opacity: 0.5;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-/* Responsive Layout */
-@media (max-width: 768px) {
-  .skeleton-chart {
-    flex-direction: row;
-    justify-content: space-around;
-  }
-}
 .responsive-chart {
   width: 100%;
 }

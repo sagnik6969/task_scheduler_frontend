@@ -10,7 +10,6 @@
         <option value="completed_vs_pending_tasks" selected>Completed vs Pending Tasks</option>
         <option value="task_distribution_by_progress">Task Distribution by Progress</option>
         <option value="task_distribution_by_priority">Task Distribution by Priority</option>
-        <!-- <option value="">Task Distribution by Deadline</option> -->
       </select>
       <select
         class="w-full md:w-auto border-none focus:[box-shadow:none] bg-black rounded-md shadow font-medium text-white"
@@ -24,15 +23,6 @@
         <option value="all">All Time</option>
       </select>
     </div>
-
-    <!-- <div v-if="statLoading" class="w-full my-10 md:my-24 flex items-center justify-center">
-      <v-progress-circular
-        :size="isMobile ? 30 : 50"
-        :width="isMobile ? 3 : 5"
-        color="purple"
-        indeterminate
-      ></v-progress-circular>
-    </div> -->
     <div
       class="py-10 flex justify-center items-center text-slate-800 text-xl font-medium px-14 text-center h-60 bg-slate-100 mt-5 rounded-lg"
       v-if="user.completed_tasks == 0 && user.incomplete_tasks == 0"
@@ -40,7 +30,7 @@
       <p>Looks like the user haven't added any tasks yet !</p>
     </div>
     <div
-      v-else-if="series.length == 0"
+      v-else-if="series.length === 0"
       class="mt-5 bg-gray-100 flex items-center justify-center text-2xl h-64 mb-10 text-gray-500 font-semibold loading-animation"
     >
       Loading ...
@@ -61,9 +51,10 @@
 <script setup>
 import axios from 'axios'
 import { computed, defineProps, ref, watchEffect } from 'vue'
+import { useStore } from 'vuex'
 
 const props = defineProps(['user'])
-
+const store = useStore()
 const isMobile = computed(() => window.innerWidth <= 768)
 const statsLoading = ref(false)
 const options = computed(() => ({
@@ -78,23 +69,20 @@ const currentDivWidth = computed(() => {
 })
 
 const statLoading = ref(false)
-const series = ref([])
-const labels = ref([])
+
 const timeFilter = ref('all')
 const statistics = ref('completed_vs_pending_tasks')
-
+const series = computed(() => store.getters['analysis/getUserStatistics'].series || [])
+const labels = computed(() => store.getters['analysis/getUserStatistics'].labels || [])
 watchEffect(async () => {
   try {
     statLoading.value = true
     statsLoading.value = true
-    const res = await axios.get(`/api/user/analysis?admin=true&user_id=${props.user.id}`, {
-      params: {
-        time_range: timeFilter.value,
-        statistics: statistics.value
-      }
+    await store.dispatch('analysis/fetchUserStatistics', {
+      userId: props.user.id,
+      timeRange: timeFilter.value,
+      statistics: statistics.value
     })
-    series.value = res.data.series
-    labels.value = res.data.labels
     statLoading.value = false
     statsLoading.value = false
   } catch {

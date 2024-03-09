@@ -1,21 +1,14 @@
 <template>
   <div class="w-4/5 md:w-4/5 lg:w-3/5 xl:w-5/5 mx-auto space-y-10">
     <div>
-      <bar-chart @initialLoadingCompleted="canDisplayBottomPart = true"></bar-chart>
+      <bar-chart></bar-chart>
     </div>
     <div
       v-show="canDisplayBottomPart"
       class="flex flex-col md:flex-row space-y-10 md:space-y-0 md:space-x-10"
     >
       <div class="md:w-1/2">
-        <user-list
-          @userSelected="
-            (user) => {
-              selectedUser = user
-            }
-          "
-          :users="users"
-        ></user-list>
+        <user-list></user-list>
       </div>
       <div v-if="selectedUser" class="md:w-1/2">
         <pie-chart :user="selectedUser"></pie-chart>
@@ -37,10 +30,10 @@ if (store.getters['adminUserList/userListStatus'] == null) {
   store.dispatch('adminUserList/fetchUserList')
 }
 
-// const props = defineProps(['users'])
 const users = computed(() => store.getters['adminUserList/userList'])
+const selectedUser = computed(() => store.getters['analysis/selectedUser'])
 
-const selectedUser = ref(null)
-
-const canDisplayBottomPart = ref(false)
+const canDisplayBottomPart = computed(
+  () => store.getters['analysis/getbarchartStatistics'].initialLoadingComplete || false
+)
 </script>

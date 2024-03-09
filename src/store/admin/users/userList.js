@@ -29,6 +29,9 @@ const mutations = {
   },
   setUserListStatus(state, status) {
     state.userListStatus = status
+  },
+  setSelectedUser(state, user) {
+    state.selectedUser = user
   }
 }
 
