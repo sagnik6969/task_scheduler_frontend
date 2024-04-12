@@ -1,18 +1,13 @@
 <template>
   <div>
     <div class="w-4/5 md:w-4/5 lg:w-3/5 xl:w-5/5 mx-auto pb-5">
-      <!-- <div v-if="taskListVisible" class="overlay"></div> -->
+      <div v-if="taskListVisible" class="overlay"></div>
       <user-list-skeleton
         v-if="
           $store.getters['adminUserList/userListStatus'] == null ||
           $store.getters['adminUserList/userListStatus'] == 'loading'
         "
       ></user-list-skeleton>
-      <user-task-list
-        v-if="taskListVisible"
-        :userId="currentUser"
-        @close="taskListVisible = false"
-      ></user-task-list>
       <div
         v-else-if="$store.getters['adminUserList/userListLength'] == 0"
         class="text-center flex flex-col justify-center items-center"
@@ -57,7 +52,6 @@
                 }
               })
             "
-            
           >
             <p class="text-lg w-1/2 text-center md:text-left">{{ user.name }}</p>
             <p class="text-sm text-gray-500 w-1/2 text-center md:text-left">
@@ -111,12 +105,7 @@
               <v-icon
                 icon="mdi-eye"
                 class="h-6 w-6 cursor-pointer transform transition duration-300 hover:scale-110"
-                @click="$router.push({
-                    name: 'AdminUserTasks',
-                    params: {
-                      id: user.id
-                    }
-                  })"
+                @click="showtasks(user.id)"
               />
             </tooltip>
           </div>
@@ -153,6 +142,13 @@
         </div> -->
       </div>
     </div>
+    <transition name="fade">
+      <div v-if="taskListVisible" class="user-task-list-container">
+        <UserTaskList 
+          @close="closeTask"
+        />
+      </div>
+    </transition>
     <!-- <transition name="fade">
       <div v-if="isViewingProfile" class="user-profile-container">
         <user-profile
@@ -185,6 +181,10 @@ import { useToast } from 'vue-toast-notification'
 import Tooltip from '../../ui/Tooltip.vue'
 import { useStore } from 'vuex'
 import { computed, ref, watch } from 'vue'
+import { useRouter } from 'vue-router'
+import UserTaskList from './UserTaskList.vue'
+const router = useRouter()
+const taskListVisible = ref(false)
 
 const toast = useToast()
 const store = useStore()
@@ -200,7 +200,15 @@ const filteredUsers = computed(() => {
     return user.name.toLowerCase().includes(searchQuery.value.toLowerCase())
   })
 })
-
+const showtasks =(userid)=>{
+    taskListVisible.value = true
+  router.push({
+    name: 'AdminUserTasks',
+    params: {
+      id: userid
+    }
+  })
+}
 const loadUsers = async () => {
   try {
     loading.value = true
@@ -215,7 +223,12 @@ const loadUsers = async () => {
 if (store.getters['adminUserList/userListStatus'] == null) {
   loadUsers()
 }
-
+const closeTask = () => {
+  taskListVisible.value = false
+  router.push({
+    name: 'AdminUserList'
+  })
+}
 function formatTime(time) {
   const currentTime = new Date()
   const timestamp = new Date(time)

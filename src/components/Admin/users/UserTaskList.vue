@@ -2,7 +2,7 @@
   <div class="w-full md:w-4/5 mx-auto bg-white p-5 md:p-10 rounded-lg relative">
     <button
       class="absolute top-0 right-0 mt-2 mr-2 text-red px-3 py-2 rounded-full"
-      @click="closeTaskList"
+      @click="$emit('close')"
     >
       <svg class="w-6 h-6" viewBox="0 0 20 20" fill="currentColor">
         <path
@@ -322,35 +322,48 @@ import { useStore } from 'vuex'
 const toast = useToast()
 const router = useRouter()
 const store=useStore()
-let tasks = ref([])
-let searchQuery = ref('')
-let currentPage = ref(1)
-let pageSize = ref(3)
-let sortColumn = ref('')
-let sortOrder = ref('asc')
-let showFilterMenu = ref(false)
-let deletingTask = ref(false)
-let filterStatus = ref('all')
+const tasks = ref([])
+    const searchQuery = ref('')
+    const currentPage = ref(1)
+    const pageSize = ref(3)
+    const sortColumn = ref('')
+    const sortOrder = ref('asc')
+    const showFilterMenu = ref(false)
+    const deletingTask = ref(false)
+    const filterStatus = ref('all')
 
 const loadTasks = async () => {
   try {
-     await store.dispatch('AdminTasks/fetchUserTasks', router.currentRoute.value.params.id)
-     await store.getters['AdminTasks/getUserTasks']
+    const response = await store.dispatch('AdminTasks/fetchUserTasks', router.currentRoute.value.params.id)
+    tasks.value = await store.getters['AdminTasks/getuserTask']
+    console.log(tasks.value)
   } catch (error) {
     console.log(error)
   }
 }
-if (store.getters['AdminTasks/userTaskStatus'] == null) {
-    loadTasks()
-}
+onMounted(() => {
+  loadTasks()
+})
+
 const formatDate = (dateString) => {
-  const date = new Date(dateString)
-  return date.toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric'
-  })
-}
+      const date = new Date(dateString)
+      return date.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
+      })
+    }
+
+
+const formattedTasks = computed(() => {
+      if (!searchQuery.value.trim()) return tasks.value
+      return tasks.value.filter((task) =>
+        task.title.toLowerCase().includes(searchQuery.value.toLowerCase())
+      )
+})
+const totalPages = computed(() => {
+   return Math.ceil(formattedTasks.value.length / pageSize.value)
+})
 
 const confirmDeleteTask = (task) => {
   if (window.confirm(`Are you sure you want to delete the task "${task.title}"?`)) {
@@ -380,39 +393,55 @@ const changePage = (page) => {
 }
 
 const closeTaskList = () => {
-  // done
-  emit('task-closed')
+  emit('close')
 }
 
 const sortBy = (column) => {
-  if (sortColumn.value === column) {
-    sortOrder.value = sortOrder.value === 'asc' ? 'desc' : 'asc'
-  } else {
-    sortColumn.value = column
-    sortOrder.value = 'asc'
-  }
-  if (column === 'progress') {
-    filteredTasks.value.sort((a, b) => {
-      if (sortOrder.value === 'asc') {
-        return a[column] - b[column]
+      if (sortColumn.value === column) {
+        sortOrder.value = sortOrder.value === 'asc' ? 'desc' : 'asc'
       } else {
-        return b[column] - a[column]
+        sortColumn.value = column
+        sortOrder.value = 'asc'
       }
-    })
-  } else {
-    filteredTasks.value.sort((a, b) => {
-      if (sortOrder.value === 'asc') {
-        return a[column] < b[column] ? -1 : 1
+      if (column === 'progress') {
+        formattedTasks.value.sort((a, b) => {
+          if (sortOrder.value === 'asc') {
+            return a[column] - b[column]
+          } else {
+            return b[column] - a[column]
+          }
+        })
       } else {
-        return a[column] > b[column] ? -1 : 1
+        formattedTasks.value.sort((a, b) => {
+          if (sortOrder.value === 'asc') {
+            return a[column] < b[column] ? -1 : 1
+          } else {
+            return a[column] > b[column] ? -1 : 1
+          }
+        })
       }
-    })
-  }
-}
+    }
+
 
 const toggleFilterMenu = () => {
   showFilterMenu.value = !showFilterMenu.value
 }
+const filterTasks = (status) => {
+      if (status === 'all') {
+        formattedTasks.value = tasks.value
+      } else {
+        let task = []
+        const completedStatus = status === 'true'
+        task = tasks.value.filter((task) => task.is_completed === completedStatus)
+        // console.log(task)
+      }
+      showFilterMenu.value = false
+    }
+
+const paginatedTasks = computed(() => {
+      const startIndex = (currentPage.value - 1) * pageSize.value
+      return formattedTasks.value.slice(startIndex, startIndex + pageSize.value)
+    })
 
 </script>
 

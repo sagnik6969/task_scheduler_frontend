@@ -9,7 +9,6 @@ const state = () => {
 
 const getters = {
   getuserTask(state) {
-    console.log('state.userTask:', state.userTask)
     return state.userTask
   },
   userTaskLength(state) {
@@ -34,7 +33,6 @@ const actions = {
     try {
       commit('setuserTaskStatus', 'loading')
       const userResponse = await axios.get(`/api/admin/users/${id}`)
-      console.log('userResponse:', userResponse)
       commit('setuserTask', userResponse.data.user.tasks)
       commit('setuserTaskStatus', 'success')
     } catch (error) {

@@ -55,7 +55,6 @@ export default createRouter({
                 },
                 {
                   path: ':id/tasks',
-                  component: UserTaskList,
                   name: 'AdminUserTasks',
                   props: true
                 }
