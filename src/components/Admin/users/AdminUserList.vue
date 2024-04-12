@@ -8,6 +8,11 @@
           $store.getters['adminUserList/userListStatus'] == 'loading'
         "
       ></user-list-skeleton>
+      <user-task-list
+        v-if="taskListVisible"
+        :userId="currentUser"
+        @close="taskListVisible = false"
+      ></user-task-list>
       <div
         v-else-if="$store.getters['adminUserList/userListLength'] == 0"
         class="text-center flex flex-col justify-center items-center"
@@ -52,6 +57,7 @@
                 }
               })
             "
+            
           >
             <p class="text-lg w-1/2 text-center md:text-left">{{ user.name }}</p>
             <p class="text-sm text-gray-500 w-1/2 text-center md:text-left">
@@ -105,7 +111,12 @@
               <v-icon
                 icon="mdi-eye"
                 class="h-6 w-6 cursor-pointer transform transition duration-300 hover:scale-110"
-                @click="openTaskList(user)"
+                @click="$router.push({
+                    name: 'AdminUserTasks',
+                    params: {
+                      id: user.id
+                    }
+                  })"
               />
             </tooltip>
           </div>
@@ -149,16 +160,6 @@
           @delete-user="deleteUser"
           @make-admin="makeAdmin"
           @close-user-profile="closeUserProfile"
-        />
-      </div>
-    </transition>
-    <transition name="fade">
-      <div v-if="taskListVisible" class="user-task-list-container">
-        <user-task-list
-          :alltasks="selectedUserTasks"
-          :user="currentUser"
-          @close-task-list="closeTaskList"
-          @task-closed="closeTaskList"
         />
       </div>
     </transition>
