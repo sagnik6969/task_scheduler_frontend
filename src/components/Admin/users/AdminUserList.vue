@@ -151,6 +151,13 @@
         />
       </div>
     </transition>
+    <div v-if="isTaskFromVisisble !== null" class="user-task-assign-container">
+      <task-form
+        :userId="isTaskFromVisisble"
+        :admin="Admin"
+        @close="closeTask"
+      ></task-form>
+    </div> 
     <!-- <transition name="fade">
       <div v-if="isViewingProfile" class="user-profile-container">
         <user-profile
@@ -160,14 +167,8 @@
           @close-user-profile="closeUserProfile"
         />
       </div>
-    </transition>
-    <div v-if="isTaskFromVisisble !== null" class="user-task-assign-container">
-      <task-form
-        :userId="isTaskFromVisisble"
-        :admin="currentRouteName"
-        @close="isTaskFromVisisble = null"
-      ></task-form>
-    </div> -->
+    </transition>-->
+
     <router-view></router-view>
   </div>
 </template>
@@ -176,7 +177,7 @@
 // import SearchFilter from '../SearchFilter.vue'
 // import UserProfile from './UserProfile.vue'
 // import UserTaskList from './UserTaskList.vue'
-// import TaskForm from '../../tasks/TaskForm.vue'
+import TaskForm from '../../tasks/TaskForm.vue'
 import UserListSkeleton from '../../ui/Shimmer/admin/UserListSkeleton.vue'
 import SearchBox from '../../ui/SearchBox.vue'
 import { useToast } from 'vue-toast-notification'
@@ -190,10 +191,10 @@ const taskListVisible = ref(false)
 let userid=ref(null)
 const toast = useToast()
 const store = useStore()
-
+const Admin =ref(false)
 const loading = ref(false)
 const searchQuery = ref('')
-
+const isTaskFromVisisble = ref(null)
 const isDeleting = ref(false)
 const makingAdmin = ref(false)
 
@@ -212,6 +213,20 @@ const showtasks =(userId)=>{
     }
   })
 }
+const makeAdmin = async (user) => {
+  try {
+    if (window.confirm(`Are you sure you want to make ${user.name} Admin"?`)) {
+      makingAdmin.value = true
+      await store.dispatch('adminUserList/makeAdmin', user.id)
+      toast.info(`${user.name} is now admin .`)
+      loadUsers()
+    }
+  } catch (error) {
+    console.error('Error deleting user:', error)
+    alert('Failed to delete user. Please try again.')
+  }
+}
+
 const loadUsers = async () => {
   try {
     loading.value = true
@@ -222,12 +237,29 @@ const loadUsers = async () => {
     loading.value = false
   }
 }
+const assignTask = async (userId) => {
+  try {
+    userid=userId
+    isTaskFromVisisble.value = userId
+    router.push({
+      name: 'AdminAssignTask',
+      params: {
+        id: userId
+      }
+    })
+    Admin.value=true
 
+  } catch (error) {
+    console.error('Error assigning task:', error)
+    alert('Failed to assign task. Please try again.')
+  }
+}
 if (store.getters['adminUserList/userListStatus'] == null) {
   loadUsers()
 }
 const closeTask = () => {
   taskListVisible.value = false
+  isTaskFromVisisble.value = null
   router.push({
     name: 'AdminUserList'
   })
@@ -245,6 +277,19 @@ function formatTime(time) {
     return `${Math.floor(diff / 3600)} hours ago`
   } else {
     return `${Math.floor(diff / 86400)} days ago`
+  }
+}
+const deleteUser = async (user) => {
+  try {
+    if (window.confirm(`Are you sure you want to delete ${user.name}"?`)) {
+      isDeleting.value = true
+      await store.dispatch('adminUserList/deleteUser', user.id)
+      toast.info(`${user.name} is deleted successfully`)
+      loadUsers()
+    }
+  } catch (error) {
+    console.error('Error deleting user:', error)
+    alert('Failed to delete user. Please try again.')
   }
 }
 </script>

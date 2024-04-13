@@ -66,7 +66,10 @@
           :class="{ 'animate-pulse': deletingTask }"
         >
           <!-- Column Headers -->
-          <thead class="bg-gray-50" v-if="store.getters['AdminTasks/userTaskLength'].length !== 0">
+          <thead
+            class="bg-gray-50"
+            v-if="store.getters['AdminTasks/userTaskLength'].length !== 0"
+          >
             <tr>
               <th
                 scope="col"
@@ -88,7 +91,12 @@
                       clip-rule="evenodd"
                     />
                   </svg>
-                  <svg v-else class="w-4 h-4 inline" viewBox="0 0 20 20" fill="currentColor">
+                  <svg
+                    v-else
+                    class="w-4 h-4 inline"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                  >
                     <path
                       fill-rule="evenodd"
                       d="M7.293 12.293a1 1 0 011.414 0L10 13.586l1.293-1.293a1 1 0 111.414 1.414l-2 2a1 1 0 01-1.414 0l-2-2a1 1 0 010-1.414z"
@@ -117,7 +125,12 @@
                       clip-rule="evenodd"
                     />
                   </svg>
-                  <svg v-else class="w-4 h-4 inline" viewBox="0 0 20 20" fill="currentColor">
+                  <svg
+                    v-else
+                    class="w-4 h-4 inline"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                  >
                     <path
                       fill-rule="evenodd"
                       d="M7.293 12.293a1 1 0 011.414 0L10 13.586l1.293-1.293a1 1 0 111.414 1.414l-2 2a1 1 0 01-1.414 0l-2-2a1 1 0 010-1.414z"
@@ -147,7 +160,12 @@
                       clip-rule="evenodd"
                     />
                   </svg>
-                  <svg v-else class="w-4 h-4 inline" viewBox="0 0 20 20" fill="currentColor">
+                  <svg
+                    v-else
+                    class="w-4 h-4 inline"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                  >
                     <path
                       fill-rule="evenodd"
                       d="M7.293 12.293a1 1 0 011.414 0L10 13.586l1.293-1.293a1 1 0 111.414 1.414l-2 2a1 1 0 01-1.414 0l-2-2a1 1 0 010-1.414z"
@@ -175,7 +193,12 @@
                       clip-rule="evenodd"
                     />
                   </svg>
-                  <svg v-else class="w-4 h-4 inline" viewBox="0 0 20 20" fill="currentColor">
+                  <svg
+                    v-else
+                    class="w-4 h-4 inline"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                  >
                     <path
                       fill-rule="evenodd"
                       d="M7.293 12.293a1 1 0 011.414 0L10 13.586l1.293-1.293a1 1 0 111.414 1.414l-2 2a1 1 0 01-1.414 0l-2-2a1 1 0 010-1.414z"
@@ -205,11 +228,11 @@
                 <span
                   :class="{
                     'text-green-500': task.is_completed,
-                    'text-red-500': !task.is_completed
+                    'text-red-500': !task.is_completed,
                   }"
                   class="text-xs md:text-sm"
                 >
-                  {{ task.is_completed ? 'Completed' : 'Pending' }}
+                  {{ task.is_completed ? "Completed" : "Pending" }}
                 </span>
               </td>
               <td class="px-3 md:px-6 py-3 md:py-4 whitespace-nowrap">
@@ -252,7 +275,7 @@
                   :class="{
                     'bg-black  cursor-not-allowed opacity-50 text-xs md:text-sm hover:bg-blaxk':
                       task.is_completed,
-                    'bg-black  rounded-lg text-xs md:text-sm hover:bg-red-600': !task.is_completed
+                    'bg-black  rounded-lg text-xs md:text-sm hover:bg-red-600': !task.is_completed,
                   }"
                   class="text-white px-3 md:px-4 py-2 rounded-lg"
                   @click="confirmDeleteTask(task)"
@@ -268,13 +291,23 @@
               </td>
             </tr>
             <tr v-if="store.getters['AdminTasks/userTaskLength'].length === 0">
-              <td class="px-3 md:px-6 py-4 whitespace-nowrap text-center text-gray-500" colspan="5">
+              <td
+                class="px-3 md:px-6 py-4 whitespace-nowrap text-center text-gray-500"
+                colspan="5"
+              >
                 <!-- <div class="flex-center no-tasks-message">
                   <p>No tasks found.</p>
                 </div> -->
                 <div class="text-center flex flex-col justify-center items-center">
-                  <img src="@/assets/images/No_data.jpg" alt="" width="250px" height="250px" />
-                  <p class="text-gray-500 mt-2 mb-2 text-xl font-bold">No tasks found...</p>
+                  <img
+                    src="@/assets/images/No_data.jpg"
+                    alt=""
+                    width="250px"
+                    height="250px"
+                  />
+                  <p class="text-gray-500 mt-2 mb-2 text-xl font-bold">
+                    No tasks found...
+                  </p>
                 </div>
               </td>
             </tr>
@@ -290,7 +323,12 @@
         @click="changePage(currentPage - 1)"
         :disabled="currentPage === 1"
       >
-        <img src="@/assets/images/db-arrow-rev.png" alt="Previous" width="16" height="20px" />
+        <img
+          src="@/assets/images/db-arrow-rev.png"
+          alt="Previous"
+          width="16"
+          height="20px"
+        />
       </button>
       <button
         v-for="page in totalPages"
@@ -307,143 +345,154 @@
         @click="changePage(currentPage + 1)"
         :disabled="currentPage === totalPages"
       >
-        <img src="@/assets/images/db-arrow-fwd.png" alt="Previous" width="16" height="20px" />
+        <img
+          src="@/assets/images/db-arrow-fwd.png"
+          alt="Previous"
+          width="16"
+          height="20px"
+        />
       </button>
     </div>
   </div>
 </template>
 
 <script setup>
-import axios from 'axios'
-import { useToast } from 'vue-toast-notification'
-import { ref, computed, onMounted, onBeforeUnmount, onUnmounted, onUpdated, watch, onBeforeMount } from 'vue'
-import { useRouter } from 'vue-router'
-import { useStore } from 'vuex'
-const toast = useToast()
-const router = useRouter()
-const store = useStore()
-const props=defineProps(['userId'])
-const tasks = ref([])
-    const searchQuery = ref('')
-    const currentPage = ref(1)
-    const pageSize = ref(3)
-    const sortColumn = ref('')
-    const sortOrder = ref('asc')
-    const showFilterMenu = ref(false)
-    const deletingTask = ref(false)
-    const filterStatus = ref('all')
+import axios from "axios";
+import { useToast } from "vue-toast-notification";
+import {
+  ref,
+  computed,
+  onMounted,
+  onBeforeUnmount,
+  onUnmounted,
+  onUpdated,
+  watch,
+  onBeforeMount,
+} from "vue";
+import { useRouter } from "vue-router";
+import { useStore } from "vuex";
+const toast = useToast();
+const router = useRouter();
+const store = useStore();
+const props = defineProps(["userId"]);
+const tasks = ref([]);
+const searchQuery = ref("");
+const currentPage = ref(1);
+const pageSize = ref(3);
+const sortColumn = ref("");
+const sortOrder = ref("asc");
+const showFilterMenu = ref(false);
+const deletingTask = ref(false);
+const filterStatus = ref("all");
 
 const loadTasks = async () => {
   try {
-    await store.dispatch('AdminTasks/fetchUserTasks', props.userId)
-      tasks.value =await store.getters['AdminTasks/getuserTask']
-      console.log(tasks.value)
+    await store.dispatch("AdminTasks/fetchUserTasks", props.userId);
+    tasks.value = await store.getters["AdminTasks/getuserTask"];
+    console.log(tasks.value);
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
-}
+};
 onMounted(() => {
-    loadTasks()
-})
+  loadTasks();
+});
 
 const formatDate = (dateString) => {
-      const date = new Date(dateString)
-      return date.toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric'
-      })
-    }
-
+  const date = new Date(dateString);
+  return date.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
+};
 
 const formattedTasks = computed(() => {
-      if (!searchQuery.value.trim()) return tasks.value
-      return tasks.value.filter((task) =>
-        task.title.toLowerCase().includes(searchQuery.value.toLowerCase())
-      )
-})
+  if (!searchQuery.value.trim()) return tasks.value;
+  return tasks.value.filter((task) =>
+    task.title.toLowerCase().includes(searchQuery.value.toLowerCase())
+  );
+});
 const totalPages = computed(() => {
-   return Math.ceil(formattedTasks.value.length / pageSize.value)
-})
+  return Math.ceil(formattedTasks.value.length / pageSize.value);
+});
 
 const confirmDeleteTask = (task) => {
   if (window.confirm(`Are you sure you want to delete the task "${task.title}"?`)) {
-    deleteTask(task)
+    deleteTask(task);
   }
-}
+};
 
 const deleteTask = async (task) => {
   try {
-    deletingTask.value = true
-    const response = await axios.delete('/api/admin/tasks/' + task.id)
-    toast.info(response.data.message)
-    const userResponse = await axios.get('/api/admin/users/' + this.user)
-    tasks.value = userResponse.data.user.tasks
-    deletingTask.value = false
+    deletingTask.value = true;
+    const response = await axios.delete("/api/admin/tasks/" + task.id);
+    toast.info(response.data.message);
+    deletingTask.value = false;
+    const userResponse = await axios.get("/api/admin/users/" + this.user);
+    tasks.value = userResponse.data.user.tasks;
   } catch (error) {
-    toast.error(error.response.data.error)
+    toast.error(error.response.data.error);
   }
-}
+};
 
 const searchTasks = (event) => {
-  searchQuery.value = event.target.value
-}
+  searchQuery.value = event.target.value;
+};
 
 const changePage = (page) => {
-  currentPage.value = page
-}
+  currentPage.value = page;
+};
 
 const closeTaskList = () => {
-  emit('close')
-}
+  emit("close");
+};
 
 const sortBy = (column) => {
-      if (sortColumn.value === column) {
-        sortOrder.value = sortOrder.value === 'asc' ? 'desc' : 'asc'
+  if (sortColumn.value === column) {
+    sortOrder.value = sortOrder.value === "asc" ? "desc" : "asc";
+  } else {
+    sortColumn.value = column;
+    sortOrder.value = "asc";
+  }
+  if (column === "progress") {
+    formattedTasks.value.sort((a, b) => {
+      if (sortOrder.value === "asc") {
+        return a[column] - b[column];
       } else {
-        sortColumn.value = column
-        sortOrder.value = 'asc'
+        return b[column] - a[column];
       }
-      if (column === 'progress') {
-        formattedTasks.value.sort((a, b) => {
-          if (sortOrder.value === 'asc') {
-            return a[column] - b[column]
-          } else {
-            return b[column] - a[column]
-          }
-        })
+    });
+  } else {
+    formattedTasks.value.sort((a, b) => {
+      if (sortOrder.value === "asc") {
+        return a[column] < b[column] ? -1 : 1;
       } else {
-        formattedTasks.value.sort((a, b) => {
-          if (sortOrder.value === 'asc') {
-            return a[column] < b[column] ? -1 : 1
-          } else {
-            return a[column] > b[column] ? -1 : 1
-          }
-        })
+        return a[column] > b[column] ? -1 : 1;
       }
-    }
-
+    });
+  }
+};
 
 const toggleFilterMenu = () => {
-  showFilterMenu.value = !showFilterMenu.value
-}
+  showFilterMenu.value = !showFilterMenu.value;
+};
 const filterTasks = (status) => {
-      if (status === 'all') {
-        formattedTasks.value = tasks.value
-      } else {
-        let task = []
-        const completedStatus = status === 'true'
-        task = tasks.value.filter((task) => task.is_completed === completedStatus)
-        // console.log(task)
-      }
-      showFilterMenu.value = false
-    }
+  if (status === "all") {
+    formattedTasks.value = tasks.value;
+  } else {
+    let task = [];
+    const completedStatus = status === "true";
+    task = tasks.value.filter((task) => task.is_completed === completedStatus);
+    // console.log(task)
+  }
+  showFilterMenu.value = false;
+};
 
 const paginatedTasks = computed(() => {
-      const startIndex = (currentPage.value - 1) * pageSize.value
-      return formattedTasks.value.slice(startIndex, startIndex + pageSize.value)
-    })
-
+  const startIndex = (currentPage.value - 1) * pageSize.value;
+  return formattedTasks.value.slice(startIndex, startIndex + pageSize.value);
+});
 </script>
 
 <style scoped>
@@ -452,6 +501,7 @@ const paginatedTasks = computed(() => {
     opacity: 0.3;
   }
 }
+
 .animate-pulse {
   animation: pulse 1s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
