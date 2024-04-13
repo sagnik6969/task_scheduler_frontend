@@ -1,7 +1,8 @@
 <template>
   <div>
     <div class="w-4/5 md:w-4/5 lg:w-3/5 xl:w-5/5 mx-auto pb-5">
-      <div v-if="taskListVisible" class="overlay"></div>
+      <div v-if="taskListVisible ||        
+          $store.getters['AdminTasks/userTaskStatus'] == 'loading' " class="overlay"></div>
       <user-list-skeleton
         v-if="
           $store.getters['adminUserList/userListStatus'] == null ||
@@ -144,8 +145,9 @@
     </div>
     <transition name="fade">
       <div v-if="taskListVisible" class="user-task-list-container">
-        <UserTaskList 
+        <UserTaskList
           @close="closeTask"
+          :userId="userid"
         />
       </div>
     </transition>
@@ -185,7 +187,7 @@ import { useRouter } from 'vue-router'
 import UserTaskList from './UserTaskList.vue'
 const router = useRouter()
 const taskListVisible = ref(false)
-
+let userid=ref(null)
 const toast = useToast()
 const store = useStore()
 
@@ -200,12 +202,13 @@ const filteredUsers = computed(() => {
     return user.name.toLowerCase().includes(searchQuery.value.toLowerCase())
   })
 })
-const showtasks =(userid)=>{
-    taskListVisible.value = true
+const showtasks =(userId)=>{
+  userid=userId
+  taskListVisible.value = true
   router.push({
     name: 'AdminUserTasks',
     params: {
-      id: userid
+      id: userId
     }
   })
 }

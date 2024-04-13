@@ -321,7 +321,8 @@ import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
 const toast = useToast()
 const router = useRouter()
-const store=useStore()
+const store = useStore()
+const props=defineProps(['userId'])
 const tasks = ref([])
     const searchQuery = ref('')
     const currentPage = ref(1)
@@ -334,15 +335,15 @@ const tasks = ref([])
 
 const loadTasks = async () => {
   try {
-    const response = await store.dispatch('AdminTasks/fetchUserTasks', router.currentRoute.value.params.id)
-    tasks.value = await store.getters['AdminTasks/getuserTask']
-    console.log(tasks.value)
+    await store.dispatch('AdminTasks/fetchUserTasks', props.userId)
+      tasks.value =await store.getters['AdminTasks/getuserTask']
+      console.log(tasks.value)
   } catch (error) {
     console.log(error)
   }
 }
 onMounted(() => {
-  loadTasks()
+    loadTasks()
 })
 
 const formatDate = (dateString) => {

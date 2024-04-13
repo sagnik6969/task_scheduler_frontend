@@ -29,10 +29,10 @@ const mutations = {
 }
 
 const actions = {
-  async fetchUserTasks({ commit }, id) {
+  async fetchUserTasks({ commit }, user) {
     try {
       commit('setuserTaskStatus', 'loading')
-      const userResponse = await axios.get(`/api/admin/users/${id}`)
+      const userResponse = await axios.get(`/api/admin/users/${user}`)
       commit('setuserTask', userResponse.data.user.tasks)
       commit('setuserTaskStatus', 'success')
     } catch (error) {
