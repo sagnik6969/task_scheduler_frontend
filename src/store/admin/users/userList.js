@@ -1,4 +1,5 @@
 import axios from 'axios'
+import assignTask from '../assign/assignTask'
 // import { connect } from 'http2'
 
 const state = () => {
@@ -45,6 +46,36 @@ const actions = {
     } catch (error) {
       context.commit('setUserListStatus', 'failed')
       throw 'Unable to fetch user'
+    }
+  },
+  async makeAdmin(context, userId) {
+    try {
+      context.commit('setUserListStatus', 'loading')
+      await axios.patch(`/api/admin/users/${userId}`)
+      context.commit('setUserListStatus', 'success')
+    } catch (error) {
+      context.commit('setUserListStatus', 'failed')
+      throw 'Unable to make user admin'
+    }
+  },
+  async assignTask(context, { userId}) {
+    try {
+      context.commit('setUserListStatus', 'loading')
+      await axios.post(`/admin/assign-task/${userId}`)
+      context.commit('setUserListStatus', 'success')
+    } catch (error) {
+      context.commit('setUserListStatus', 'failed')
+      throw 'Unable to assign task'
+    }
+  },
+  async deleteUser(context, userId) {
+    try {
+      context.commit('setUserListStatus', 'loading')
+      await axios.delete(`/api/admin/users/${userId}`)
+      context.commit('setUserListStatus', 'success')
+    } catch (error) {
+      context.commit('setUserListStatus', 'failed')
+      throw 'Unable to delete user'
     }
   }
 }

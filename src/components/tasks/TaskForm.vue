@@ -74,7 +74,7 @@
               class="bg-slate-900 text-slate-100 hover:bg-slate-950 hover:text-slate-100"
               :disabled="loading"
             >
-              {{ props.admin ? 'Assign Task' : 'Add Task' }}
+              {{ props.admin == true ? 'Assign Task' : 'Add Task' }}
             </icon-button>
           </div>
           <div class="flex space-x-2 bg-slate-900 pt-2 pl-12 pr-12 pb-2 rounded-md" v-else>
@@ -91,7 +91,7 @@ import IconButton from '@/components/ui/IconButton.vue'
 // import IconSelect from '@/components/ui/IconSelect.vue'
 import VueDatePicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useToast } from 'vue-toast-notification'
 import { useStore } from 'vuex'
 
@@ -118,7 +118,7 @@ const handleSubmit = async () => {
       deadline: date.value,
       priority: priority.value
     }
-    if (props.userId) {
+    if (props.userId!=null && props.admin) {
       await store.dispatch('createUserTaskByAdmin', {
         userId: props.userId,
         ...taskData
