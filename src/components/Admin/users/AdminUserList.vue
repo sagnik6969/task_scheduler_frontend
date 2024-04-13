@@ -1,7 +1,8 @@
 <template>
   <div>
     <div class="w-4/5 md:w-4/5 lg:w-3/5 xl:w-5/5 mx-auto pb-5">
-      <!-- <div v-if="taskListVisible" class="overlay"></div> -->
+      <div v-if="taskListVisible ||        
+          $store.getters['AdminTasks/userTaskStatus'] == 'loading' " class="overlay"></div>
       <user-list-skeleton
         v-if="
           $store.getters['adminUserList/userListStatus'] == null ||
@@ -105,7 +106,7 @@
               <v-icon
                 icon="mdi-eye"
                 class="h-6 w-6 cursor-pointer transform transition duration-300 hover:scale-110"
-                @click="openTaskList(user)"
+                @click="showtasks(user.id)"
               />
             </tooltip>
           </div>
@@ -142,6 +143,14 @@
         </div> -->
       </div>
     </div>
+    <transition name="fade">
+      <div v-if="taskListVisible" class="user-task-list-container">
+        <UserTaskList
+          @close="closeTask"
+          :userId="userid"
+        />
+      </div>
+    </transition>
     <!-- <transition name="fade">
       <div v-if="isViewingProfile" class="user-profile-container">
         <user-profile
@@ -149,16 +158,6 @@
           @delete-user="deleteUser"
           @make-admin="makeAdmin"
           @close-user-profile="closeUserProfile"
-        />
-      </div>
-    </transition>
-    <transition name="fade">
-      <div v-if="taskListVisible" class="user-task-list-container">
-        <user-task-list
-          :alltasks="selectedUserTasks"
-          :user="currentUser"
-          @close-task-list="closeTaskList"
-          @task-closed="closeTaskList"
         />
       </div>
     </transition>
@@ -184,7 +183,11 @@ import { useToast } from 'vue-toast-notification'
 import Tooltip from '../../ui/Tooltip.vue'
 import { useStore } from 'vuex'
 import { computed, ref, watch } from 'vue'
-
+import { useRouter } from 'vue-router'
+import UserTaskList from './UserTaskList.vue'
+const router = useRouter()
+const taskListVisible = ref(false)
+let userid=ref(null)
 const toast = useToast()
 const store = useStore()
 
@@ -199,7 +202,16 @@ const filteredUsers = computed(() => {
     return user.name.toLowerCase().includes(searchQuery.value.toLowerCase())
   })
 })
-
+const showtasks =(userId)=>{
+  userid=userId
+  taskListVisible.value = true
+  router.push({
+    name: 'AdminUserTasks',
+    params: {
+      id: userId
+    }
+  })
+}
 const loadUsers = async () => {
   try {
     loading.value = true
@@ -214,7 +226,12 @@ const loadUsers = async () => {
 if (store.getters['adminUserList/userListStatus'] == null) {
   loadUsers()
 }
-
+const closeTask = () => {
+  taskListVisible.value = false
+  router.push({
+    name: 'AdminUserList'
+  })
+}
 function formatTime(time) {
   const currentTime = new Date()
   const timestamp = new Date(time)

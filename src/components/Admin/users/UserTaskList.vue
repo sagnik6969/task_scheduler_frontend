@@ -2,7 +2,7 @@
   <div class="w-full md:w-4/5 mx-auto bg-white p-5 md:p-10 rounded-lg relative">
     <button
       class="absolute top-0 right-0 mt-2 mr-2 text-red px-3 py-2 rounded-full"
-      @click="closeTaskList"
+      @click="$emit('close')"
     >
       <svg class="w-6 h-6" viewBox="0 0 20 20" fill="currentColor">
         <path
@@ -66,7 +66,7 @@
           :class="{ 'animate-pulse': deletingTask }"
         >
           <!-- Column Headers -->
-          <thead class="bg-gray-50" v-if="filteredTasks.length !== 0">
+          <thead class="bg-gray-50" v-if="store.getters['AdminTasks/userTaskLength'].length !== 0">
             <tr>
               <th
                 scope="col"
@@ -267,7 +267,7 @@
                 </span> -->
               </td>
             </tr>
-            <tr v-if="filteredTasks.length === 0">
+            <tr v-if="store.getters['AdminTasks/userTaskLength'].length === 0">
               <td class="px-3 md:px-6 py-4 whitespace-nowrap text-center text-gray-500" colspan="5">
                 <!-- <div class="flex-center no-tasks-message">
                   <p>No tasks found.</p>
@@ -313,120 +313,137 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import axios from 'axios'
 import { useToast } from 'vue-toast-notification'
+import { ref, computed, onMounted, onBeforeUnmount, onUnmounted, onUpdated, watch, onBeforeMount } from 'vue'
+import { useRouter } from 'vue-router'
+import { useStore } from 'vuex'
 const toast = useToast()
-export default {
-  props: {
-    alltasks: Array,
-    user: Number
-  },
-  data() {
-    return {
-      tasks: this.alltasks,
-      searchQuery: '',
-      currentPage: 1,
-      pageSize: 3,
-      sortColumn: '',
-      sortOrder: 'asc',
-      showFilterMenu: false,
-      deletingTask: false,
-      filterStatus: 'all'
-    }
-  },
-  computed: {
-    filteredTasks() {
-      if (!this.searchQuery.trim()) return this.tasks
-      return this.tasks.filter((task) =>
-        task.title.toLowerCase().includes(this.searchQuery.toLowerCase())
-      )
-    },
-    totalPages() {
-      return Math.ceil(this.filteredTasks.length / this.pageSize)
-    },
-    paginatedTasks() {
-      const startIndex = (this.currentPage - 1) * this.pageSize
-      return this.filteredTasks.slice(startIndex, startIndex + this.pageSize)
-    }
-  },
-  methods: {
-    formatDate(dateString) {
+const router = useRouter()
+const store = useStore()
+const props=defineProps(['userId'])
+const tasks = ref([])
+    const searchQuery = ref('')
+    const currentPage = ref(1)
+    const pageSize = ref(3)
+    const sortColumn = ref('')
+    const sortOrder = ref('asc')
+    const showFilterMenu = ref(false)
+    const deletingTask = ref(false)
+    const filterStatus = ref('all')
+
+const loadTasks = async () => {
+  try {
+    await store.dispatch('AdminTasks/fetchUserTasks', props.userId)
+      tasks.value =await store.getters['AdminTasks/getuserTask']
+      console.log(tasks.value)
+  } catch (error) {
+    console.log(error)
+  }
+}
+onMounted(() => {
+    loadTasks()
+})
+
+const formatDate = (dateString) => {
       const date = new Date(dateString)
       return date.toLocaleDateString('en-US', {
         year: 'numeric',
         month: 'short',
         day: 'numeric'
       })
-    },
-    confirmDeleteTask(task) {
-      if (window.confirm(`Are you sure you want to delete the task "${task.title}"?`)) {
-        this.deleteTask(task)
-      }
-    },
-    async deleteTask(task) {
-      try {
-        this.deletingTask = true
-        const response = await axios.delete('/api/admin/tasks/' + task.id)
-        toast.info(response.data.message)
-        const userResponse = await axios.get('/api/admin/users/' + this.user)
-        this.tasks = userResponse.data.user.tasks
-        this.deletingTask = false
-      } catch (error) {
-        toast.error(error.response.data.error)
-      }
-    },
-    searchTasks(event) {
-      this.searchQuery = event.target.value
-    },
-    changePage(page) {
-      this.currentPage = page
-    },
-    closeTaskList() {
-      // done
-      this.$emit('task-closed')
-    },
-    sortBy(column) {
-      if (this.sortColumn === column) {
-        this.sortOrder = this.sortOrder === 'asc' ? 'desc' : 'asc'
+    }
+
+
+const formattedTasks = computed(() => {
+      if (!searchQuery.value.trim()) return tasks.value
+      return tasks.value.filter((task) =>
+        task.title.toLowerCase().includes(searchQuery.value.toLowerCase())
+      )
+})
+const totalPages = computed(() => {
+   return Math.ceil(formattedTasks.value.length / pageSize.value)
+})
+
+const confirmDeleteTask = (task) => {
+  if (window.confirm(`Are you sure you want to delete the task "${task.title}"?`)) {
+    deleteTask(task)
+  }
+}
+
+const deleteTask = async (task) => {
+  try {
+    deletingTask.value = true
+    const response = await axios.delete('/api/admin/tasks/' + task.id)
+    toast.info(response.data.message)
+    const userResponse = await axios.get('/api/admin/users/' + this.user)
+    tasks.value = userResponse.data.user.tasks
+    deletingTask.value = false
+  } catch (error) {
+    toast.error(error.response.data.error)
+  }
+}
+
+const searchTasks = (event) => {
+  searchQuery.value = event.target.value
+}
+
+const changePage = (page) => {
+  currentPage.value = page
+}
+
+const closeTaskList = () => {
+  emit('close')
+}
+
+const sortBy = (column) => {
+      if (sortColumn.value === column) {
+        sortOrder.value = sortOrder.value === 'asc' ? 'desc' : 'asc'
       } else {
-        this.sortColumn = column
-        this.sortOrder = 'asc'
+        sortColumn.value = column
+        sortOrder.value = 'asc'
       }
       if (column === 'progress') {
-        this.filteredTasks.sort((a, b) => {
-          if (this.sortOrder === 'asc') {
+        formattedTasks.value.sort((a, b) => {
+          if (sortOrder.value === 'asc') {
             return a[column] - b[column]
           } else {
             return b[column] - a[column]
           }
         })
       } else {
-        this.filteredTasks.sort((a, b) => {
-          if (this.sortOrder === 'asc') {
+        formattedTasks.value.sort((a, b) => {
+          if (sortOrder.value === 'asc') {
             return a[column] < b[column] ? -1 : 1
           } else {
             return a[column] > b[column] ? -1 : 1
           }
         })
       }
-    },
-    toggleFilterMenu() {
-      this.showFilterMenu = !this.showFilterMenu
-    },
-    filterTasks(status) {
+    }
+
+
+const toggleFilterMenu = () => {
+  showFilterMenu.value = !showFilterMenu.value
+}
+const filterTasks = (status) => {
       if (status === 'all') {
-        this.filteredTasks = this.tasks
+        formattedTasks.value = tasks.value
       } else {
         let task = []
         const completedStatus = status === 'true'
-        task = this.tasks.filter((task) => task.is_completed === completedStatus)
+        task = tasks.value.filter((task) => task.is_completed === completedStatus)
         // console.log(task)
       }
-      this.showFilterMenu = false
+      showFilterMenu.value = false
     }
-  }
-}
+
+const paginatedTasks = computed(() => {
+      const startIndex = (currentPage.value - 1) * pageSize.value
+      return formattedTasks.value.slice(startIndex, startIndex + pageSize.value)
+    })
+
 </script>
 
 <style scoped>

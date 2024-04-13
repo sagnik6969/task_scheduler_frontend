@@ -3,12 +3,14 @@ import axios from 'axios'
 import userTasks from './userTasks'
 import userList from './admin/users/userList'
 import analysis from './admin/analysis/analysis'
+import AdminTasks from './AdminTasks'
 
 const store = createStore({
   modules: {
     userTasks,
     adminUserList: userList,
-    analysis: analysis
+    analysis: analysis,
+    AdminTasks
   },
   state() {
     return {
